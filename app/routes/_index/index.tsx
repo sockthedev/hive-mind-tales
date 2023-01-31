@@ -1,30 +1,23 @@
-import { H1, H2, P, Spacer } from "~/components"
+import { H1, H2, H3, P, Spacer } from "~/components"
 import { RichTextEditor } from "~/components/rich-text-editor"
 
 export default function Index() {
   return (
     <>
       <Spacer size="sm" />
-      <H1>Hive Mind Tales</H1>
-      <H2>A ridiculous experiment in storytelling</H2>
+      <H2>Hive Mind Tales</H2>
+      <H3>A ridiculous experiment in collaborative storytelling</H3>
       <P>
-        Hive Mind Tales is a collaborative storytelling experiment. Start
-        writing a story then click the "Configure" button. We'll then show you a
-        few options allowing you to customize how others can collaborate with
-        your story. When you're happy click the "Collaborate" button and a
-        unique link will be generated allowing others to begin collorating with
-        you.
+        Start writing a story, configure how others can collaborate, then share
+        the generated link to start the magic.
       </P>
-      <Spacer size="md" />
-      <hr />
-      <Spacer size="sm" />
-      <em>
-        Click the text below to edit your story. Feel free to change the title
-        and the body of course.
-      </em>
-      <Spacer size="sm" />
-      <hr />
-      <Spacer size="md" />
+      <P className="text-center">
+        <em>
+          (<strong>Hint:</strong> You can click on and edit any of the text
+          below)
+        </em>
+      </P>
+      <Spacer size="lg" />
       <RichTextEditor onUpdate={(v) => console.log(v)} />
     </>
   )
