@@ -19,13 +19,21 @@ export default function Index() {
       <img
         src="/assets/start-writing-here.png"
         alt="Start writing here"
-        className="ml-10 block w-full max-w-[150px]"
+        className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
       />
       <Spacer size="sm" />
       <RichTextEditor
         initialContent={exampleStory}
         onUpdate={(v) => console.log(v)}
       />
+      <Spacer size="md" />
+      <div className="flex flex-row justify-end pr-10 sm:pr-32">
+        <img
+          src="/assets/awesome-configure-settings.png"
+          alt="Awesome! Now, configure your settings"
+          className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
+        />
+      </div>
     </>
   )
 }
