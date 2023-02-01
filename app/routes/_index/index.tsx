@@ -21,17 +21,20 @@ export default function Index() {
         Start writing a story. Configure the collaboration settings. Share it.
         Watch the magic unfold.
       </P>
+
       <Spacer size="md" />
       <img
         src="/assets/start-writing-here.png"
         alt="Start writing here"
         className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
       />
+
       <Spacer size="sm" />
       <RichTextEditor
         initialContent={exampleStory}
         onUpdate={(v) => console.log(v)}
       />
+
       <Spacer size="md" />
       <div className="flex flex-row justify-end pr-10 sm:pr-32">
         <img
@@ -40,6 +43,7 @@ export default function Index() {
           className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
         />
       </div>
+
       <Spacer size="md" />
       <Checkbox
         label="Visible in our feeds"
@@ -47,6 +51,7 @@ export default function Index() {
         checked={visibleInFeeds}
         onChange={setVisibleInFeeds}
       />
+
       <Spacer size="sm" />
       <ComboBox
         options={[
@@ -57,6 +62,14 @@ export default function Index() {
         onChange={setCollaborationMode}
         value={collaborationMode}
       />
+
+      <Spacer size="lg" />
+      <img
+        src="/assets/woot-share-it.png"
+        alt="Woot! Let's share it!"
+        className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
+      />
+
       <Spacer size="lg" />
     </>
   )
