@@ -1,5 +1,5 @@
 import React from "react"
-import { Checkbox, H3, P, Spacer } from "~/components"
+import { Checkbox, ComboBox, H3, P, Spacer } from "~/components"
 import { RichTextEditor } from "~/components/rich-text-editor"
 
 // TODO: Pull from a pool of example stories from the backend;
@@ -10,6 +10,10 @@ const exampleStory = `
 
 export default function Index() {
   const [visibleInFeeds, setVisibleInFeeds] = React.useState(true)
+  const [collaborationMode, setCollaborationMode] = React.useState({
+    name: "Linear",
+    value: "linear",
+  })
   return (
     <>
       <H3>A ridiculous experiment in collaborative storytelling.</H3>
@@ -42,6 +46,16 @@ export default function Index() {
         description="Your story will appear in our lists - e.g. Recent, Most Viewed, etc."
         checked={visibleInFeeds}
         onChange={setVisibleInFeeds}
+      />
+      <Spacer size="sm" />
+      <ComboBox
+        options={[
+          { name: "Linear", value: "linear" },
+          { name: "Tree", value: "tree" },
+        ]}
+        label="Collaboration Mode"
+        onChange={setCollaborationMode}
+        value={collaborationMode}
       />
       <Spacer size="lg" />
     </>
