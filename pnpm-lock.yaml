@@ -41,7 +41,7 @@ specifiers:
   prosemirror-view: ^1.30.0
   react: ^18.2.0
   react-dom: ^18.2.0
-  sst: 2.0.0-rc.64
+  sst: 2.0.0-rc.65
   tailwindcss: ^3.2.4
   typescript: ^4.9.5
 
@@ -88,7 +88,7 @@ devDependencies:
   prettier: 2.8.3
   prettier-plugin-organize-imports: 3.2.2_ioxdq35luteszuxmt2jhnqjeca
   prettier-plugin-tailwindcss: 0.2.2_i4xi2hg6g3kmzi3zhxser2a7ai
-  sst: 2.0.0-rc.64_@types+react@18.0.27
+  sst: 2.0.0-rc.65_@types+react@18.0.27
   tailwindcss: 3.2.4
   typescript: 4.9.5
 
@@ -201,7 +201,7 @@ packages:
     resolution: {integrity: sha512-TvE1r2CUueyXOuHdEigYjIZVesInd9KN+K/TFFNfkkxRThiNxO6i4ZqqAVMoEjAamZZ1AA8WXJkjCz7YShHPQA==}
     dependencies:
       '@aws-crypto/util': 2.0.2
-      '@aws-sdk/types': 3.208.0
+      '@aws-sdk/types': 3.257.0
       tslib: 1.14.1
     dev: true
 
@@ -209,7 +209,7 @@ packages:
     resolution: {integrity: sha512-vF0eMdMHx3O3MoOXUfBZry8Y4ZDtcuskjjKgJz8YfIDjLStxTZrYXk+kZqtl6A0uCmmiN/Eb/JbC/CndTV1MHg==}
     dependencies:
       '@aws-crypto/util': 2.0.2
-      '@aws-sdk/types': 3.208.0
+      '@aws-sdk/types': 3.257.0
       tslib: 1.14.1
     dev: true
 
@@ -224,9 +224,9 @@ packages:
     dependencies:
       '@aws-crypto/ie11-detection': 2.0.2
       '@aws-crypto/supports-web-crypto': 2.0.2
-      '@aws-sdk/types': 3.208.0
+      '@aws-sdk/types': 3.257.0
       '@aws-sdk/util-locate-window': 3.208.0
-      '@aws-sdk/util-utf8-browser': 3.188.0
+      '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     dev: true
 
@@ -237,9 +237,9 @@ packages:
       '@aws-crypto/sha256-js': 2.0.0
       '@aws-crypto/supports-web-crypto': 2.0.2
       '@aws-crypto/util': 2.0.2
-      '@aws-sdk/types': 3.208.0
+      '@aws-sdk/types': 3.257.0
       '@aws-sdk/util-locate-window': 3.208.0
-      '@aws-sdk/util-utf8-browser': 3.188.0
+      '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     dev: true
 
@@ -247,7 +247,7 @@ packages:
     resolution: {integrity: sha512-VZY+mCY4Nmrs5WGfitmNqXzaE873fcIZDu54cbaDaaamsaTOP1DBImV9F4pICc3EHjQXujyE8jig+PFCaew9ig==}
     dependencies:
       '@aws-crypto/util': 2.0.2
-      '@aws-sdk/types': 3.208.0
+      '@aws-sdk/types': 3.257.0
       tslib: 1.14.1
     dev: true
 
@@ -260,8 +260,8 @@ packages:
   /@aws-crypto/util/2.0.2:
     resolution: {integrity: sha512-Lgu5v/0e/BcrZ5m/IWqzPUf3UYFTy/PpeED+uc9SWUR1iZQL8XXbGQg10UfllwwBryO3hFF5dizK+78aoXC1eA==}
     dependencies:
-      '@aws-sdk/types': 3.208.0
-      '@aws-sdk/util-utf8-browser': 3.188.0
+      '@aws-sdk/types': 3.257.0
+      '@aws-sdk/util-utf8-browser': 3.259.0
       tslib: 1.14.1
     dev: true
 
@@ -2850,6 +2850,10 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@balena/dockerignore/1.0.2:
+    resolution: {integrity: sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q==}
+    dev: true
+
   /@emotion/hash/0.9.0:
     resolution: {integrity: sha512-14FtKiHhy2QoPIzdTcvh//8OyBlknNs2nXRwIhG904opCby3l+9Xaf/wuPvICBF0rc1ZCNBd3nKe9cd2mecVkQ==}
     dev: true
@@ -4726,7 +4730,16 @@ packages:
       '@aws-cdk/asset-awscli-v1': 2.2.53
       '@aws-cdk/asset-kubectl-v20': 2.1.1
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.42
+      '@balena/dockerignore': 1.0.2
+      case: 1.6.3
       constructs: 10.1.156
+      fs-extra: 9.1.0
+      ignore: 5.2.4
+      jsonschema: 1.4.1
+      minimatch: 3.1.2
+      punycode: 2.3.0
+      semver: 7.3.8
+      yaml: 1.10.2
     dev: true
     bundledDependencies:
       - '@balena/dockerignore'
@@ -5176,6 +5189,11 @@ packages:
 
   /caniuse-lite/1.0.30001449:
     resolution: {integrity: sha512-CPB+UL9XMT/Av+pJxCKGhdx+yg1hzplvFJQlJ2n68PyQGMz9L/E2zCyLdOL8uasbouTUgnPl+y0tccI/se+BEw==}
+    dev: true
+
+  /case/1.6.3:
+    resolution: {integrity: sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==}
+    engines: {node: '>= 0.8.0'}
     dev: true
 
   /cdk-assets/2.62.2:
@@ -11063,8 +11081,8 @@ packages:
       minipass: 3.3.6
     dev: true
 
-  /sst/2.0.0-rc.64_@types+react@18.0.27:
-    resolution: {integrity: sha512-ysU3hhwkrPlFu1hC7n4tiGquvFhRH47mVSFpWJfPQM7Qz2b8HKDbAEpfE3vkCd5dxEJ7H+XqfeNAu2d9b87Dhg==}
+  /sst/2.0.0-rc.65_@types+react@18.0.27:
+    resolution: {integrity: sha512-0HiaKZtY0/wuJ01VRYkajmNXxGiHB9J+V/MndS8RbY8NZHh/s94wlzMVsiRuAWAhp8uT6e1frTxdioA2e3QA+Q==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0

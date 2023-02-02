@@ -1,5 +1,6 @@
 export * from "./checkbox"
 export * from "./combobox"
+export * from "./divider"
 export * from "./h1"
 export * from "./h2"
 export * from "./h3"

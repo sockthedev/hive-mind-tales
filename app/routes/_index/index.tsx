@@ -1,5 +1,5 @@
 import React from "react"
-import { Checkbox, ComboBox, H3, Input, P, Spacer } from "~/components"
+import { Checkbox, ComboBox, Divider, H3, Input, P, Spacer } from "~/components"
 import { RichTextEditor } from "~/components/rich-text-editor"
 
 // TODO: Pull from a pool of example stories from the backend;
@@ -29,7 +29,8 @@ export default function HomepageRoute() {
           alt="Start writing here"
           className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
         />
-        <Spacer size="md" />
+        <Divider label="Story Editor" />
+        <Spacer size="sm" />
         <RichTextEditor
           initialContent={exampleStory}
           onUpdate={(v) => console.log(v)}
@@ -45,6 +46,7 @@ export default function HomepageRoute() {
             className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
           />
         </div>
+        <Divider label="Collaboration Settings" />
         <Spacer size="md" />
         <Checkbox
           label="Visible in our feeds"
@@ -71,6 +73,7 @@ export default function HomepageRoute() {
           alt="You need to be logged in so we can save your story"
           className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
         />
+        <Divider label="Login" />
         <P>
           We will send a code to the email address you provide below in order to
           get you logged into our system. Don't worry, we won't be spamming you
