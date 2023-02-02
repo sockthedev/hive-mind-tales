@@ -1,6 +1,7 @@
 import React from "react"
-import { Checkbox, ComboBox, Divider, H3, Input, P, Spacer } from "~/components"
+import { Checkbox, ComboBox, Divider, H3, P, Spacer } from "~/components"
 import { RichTextEditor } from "~/components/rich-text-editor"
+import { LoginForm } from "../resources.login"
 
 // TODO: Pull from a pool of example stories from the backend;
 const exampleStory = `
@@ -54,7 +55,7 @@ export default function HomepageRoute() {
           checked={visibleInFeeds}
           onChange={setVisibleInFeeds}
         />
-        <Spacer size="sm" />
+        <Spacer size="md" />
         <ComboBox
           options={[
             { name: "Linear", value: "linear" },
@@ -74,23 +75,8 @@ export default function HomepageRoute() {
           className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
         />
         <Divider label="Login" />
-        <P>
-          We will send a code to the email address you provide below in order to
-          get you logged into our system. Don't worry, we won't be spamming you
-          or sharing your email with others. We purely need this so that you are
-          able to easily view and administer your story in the future.
-        </P>
-        <P>Fill in your email address and click the button to get started...</P>
-        <P>
-          <Input
-            id="email"
-            name="email"
-            type="email"
-            label="Email"
-            placeholder="your@emailaddress.com"
-            required
-          />
-        </P>
+        <Spacer size="sm" />
+        <LoginForm />
       </section>
 
       <section>
@@ -100,6 +86,7 @@ export default function HomepageRoute() {
           alt="Woot! Let's share it!"
           className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
         />
+        <Divider label="Share" />
       </section>
 
       <Spacer size="lg" />
