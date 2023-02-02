@@ -24,12 +24,12 @@ export default function HomepageRoute() {
       </P>
 
       <section>
-        <Spacer size="lg" />
-        <img
-          src="/assets/start-writing-here.png"
-          alt="Start writing here"
-          className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
-        />
+        <Spacer size="xl" />
+        {/* <img */}
+        {/*   src="/assets/start-writing-here.png" */}
+        {/*   alt="Start writing here" */}
+        {/*   className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]" */}
+        {/* /> */}
         <Divider label="Story Editor" />
         <Spacer size="sm" />
         <RichTextEditor
@@ -39,14 +39,14 @@ export default function HomepageRoute() {
       </section>
 
       <section>
-        <Spacer size="lg" />
-        <div className="flex flex-row justify-end pr-10 sm:pr-32">
-          <img
-            src="/assets/awesome-configure-settings.png"
-            alt="Awesome! Now, configure your settings"
-            className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]"
-          />
-        </div>
+        <Spacer size="xl" />
+        {/* <div className="flex flex-row justify-end pr-10 sm:pr-32"> */}
+        {/*   <img */}
+        {/*     src="/assets/awesome-configure-settings.png" */}
+        {/*     alt="Awesome! Now, configure your settings" */}
+        {/*     className="ml-10 block w-full max-w-[150px] sm:max-w-[175px]" */}
+        {/*   /> */}
+        {/* </div> */}
         <Divider label="Collaboration Settings" />
         <Spacer size="md" />
         <Checkbox
@@ -68,28 +68,28 @@ export default function HomepageRoute() {
       </section>
 
       <section>
-        <Spacer size="lg" />
-        <img
-          src="/assets/login-to-save-story.png"
-          alt="You need to be logged in so we can save your story"
-          className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
-        />
+        <Spacer size="xl" />
+        {/* <img */}
+        {/*   src="/assets/login-to-save-story.png" */}
+        {/*   alt="You need to be logged in so we can save your story" */}
+        {/*   className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]" */}
+        {/* /> */}
         <Divider label="Login" />
         <Spacer size="sm" />
         <LoginForm />
       </section>
 
       <section>
-        <Spacer size="lg" />
-        <img
-          src="/assets/woot-share-it.png"
-          alt="Woot! Let's share it!"
-          className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]"
-        />
+        <Spacer size="xl" />
+        {/* <img */}
+        {/*   src="/assets/woot-share-it.png" */}
+        {/*   alt="Woot! Let's share it!" */}
+        {/*   className="ml-12 block w-full max-w-[175px] sm:max-w-[200px]" */}
+        {/* /> */}
         <Divider label="Share" />
       </section>
 
-      <Spacer size="lg" />
+      <Spacer size="xl" />
     </>
   )
 }
