@@ -6,7 +6,7 @@ import clsx from "clsx"
 export const MenuContainer: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
-  <div className="bg-gray-800 rounded-md px-3 py-2 flex-row align-middle">
+  <div className="flex-row rounded-md bg-gray-800 px-3 py-2 align-middle">
     {children}
   </div>
 )
@@ -17,10 +17,10 @@ export const MenuButton: React.FC<{
   isActive: boolean
   onClick: React.MouseEventHandler<HTMLButtonElement>
 }> = ({ icon, isActive, onClick }) => (
-  <button className="inline-block w-6 h-6" onClick={onClick}>
+  <button className="inline-block h-6 w-6" onClick={onClick}>
     <FontAwesomeIcon
       icon={icon}
-      className={clsx("text-white font-bold text-sm", {
+      className={clsx("text-sm font-bold text-white", {
         "text-yellow-300": isActive,
       })}
     />
@@ -28,5 +28,5 @@ export const MenuButton: React.FC<{
 )
 
 export const MenuSeperator: React.FC = () => (
-  <span className="text-gray-300 text-xl leading-none font-thin px-2">|</span>
+  <span className="px-2 text-xl font-thin leading-none text-gray-300">|</span>
 )

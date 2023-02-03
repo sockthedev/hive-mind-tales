@@ -5,12 +5,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons"
 import type { Editor } from "@tiptap/core"
 import { isTextSelection } from "@tiptap/core"
+import type { EditorState } from "@tiptap/pm/state"
+import type { EditorView } from "@tiptap/pm/view"
 import type { Editor as ReactEditor } from "@tiptap/react"
 import { BubbleMenu } from "@tiptap/react"
-import type { EditorState } from "prosemirror-state"
-import type { EditorView } from "prosemirror-view"
 
-import { MenuContainer, MenuButton } from "./rich-text-editor-menu"
+import { MenuButton, MenuContainer } from "./rich-text-editor-menu"
 
 const shouldShow: (props: {
   editor: Editor

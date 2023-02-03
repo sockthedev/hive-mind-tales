@@ -1,4 +1,5 @@
 export * from "./checkbox"
+export * from "./column"
 export * from "./combobox"
 export * from "./divider"
 export * from "./form-input"

@@ -7,6 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"
+import { Column } from "./components"
 import { Header } from "./components/header"
 import styles from "./tailwind.css"
 
@@ -26,14 +27,14 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-yellow-50">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <Column>
           <Header />
-          <main>
-            <Outlet />
-          </main>
-        </div>
+        </Column>
 
-        {/* Special Remix Components;*/}
+        <main>
+          <Outlet />
+        </main>
+
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

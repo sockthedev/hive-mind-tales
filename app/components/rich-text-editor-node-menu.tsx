@@ -5,10 +5,10 @@ import {
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons"
 import type { Editor } from "@tiptap/core"
+import type { EditorState } from "@tiptap/pm/state"
+import type { EditorView } from "@tiptap/pm/view"
 import type { Editor as ReactEditor } from "@tiptap/react"
 import { FloatingMenu } from "@tiptap/react"
-import type { EditorState } from "prosemirror-state"
-import type { EditorView } from "prosemirror-view"
 import React from "react"
 import { MenuButton, MenuContainer } from "./rich-text-editor-menu"
 
