@@ -4,7 +4,7 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import z from "zod"
 
 import { useFetcher } from "@remix-run/react"
-import { FormInput, P } from "~/components"
+import { FormInput, P, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 
 export const validator = withZod(
@@ -46,6 +46,7 @@ export const LoginForm: React.FC<LoginFormProps> = () => {
       action="/resources/login"
     >
       <P>Fill in your email and we'll send you a code to get logged in.</P>
+      <Spacer size="md" />
       <FormInput
         id="email"
         name="email"
@@ -53,6 +54,7 @@ export const LoginForm: React.FC<LoginFormProps> = () => {
         label="Email"
         placeholder="your@emailaddress.com"
       />
+      <Spacer size="md" />
       <FormSubmitButton />
     </ValidatedForm>
   )

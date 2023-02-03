@@ -42,7 +42,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
     editorProps: {
       attributes: {
         class:
-          "cursor-pointer py-4 px-4 sm:px-6 lg:px-8 transition-all border border-transparent outline-none focus:shadow-2xl focus:border-slate-100 focus:bg-yellow-100",
+          "cursor-pointer focus:cursor-auto py-4 px-4 sm:px-6 lg:px-8 transition-all border border-transparent outline-none focus:shadow-2xl focus:border-slate-100 focus:bg-yellow-100",
       },
     },
   })
