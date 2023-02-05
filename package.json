@@ -21,7 +21,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.1",
     "@fortawesome/free-solid-svg-icons": "^6.1.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
-    "@headlessui/react": "^1.7.8",
+    "@headlessui/react": "^1.7.9",
     "@remix-run/node": "1.11.1",
     "@remix-run/react": "1.11.1",
     "@remix-run/serve": "1.11.1",
@@ -34,7 +34,7 @@
     "isbot": "^3.6.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "remix-validated-form": "^4.6.7",
+    "remix-validated-form": "^4.6.8",
     "zod": "^3.20.2",
     "zod-form-data": "^1.2.4"
   },
@@ -52,7 +52,7 @@
     "prettier": "^2.8.3",
     "prettier-plugin-organize-imports": "^3.2.2",
     "prettier-plugin-tailwindcss": "^0.2.2",
-    "sst": "2.0.0-rc.65",
+    "sst": "2.0.0-rc.68",
     "tailwindcss": "^3.2.4",
     "typescript": "^4.9.5"
   },

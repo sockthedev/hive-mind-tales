@@ -5,9 +5,13 @@ export type CheckboxProps = {
   checked?: boolean
   onChange: (checked: boolean) => void
   label: string
+  name?: string
   description: string
 }
 
+// TODO:
+// - Add disabled support
+// - Add error support
 export const Checkbox: React.FC<CheckboxProps> = (props) => {
   return (
     <Switch.Group as="div" className="flex items-center justify-between">
@@ -25,6 +29,7 @@ export const Checkbox: React.FC<CheckboxProps> = (props) => {
       </span>
       <Switch
         checked={props.checked}
+        name={props.name}
         onChange={props.onChange}
         className={clsx(
           props.checked ? "bg-indigo-600" : "bg-gray-200",

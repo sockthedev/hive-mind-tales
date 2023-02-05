@@ -1,23 +1,26 @@
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
+import React from "react"
 import { RichTextEditorMarkMenu } from "./rich-text-editor-mark-menu"
 import { RichTextEditorNodeMenu } from "./rich-text-editor-node-menu"
 
 export type RichTextEditorProps = {
   className?: string
   initialContent: string
-  onUpdate: (content: string) => void
+  name?: string
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
+  const [html, setHtml] = React.useState(props.initialContent)
+
   const editor = useEditor({
-    // onUpdate: ({ editor }) => {
-    //   // TODO: This gets executed for every update. I'm wondering if we should
-    //   // use a debounce callback instead. To be confirmed via TipTap Discord,
-    //   // https://discord.com/channels/818568566479257641/818569721934774272/1014793086414626866
-    //   const value = editor.getHTML()
-    //   props.onUpdate(value)
-    // },
+    onUpdate: ({ editor }) => {
+      // TODO: This gets executed for every update. I'm wondering if we should
+      // use a debounce callback instead? Current Discord thread seems to think
+      // it's fine:
+      // https://discord.com/channels/818568566479257641/818569721934774272/1014793086414626866
+      setHtml(editor.getHTML())
+    },
     extensions: [
       StarterKit.configure({
         blockquote: {
@@ -48,9 +51,16 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
   })
 
   return (
-    <EditorContent className={props.className} editor={editor}>
-      {editor && <RichTextEditorMarkMenu editor={editor} />}
-      {editor && <RichTextEditorNodeMenu editor={editor} />}
-    </EditorContent>
+    <>
+      <EditorContent
+        name={props.name}
+        className={props.className}
+        editor={editor}
+      >
+        {editor && <RichTextEditorMarkMenu editor={editor} />}
+        {editor && <RichTextEditorNodeMenu editor={editor} />}
+      </EditorContent>
+      <input type="hidden" name={props.name} value={html} />
+    </>
   )
 }
