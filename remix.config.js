@@ -4,5 +4,10 @@ module.exports = {
   future: {
     v2_routeConvention: true,
   },
-  serverDependenciesToBundle: [/^@tiptap.*/],
+  serverDependenciesToBundle: [
+    /^@tiptap.*/,
+    "lodash-es",
+    "react-d3-tree",
+    /^d3-.*/,
+  ],
 }

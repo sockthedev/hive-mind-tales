@@ -18,25 +18,31 @@ export function convertStoryPartsToTree(storyData: StoryPart[]): StoryTree {
   }
   const tree: StoryTree = {
     ...root,
+    name: root.author,
     children: extractNodes(root.id, storyData),
   }
   return tree
 }
 
-export function resolvePartPath({
-  tree,
-  part,
+export function resolveBreadcrumb({
+  storyParts,
+  leafPartId,
 }: {
-  tree: StoryTree
-  part: string
+  storyParts: StoryPart[]
+  leafPartId: string
 }): string[] {
-  const path: string[] = []
-  let current = tree
-  while (current.id !== part) {
-    path.push(current.id)
-    const next = current.children.find((child) => child.id === part)
-    invariant(next, "Part not found in tree")
-    current = next
+  const breadcrumb: string[] = []
+
+  const findParent = (partId: string) => {
+    const part = storyParts.find((part) => part.id === partId)
+    invariant(part, `Could not find part with id ${partId}`)
+    breadcrumb.push(part.id)
+    if (part.parentStoryPart) {
+      findParent(part.parentStoryPart)
+    }
   }
-  return path
+
+  findParent(leafPartId)
+
+  return breadcrumb.reverse()
 }

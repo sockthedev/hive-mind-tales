@@ -1,5 +1,6 @@
 export type StoryPart = {
   id: string
+  name: string
   content: string
   author: string
   parentStoryPart?: string
