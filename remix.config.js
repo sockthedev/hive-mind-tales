@@ -7,7 +7,7 @@ module.exports = {
   serverDependenciesToBundle: [
     /^@tiptap.*/,
     "lodash-es",
-    "react-d3-tree",
+    "@sockthedev/react-d3-tree",
     /^d3-.*/,
   ],
 }

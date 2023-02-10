@@ -4,7 +4,7 @@ import {
   useLoaderData,
   useNavigate,
 } from "@remix-run/react"
-import Tree from "react-d3-tree"
+import Tree from "@sockthedev/react-d3-tree"
 import invariant from "tiny-invariant"
 import { z } from "zod"
 import {
@@ -131,12 +131,15 @@ export default function StoryRoute() {
     <>
       <Column>
         <Spacer size="lg" />
-        <div className="h-96 w-full">
+        <div className="relative h-96 w-full text-center">
           <Tree
             data={data.tree}
+            shouldCollapseNeighborNodes={true}
             orientation="vertical"
-            zoom={0.7}
             dimensions={{ width: 704, height: 384 }}
+            translate={{ x: 704 / 2, y: 384 / 2 }}
+            // initialDepth={0}
+            collapsible={true}
           />
         </div>
         <H1>Story</H1>

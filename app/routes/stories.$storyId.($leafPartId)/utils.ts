@@ -13,6 +13,7 @@ export function convertStoryPartsToTree(storyData: StoryPart[]): StoryTree {
     )
     return children.map<StoryTree>((child) => ({
       ...child,
+      name: child.author,
       children: extractNodes(child.id, storyData),
     }))
   }
