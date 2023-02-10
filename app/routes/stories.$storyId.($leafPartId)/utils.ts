@@ -19,7 +19,6 @@ export function convertStoryPartsToTree(storyData: StoryPart[]): StoryTree {
   }
   const tree: StoryTree = {
     ...root,
-    name: root.author,
     children: extractNodes(root.id, storyData),
   }
   return tree
