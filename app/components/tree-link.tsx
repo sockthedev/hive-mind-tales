@@ -2,16 +2,16 @@ import clsx from "clsx"
 import { HierarchyPointLink } from "d3-hierarchy"
 import { linkVertical } from "d3-shape"
 import invariant from "tiny-invariant"
-import { TreeData } from "./tree"
+import { RawTreeNode } from "./tree"
 
 export type TreeLinkProps<Data> = {
-  link: HierarchyPointLink<TreeData<Data>>
+  link: HierarchyPointLink<RawTreeNode<Data>>
 }
 
 function drawPath<Data>({
   source,
   target,
-}: HierarchyPointLink<TreeData<Data>>) {
+}: HierarchyPointLink<RawTreeNode<Data>>) {
   const path = linkVertical()({
     source: [source.x, source.y],
     target: [target.x, target.y],

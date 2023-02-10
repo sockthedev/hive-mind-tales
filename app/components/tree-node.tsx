@@ -1,17 +1,17 @@
 import clsx from "clsx"
 import { HierarchyPointNode } from "d3-hierarchy"
 import React from "react"
-import { TreeData } from "./tree"
+import { RawTreeNode } from "./tree"
 
 const DEFAULT_NODE_CIRCLE_RADIUS = 15
 
-function transformForNode<Data>(node: HierarchyPointNode<TreeData<Data>>) {
+function transformForNode<Data>(node: HierarchyPointNode<RawTreeNode<Data>>) {
   return `translate(${node.x},${node.y})`
 }
 
 export type TreeNodeProps<Data> = {
-  node: HierarchyPointNode<TreeData<Data>>
-  onClick: (node: HierarchyPointNode<TreeData<Data>>) => void
+  node: HierarchyPointNode<RawTreeNode<Data>>
+  onClick: (node: HierarchyPointNode<RawTreeNode<Data>>) => void
 }
 
 export const TreeNode = <Data extends unknown>(props: TreeNodeProps<Data>) => {
