@@ -1,18 +1,22 @@
-import { hierarchy, tree as d3tree } from "d3-hierarchy"
+import { hierarchy, HierarchyPointNode, tree as d3tree } from "d3-hierarchy"
 import { select } from "d3-selection"
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom"
 import React from "react"
 import { TreeLink } from "./tree-link"
 import { TreeNode } from "./tree-node"
 
+const dimensions = {
+  width: 704,
+  height: 400,
+}
 const nodeSize = {
   x: 90,
   y: 90,
 }
 const separation = { siblings: 1, nonSiblings: 2 }
-const translate = { x: 200, y: 200 }
+const translate = { x: 0, y: 0 }
 const scale = 1
-const scaleExtent = { min: 0.1, max: 1 }
+const scaleExtent = { min: 0.25, max: 1 }
 const data: TreeNodeDatum = {
   id: "A",
   name: "A",
@@ -37,6 +41,14 @@ const data: TreeNodeDatum = {
               id: "F",
               name: "F",
               active: false,
+
+              children: [
+                {
+                  id: "G",
+                  name: "G",
+                  active: false,
+                },
+              ],
             },
           ],
         },
@@ -79,8 +91,27 @@ function generateTree(data: TreeNodeDatum) {
 export const Tree: React.FC<TreeProps> = () => {
   const { nodes, links } = generateTree(data)
 
+  const scaleRef = React.useRef(1)
+
   const svgId = React.useId()
   const gId = React.useId()
+
+  function centerNode(hierarchyPointNode: HierarchyPointNode<TreeNodeDatum>) {
+    const svg = select(`[data-d3-id="${svgId}"]`)
+    const g = select(`[data-d3-id="${gId}"]`)
+    const scale = scaleRef.current
+
+    const x = -hierarchyPointNode.x * scale + dimensions.width / 2
+    const y = -hierarchyPointNode.y * scale + dimensions.height / 3
+    // @ts-ignore
+    g.transition()
+      .duration(500)
+      .attr("transform", "translate(" + x + "," + y + ")scale(" + scale + ")")
+    // Sets the viewport to the new center so that it does not jump back to original
+    // coordinates when dragged/zoomed
+    // @ts-ignore
+    svg.call(d3Zoom().transform, zoomIdentity.translate(x, y).scale(1))
+  }
 
   React.useEffect(() => {
     const svg = select(`[data-d3-id="${svgId}"]`)
@@ -101,21 +132,22 @@ export const Tree: React.FC<TreeProps> = () => {
         .scaleExtent([scaleExtent.min, scaleExtent.max])
         .on("zoom", (event: any) => {
           g.attr("transform", event.transform)
+          scaleRef.current = event.transform.k
         }),
     )
   }, [])
 
+  React.useEffect(() => {
+    // TODO: Center on breadcrumb node, or first
+    centerNode(nodes[0].children[0])
+  }, [])
+
   return (
     <div
-      className="h-full w-full cursor-grab active:cursor-grabbing"
+      className="h-full w-full cursor-grab overflow-hidden active:cursor-grabbing"
       draggable={false}
     >
-      <svg
-        data-d3-id={svgId}
-        width="100%"
-        height="100vh"
-        style={{ border: "solid 1px pink" }}
-      >
+      <svg data-d3-id={svgId} width="100%" height="100%">
         <g
           data-d3-id={gId}
           className="relative"
@@ -128,7 +160,10 @@ export const Tree: React.FC<TreeProps> = () => {
             <TreeNode
               key={i}
               node={node}
-              onClick={(node) => console.log(`Clicked node ${node.data.name}`)}
+              onClick={(node) => {
+                console.log(`Clicked node ${node.data.name}`)
+                centerNode(node)
+              }}
             />
           ))}
         </g>
