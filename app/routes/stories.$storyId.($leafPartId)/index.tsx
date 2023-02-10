@@ -4,7 +4,8 @@ import {
   useLoaderData,
   useNavigate,
 } from "@remix-run/react"
-import Tree from "@sockthedev/react-d3-tree"
+import { HierarchyPointNode } from "d3-hierarchy"
+import React from "react"
 import invariant from "tiny-invariant"
 import { z } from "zod"
 import {
@@ -16,8 +17,9 @@ import {
   RichTextEditor,
   Spacer,
 } from "~/components"
+import { RawTreeNode, Tree } from "~/components/tree"
 import { mockStoryParts } from "./mocks"
-import { StoryTree } from "./types"
+import { StoryPart, StoryTree } from "./types"
 import { convertStoryPartsToTree, resolveBreadcrumb } from "./utils"
 
 const paramsSchema = z.object({
@@ -127,19 +129,29 @@ export default function StoryRoute() {
     )
   }
 
+  const [selectedNode, setSelectedNode] = React.useState<HierarchyPointNode<
+    RawTreeNode<StoryPart>
+  > | null>(null)
+
+  const onNodeClick = React.useCallback(
+    (node: HierarchyPointNode<RawTreeNode<StoryPart>>) => {
+      setSelectedNode(node)
+    },
+    [setSelectedNode, selectedNode],
+  )
+
   return (
     <>
       <Column>
         <Spacer size="lg" />
         <div className="relative h-96 w-full text-center">
           <Tree
-            data={data.tree}
-            shouldCollapseNeighborNodes={true}
-            orientation="vertical"
-            dimensions={{ width: 704, height: 384 }}
-            translate={{ x: 704 / 2, y: 384 / 2 }}
-            // initialDepth={0}
-            collapsible={true}
+            items={mockStoryParts}
+            id={(d) => d.id}
+            name={(d) => d.author}
+            parentId={(d) => d.parentStoryPart ?? null}
+            activeDataId={mockStoryParts[0].id}
+            onNodeActivated={onNodeClick}
           />
         </div>
         <H1>Story</H1>
