@@ -12,7 +12,8 @@ import {
   Spacer,
 } from "~/components"
 import { StoryNavigator, StoryNavigatorNode } from "~/components/tree"
-import { Stories, StoryNode } from "~/domain/stories"
+import { Stories } from "~/domain/stories"
+import { EnhancedStoryThreadItem, enhanceThread } from "./lib"
 
 const paramsSchema = z.object({
   storyId: z.string(),
@@ -20,23 +21,23 @@ const paramsSchema = z.object({
 })
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const { storyId, leafPartId } = paramsSchema.parse(params)
+  const { storyId, leafPartId: threadEndPartId } = paramsSchema.parse(params)
 
-  const [tree, breadcrumb] = await Promise.all([
+  console.log(storyId, threadEndPartId)
+
+  const [tree, thread] = await Promise.all([
     Stories.getTree({ storyId }),
-    Stories.getBreadcrumb({ storyId, leafPartId }),
+    Stories.getThread({ storyId, threadEndPartId }),
   ])
 
   // TODO:
   // - Consider a caching strategy here.
-  return json({ tree, breadcrumb, storyId }, 200)
+  return json({ tree, thread: enhanceThread({ tree, thread }), storyId }, 200)
 }
 
 export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
-
-  const hasChildren = data.tree.children.length > 1
 
   function renderCollaborateInvitation() {
     return (
@@ -59,7 +60,7 @@ export default function StoryRoute() {
     )
   }
 
-  function renderReadMore({ parent }: { parent: StoryNode }) {
+  function renderReadMore({ lastPart }: { lastPart: EnhancedStoryThreadItem }) {
     return (
       <Column>
         <Spacer size="xs" />
@@ -70,7 +71,9 @@ export default function StoryRoute() {
         <P>
           <Button
             onClick={() => {
-              navigate(`/stories/${data.storyId}/${parent.children[0].id}`)
+              navigate(
+                `/stories/${data.storyId}/${lastPart.node.children[0].id}`,
+              )
             }}
           >
             Read more
@@ -90,7 +93,12 @@ export default function StoryRoute() {
     [setSelectedNode, selectedNode],
   )
 
-  const [root, ...collaborations] = data.breadcrumb
+  const [root, ...collaborations] = data.thread
+  const lastPart = data.thread[data.thread.length - 1]
+  const hasChildren = lastPart.node.children.length > 0
+  const parent =
+    data.thread.length > 1 ? data.thread[data.thread.length - 2] : null
+  const hasSiblings = parent ? parent.node.children.length > 1 : false
 
   return (
     <>
@@ -99,7 +107,7 @@ export default function StoryRoute() {
         <div className="relative h-96 w-full text-center">
           <StoryNavigator
             tree={data.tree}
-            breadcrumb={data.breadcrumb}
+            thread={data.thread}
             onNodeClick={onNodeClick}
           />
         </div>
@@ -108,23 +116,24 @@ export default function StoryRoute() {
           A story initiated by @{data.tree.author}.
         </span>
         <Spacer size="sm" />
-        <div dangerouslySetInnerHTML={{ __html: root.content }} />
+        <div dangerouslySetInnerHTML={{ __html: root.part.content }} />
         {collaborations.map((collaboration) => (
-          <Fragment key={collaboration.id}>
+          <Fragment key={collaboration.part.id}>
             <Spacer size="sm" />
             <span className="block text-right text-xs italic text-slate-400">
-              Collaboration by @{collaboration.author};
+              Collaboration by @{collaboration.part.author};
             </span>
             <div
               dangerouslySetInnerHTML={{
-                __html: collaboration.content,
+                __html: collaboration.part.content,
               }}
             />
           </Fragment>
         ))}
       </Column>
 
-      {hasChildren && renderReadMore({ parent: data.tree })}
+      {/* If this thread continues, render a read more button */}
+      {hasChildren && renderReadMore({ lastPart })}
 
       {/* If there hasn't been any collaboration, invite it */}
       {!hasChildren && renderCollaborateInvitation()}

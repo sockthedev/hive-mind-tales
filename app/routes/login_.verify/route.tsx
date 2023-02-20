@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionArgs) => {
   }
 }
 
-export default function LoginRoute() {
+export default function LoginVerifyRoute() {
   return (
     <Column>
       <Spacer size="xl" />

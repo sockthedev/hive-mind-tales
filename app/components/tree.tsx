@@ -11,6 +11,7 @@ import { zoom as d3Zoom, zoomIdentity } from "d3-zoom"
 import React from "react"
 import invariant from "tiny-invariant"
 import { StoryNode, StoryPart, StoryTree } from "~/domain/stories"
+import { EnhancedStoryThread } from "~/routes/stories.$storyId.($leafPartId)/lib"
 
 // TODO: Change this so that it is dynamically determined based on the size of the container;
 const dimensions = {
@@ -76,7 +77,7 @@ const TreeNode = (props: TreeNodeProps) => {
       <circle
         className={clsx(
           "cursor-pointer stroke-none transition duration-1000",
-          // TODO: Need to make this toggle per breadcrumb data
+          // TODO: Need to make this toggle per thread data
           props.node.data.parentStoryPartId == null
             ? "fill-blue-500"
             : "fill-slate-300",
@@ -113,7 +114,7 @@ const TreeLink = (props: TreeLinkProps) => {
     <path
       className={clsx(
         "pointer-events-none fill-none stroke-2 transition duration-1000",
-        // TODO: Need to make this toggle per breadcrumb data
+        // TODO: Need to make this toggle per thread data
         props.link.target.data.parentStoryPartId == null
           ? "stroke-blue-500"
           : "stroke-slate-300",
@@ -126,7 +127,7 @@ const TreeLink = (props: TreeLinkProps) => {
 }
 
 export type StoryNavigatorProps = {
-  breadcrumb: StoryPart[]
+  thread: EnhancedStoryThread
   tree: StoryTree
   onNodeClick: (node: StoryNavigatorNode) => void
 }
@@ -184,13 +185,13 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
   React.useEffect(() => {
     if (data == null) return
 
-    const leafStoryPart = props.breadcrumb[props.breadcrumb.length - 1]
+    const leafStoryPart = props.thread[props.thread.length - 1]
 
-    const activeNode = findNode(data, leafStoryPart)
+    const activeNode = findNode(data, leafStoryPart.part)
     invariant(activeNode, "Active node not found")
 
     centerNode(activeNode, false)
-  }, [data, props.breadcrumb])
+  }, [data, props.thread])
 
   // After the data is initialised ensure than panning and zooming are enabled
   React.useEffect(() => {

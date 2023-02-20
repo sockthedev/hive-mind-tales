@@ -6,7 +6,5 @@ node_modules
 /public/build
 .env
 
-/app/tailwind.css
-
 /.sst
 

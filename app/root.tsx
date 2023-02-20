@@ -9,9 +9,11 @@ import {
 } from "@remix-run/react"
 import { Column } from "./components"
 import { Header } from "./components/header"
-import styles from "./tailwind.css"
+import stylesheet from "./tailwind.css"
 
-export const links: LinksFunction = () => [{ rel: "stylesheet", href: styles }]
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: stylesheet },
+]
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",

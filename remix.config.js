@@ -2,12 +2,8 @@
 module.exports = {
   ignoredRouteFiles: ["**/.*"],
   future: {
+    unstable_tailwind: true,
     v2_routeConvention: true,
   },
-  serverDependenciesToBundle: [
-    /^@tiptap.*/,
-    "lodash-es",
-    "@sockthedev/react-d3-tree",
-    /^d3-.*/,
-  ],
+  serverDependenciesToBundle: ["lodash-es", /^d3-.*/],
 }

@@ -18,6 +18,7 @@ export const validator = withZod(
 )
 
 export const action = async ({ request }: ActionArgs) => {
+  console.log("🥸 request.method", request.method)
   switch (request.method) {
     case "POST": {
       const data = await validator.validate(await request.formData())
@@ -27,9 +28,7 @@ export const action = async ({ request }: ActionArgs) => {
       // TODO:
       // - Generate a code and send an email
       // - Log the code to console in dev
-      return redirect("/login/verify", {
-        status: 302,
-      })
+      return redirect("/login/verify")
     }
     default: {
       return json({ message: "Method not allowed" }, 405)

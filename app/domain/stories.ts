@@ -13,10 +13,16 @@ export type StoryNode = Omit<StoryPart, "content"> & {
 
 export type StoryTree = StoryNode
 
+export type StoryThread = StoryPart[]
+
 export abstract class Stories {
+  // Gets all the parts of a story
   private static async getParts(args: {
     storyId: string
   }): Promise<StoryPart[]> {
+    // TODO:
+    // - Convert this to a database call
+    // - This is just returning mock data for now
     return [
       {
         id: "1",
@@ -59,13 +65,13 @@ export abstract class Stories {
   // Gets a breadcrumb of story parts from the root to the target left part.
   // If the leaf part is not specified, then only the root part is returned
   // within the breadcrumb.
-  static async getBreadcrumb(args: {
+  static async getThread(args: {
     storyId: string
-    leafPartId?: string
-  }): Promise<StoryPart[]> {
+    threadEndPartId?: string
+  }): Promise<StoryThread> {
     // TODO:
     // - Utilise a recursive query to get this from the database
-    //   https://stackoverflow.com/questions/20215744/how-to-create-a-mysql-hierarchical-recursive-query
+    // - https://stackoverflow.com/questions/20215744/how-to-create-a-mysql-hierarchical-recursive-query
 
     const parts = await this.getParts(args)
 
@@ -80,14 +86,15 @@ export abstract class Stories {
       }
     }
 
-    findParent(args.leafPartId ?? parts[0].id)
+    findParent(args.threadEndPartId ?? parts[0].id)
 
     return breadcrumb.reverse()
   }
 
-  // Gets a tree representation for all the parts of a story.
+  // Gets a tree representation of all the parts for a story.
   static async getTree(args: { storyId: string }): Promise<StoryTree> {
-    // TODO: Change this to a database call that just gets the required data
+    // TODO:
+    // - Change this to a database call that just gets the minimum amount of data required to build the tree
     const parts = await this.getParts(args)
 
     const rootItem = parts.find((part) => part.parentStoryPartId == null)
@@ -102,14 +109,15 @@ export abstract class Stories {
     const nodeMap = new Map<string, StoryNode>()
     nodeMap.set(rootNode.id, rootNode)
 
+    // Note: this only works if parts are in ascending order
     parts.forEach((part) => {
       if (part === rootItem) return
 
       invariant(part.parentStoryPartId, "Multiple root nodes found")
 
       const node: StoryNode = {
-        id: rootItem.id,
-        author: rootItem.author,
+        id: part.id,
+        author: part.author,
         children: [],
         parentStoryPartId: part.parentStoryPartId,
       }
