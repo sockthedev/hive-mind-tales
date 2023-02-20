@@ -66,32 +66,33 @@ const DEFAULT_NODE_CIRCLE_RADIUS = 15
 
 type TreeNodeProps = {
   node: StoryNavigatorNode
+  thread: EnhancedStoryThread
   onClick: (node: StoryNavigatorNode) => void
 }
 
 const TreeNode = (props: TreeNodeProps) => {
   const nodeRef = React.useRef<SVGGElement>(null)
+  const isActive = props.thread.some(
+    (part) => part.node.id === props.node.data.id,
+  )
 
   return (
     <g transform={`translate(${props.node.x},${props.node.y})`} ref={nodeRef}>
       <circle
         className={clsx(
           "cursor-pointer stroke-none transition duration-1000",
-          // TODO: Need to make this toggle per thread data
-          props.node.data.parentStoryPartId == null
-            ? "fill-blue-500"
-            : "fill-slate-300",
+          isActive ? "fill-blue-500" : "fill-slate-300",
         )}
         r={DEFAULT_NODE_CIRCLE_RADIUS}
         onClick={() => {
           props.onClick(props.node)
         }}
       />
-      <g className="pointer-events-none">
-        <text className="fill-white stroke-none font-extrabold">
-          {props.node.data.author}
-        </text>
-      </g>
+      {/* <g className="pointer-events-none"> */}
+      {/*   <text className="fill-white stroke-none font-extrabold"> */}
+      {/*     {props.node.data.author} */}
+      {/*   </text> */}
+      {/* </g> */}
     </g>
   )
 }
@@ -107,17 +108,19 @@ function drawPath({ source, target }: StoryNavigatorLink) {
 
 type TreeLinkProps = {
   link: StoryNavigatorLink
+  thread: EnhancedStoryThread
 }
 
 const TreeLink = (props: TreeLinkProps) => {
+  const isActive = props.thread.some(
+    (part) => part.node.id === props.link.target.data.id,
+  )
+
   return (
     <path
       className={clsx(
         "pointer-events-none fill-none stroke-2 transition duration-1000",
-        // TODO: Need to make this toggle per thread data
-        props.link.target.data.parentStoryPartId == null
-          ? "stroke-blue-500"
-          : "stroke-slate-300",
+        isActive ? "stroke-blue-500" : "stroke-slate-300",
       )}
       d={drawPath(props.link)}
       data-source-id={props.link.source.id}
@@ -200,14 +203,6 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
     const svg = select(`[data-d3-id="${svgId}"]`)
     const g = select(`[data-d3-id="${gId}"]`)
 
-    // Sets initial offset, so that first pan and zoom does not jump back to
-    // default [0,0] coords.
-    svg.call(
-      // @ts-ignore
-      d3Zoom().transform,
-      zoomIdentity.translate(config.translate.x, config.translate.y).scale(1),
-    )
-
     // Enables panning and zooming
     svg.call(
       // @ts-ignore
@@ -233,12 +228,17 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
             transform={`translate(${config.translate.x},${config.translate.y}) scale(${config.scale})`}
           >
             {data.links.map((link) => (
-              <TreeLink key={link.source.data.id} link={link} />
+              <TreeLink
+                key={link.source.data.id}
+                link={link}
+                thread={props.thread}
+              />
             ))}
             {data.nodes.map((node) => (
               <TreeNode
                 key={node.data.id}
                 node={node}
+                thread={props.thread}
                 onClick={(node) => {
                   props.onNodeClick(node)
                   centerNode(node)

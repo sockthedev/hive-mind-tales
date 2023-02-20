@@ -12,7 +12,7 @@ import {
   Spacer,
 } from "~/components"
 import { StoryNavigator, StoryNavigatorNode } from "~/components/tree"
-import { Stories } from "~/domain/stories"
+import { Stories, StoryNode } from "~/domain/stories"
 import { EnhancedStoryThreadItem, enhanceThread } from "./lib"
 
 const paramsSchema = z.object({
@@ -60,6 +60,11 @@ export default function StoryRoute() {
     )
   }
 
+  function navigateToNode(args: { node: StoryNode }) {
+    const { node } = args
+    navigate(`/stories/${data.storyId}/${node.id}`)
+  }
+
   function renderReadMore({ lastPart }: { lastPart: EnhancedStoryThreadItem }) {
     return (
       <Column>
@@ -71,9 +76,7 @@ export default function StoryRoute() {
         <P>
           <Button
             onClick={() => {
-              navigate(
-                `/stories/${data.storyId}/${lastPart.node.children[0].id}`,
-              )
+              navigateToNode({ node: lastPart.node.children[0] })
             }}
           >
             Read more
@@ -89,6 +92,7 @@ export default function StoryRoute() {
   const onNodeClick = React.useCallback(
     (node: StoryNavigatorNode) => {
       setSelectedNode(node)
+      navigateToNode({ node: node.data })
     },
     [setSelectedNode, selectedNode],
   )
