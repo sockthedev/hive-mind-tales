@@ -11,7 +11,10 @@ import {
   RichTextEditor,
   Spacer,
 } from "~/components"
-import { StoryNavigator, StoryNavigatorNode } from "~/components/tree"
+import {
+  StoryNavigator,
+  StoryNavigatorNode,
+} from "~/components/story-navigator"
 import { Stories, StoryNode } from "~/domain/stories"
 import { EnhancedStoryThreadItem, enhanceThread } from "./lib"
 
@@ -38,27 +41,6 @@ export const loader = async ({ params }: LoaderArgs) => {
 export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
-
-  function renderCollaborateInvitation() {
-    return (
-      <>
-        <Column>
-          <Spacer size="xs" />
-          <P className="border-l-4 border-l-slate-200 py-2 pl-4 text-sm italic">
-            This story arc ends here... or does it? Keep it alive by
-            collaborating a paragraph or few below.
-          </P>
-          <Spacer size="sm" />
-          <Divider label="Collaborate" />
-        </Column>
-        <Column size="md+">
-          <RichTextEditor
-            initialContent={"<p>The story didn't end there...</p>"}
-          />
-        </Column>
-      </>
-    )
-  }
 
   function navigateToNode(args: { node: StoryNode }) {
     const { node } = args
@@ -99,9 +81,9 @@ export default function StoryRoute() {
 
   const [root, ...collaborations] = data.thread
   const lastPart = data.thread[data.thread.length - 1]
-  const hasChildren = lastPart.node.children.length > 0
   const parent =
     data.thread.length > 1 ? data.thread[data.thread.length - 2] : null
+  const hasChildren = lastPart.node.children.length > 0
   const hasSiblings = parent ? parent.node.children.length > 1 : false
 
   return (
@@ -137,10 +119,21 @@ export default function StoryRoute() {
       </Column>
 
       {/* If this thread continues, render a read more button */}
-      {hasChildren && renderReadMore({ lastPart })}
+      {/* {hasChildren && renderReadMore({ lastPart })} */}
 
-      {/* If there hasn't been any collaboration, invite it */}
-      {!hasChildren && renderCollaborateInvitation()}
+      <Column>
+        <Spacer size="md" />
+        <Divider label="Collaborate" />
+        <P className="border-l-4 border-l-slate-200 py-2 pl-4 text-sm italic">
+          Want to add your own spin to this thread? Drop your words below.{" "}
+        </P>
+      </Column>
+      <Column size="md+">
+        <Spacer size="sm" />
+        <RichTextEditor
+          initialContent={"<p>The story didn't end there...</p>"}
+        />
+      </Column>
     </>
   )
 }

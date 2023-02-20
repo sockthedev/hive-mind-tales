@@ -1,3 +1,4 @@
+import useSize from "@react-hook/size"
 import clsx from "clsx"
 import {
   hierarchy,
@@ -12,12 +13,6 @@ import React from "react"
 import invariant from "tiny-invariant"
 import { StoryNode, StoryPart, StoryTree } from "~/domain/stories"
 import { EnhancedStoryThread } from "~/routes/stories.$storyId.($leafPartId)/lib"
-
-// TODO: Change this so that it is dynamically determined based on the size of the container;
-const dimensions = {
-  width: 704,
-  height: 400,
-}
 
 const config = {
   nodeSize: {
@@ -129,14 +124,18 @@ const TreeLink = (props: TreeLinkProps) => {
   )
 }
 
-export type StoryNavigatorProps = {
+export type StoryNavigatorTreeProps = {
   thread: EnhancedStoryThread
   tree: StoryTree
   onNodeClick: (node: StoryNavigatorNode) => void
 }
 
-export const StoryNavigator = (props: StoryNavigatorProps) => {
+export const StoryNavigatorTree: React.FC<StoryNavigatorTreeProps> = (
+  props,
+) => {
   const [data, setData] = React.useState<StoryNavigatorData | null>(null)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  const [width, height] = useSize(containerRef)
 
   const scaleRef = React.useRef(1)
 
@@ -149,8 +148,8 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
       const g = select(`[data-d3-id="${gId}"]`)
       const scale = scaleRef.current
 
-      const x = -node.x * scale + dimensions.width / 2
-      const y = -node.y * scale + dimensions.height / 3
+      const x = -node.x * scale + width / 2
+      const y = -node.y * scale + height / 3
 
       if (animate) {
         // @ts-ignore
@@ -167,15 +166,12 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
         )
       }
 
-      // @ts-ignore
-      // svg.transition().duration(0).attr("opacity", 1)
-
-      // Sets the viewport to the new center so that it does not jump back to original
-      // coordinates when dragged/zoomed
+      // Sets the viewport to the new center so that it does not jump back to
+      // original coordinates when dragged/zoomed
       // @ts-ignore
       svg.call(d3Zoom().transform, zoomIdentity.translate(x, y).scale(scale))
     },
-    [svgId, gId],
+    [svgId, gId, width, height],
   )
 
   // "onMount"
@@ -219,6 +215,7 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
     <div
       className="relative h-full w-full cursor-grab overflow-hidden active:cursor-grabbing"
       draggable={false}
+      ref={containerRef}
     >
       {data ? (
         <svg data-d3-id={svgId} width="100%" height="100%">
@@ -229,7 +226,7 @@ export const StoryNavigator = (props: StoryNavigatorProps) => {
           >
             {data.links.map((link) => (
               <TreeLink
-                key={link.source.data.id}
+                key={link.target.data.id}
                 link={link}
                 thread={props.thread}
               />
