@@ -44,8 +44,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
     content: props.initialContent ?? `<h1></h1><p></p>`,
     editorProps: {
       attributes: {
-        class:
-          "cursor-pointer focus:cursor-auto py-4 px-4 sm:px-6 lg:px-8 transition-all border border-transparent outline-none focus:shadow-2xl focus:border-slate-100 focus:bg-yellow-100",
+        class: "cursor-pointer focus:cursor-auto transition-all outline-none",
       },
     },
   })

@@ -1,22 +1,21 @@
+import {
+  faCaretDown,
+  faCaretLeft,
+  faCaretRight,
+  faCaretUp,
+} from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { json, LoaderArgs } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import React, { Fragment } from "react"
 import { z } from "zod"
-import {
-  Button,
-  Column,
-  Divider,
-  H1,
-  P,
-  RichTextEditor,
-  Spacer,
-} from "~/components"
+import { Column, Divider, H1, P, RichTextEditor, Spacer } from "~/components"
 import {
   StoryNavigator,
   StoryNavigatorNode,
 } from "~/components/story-navigator"
 import { Stories, StoryNode } from "~/domain/stories"
-import { EnhancedStoryThreadItem, enhanceThread } from "./lib"
+import { enhanceThread } from "./lib"
 
 const paramsSchema = z.object({
   storyId: z.string(),
@@ -38,6 +37,25 @@ export const loader = async ({ params }: LoaderArgs) => {
   return json({ tree, thread: enhanceThread({ tree, thread }), storyId }, 200)
 }
 
+const StoryNavigateGamepad: React.FC = () => {
+  return (
+    <div className="relative h-32 w-32 bg-pink-200">
+      <button className="absolute left-2/4 h-7 w-9 -translate-x-1/2">
+        <FontAwesomeIcon icon={faCaretUp} />
+      </button>
+      <button className="absolute left-2/4 bottom-6 h-7 w-9 -translate-x-1/2">
+        <FontAwesomeIcon icon={faCaretDown} />
+      </button>
+      <button className="absolute right-0 bottom-1/2 h-7 w-7">
+        <FontAwesomeIcon icon={faCaretRight} />
+      </button>
+      <button className="absolute left-0 bottom-1/2 h-7 w-7">
+        <FontAwesomeIcon icon={faCaretLeft} />
+      </button>
+    </div>
+  )
+}
+
 export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
@@ -45,27 +63,6 @@ export default function StoryRoute() {
   function navigateToNode(args: { node: StoryNode }) {
     const { node } = args
     navigate(`/stories/${data.storyId}/${node.id}`)
-  }
-
-  function renderReadMore({ lastPart }: { lastPart: EnhancedStoryThreadItem }) {
-    return (
-      <Column>
-        <Spacer size="xs" />
-        <P className="border-l-4 border-l-slate-200 py-2 pl-4 text-sm italic">
-          This story arc has been continued by others...
-        </P>
-        <Spacer size="sm" />
-        <P>
-          <Button
-            onClick={() => {
-              navigateToNode({ node: lastPart.node.children[0] })
-            }}
-          >
-            Read more
-          </Button>
-        </P>
-      </Column>
-    )
   }
 
   const [selectedNode, setSelectedNode] =
@@ -87,7 +84,7 @@ export default function StoryRoute() {
   const hasSiblings = parent ? parent.node.children.length > 1 : false
 
   return (
-    <>
+    <div className="relative">
       <Column>
         <Spacer size="lg" />
         <div className="relative h-96 w-full text-center">
@@ -116,12 +113,7 @@ export default function StoryRoute() {
             />
           </Fragment>
         ))}
-      </Column>
 
-      {/* If this thread continues, render a read more button */}
-      {/* {hasChildren && renderReadMore({ lastPart })} */}
-
-      <Column>
         <Spacer size="md" />
         <Divider label="Collaborate" />
         <P className="border-l-4 border-l-slate-200 py-2 pl-4 text-sm italic">
@@ -134,6 +126,7 @@ export default function StoryRoute() {
           initialContent={"<p>The story didn't end there...</p>"}
         />
       </Column>
-    </>
+      <StoryNavigateGamepad />
+    </div>
   )
 }

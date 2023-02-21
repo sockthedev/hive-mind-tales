@@ -7,7 +7,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react"
-import { Column } from "./components"
+import { Column, Spacer } from "./components"
 import { Header } from "./components/header"
 import stylesheet from "./tailwind.css"
 
@@ -32,11 +32,11 @@ export default function App() {
       <body className="bg-yellow-50">
         <Column>
           <Header />
+          <main>
+            <Outlet />
+          </main>
+          <Spacer size="xl" />
         </Column>
-
-        <main>
-          <Outlet />
-        </main>
 
         <ScrollRestoration />
         <Scripts />

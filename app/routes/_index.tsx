@@ -3,9 +3,10 @@ import { withZod } from "@remix-validated-form/with-zod"
 import React from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
-import { Checkbox, Column, Divider, H3, P, Spacer } from "~/components"
+import { Checkbox, Divider, H3, P, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 import { RichTextEditor } from "~/components/rich-text-editor"
+import { TwoColumnContent } from "~/components/two-column-content"
 
 // TODO: Pull from a pool of example stories from the backend;
 const exampleStory = `
@@ -48,41 +49,32 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function HomepageRoute() {
   const [visibleInFeeds, setVisibleInFeeds] = React.useState(true)
-  const [collaborationMode, setCollaborationMode] = React.useState({
-    name: "Linear",
-    value: "linear",
-  })
   return (
-    <>
-      <Column>
-        <H3>A ridiculous experiment in collaborative storytelling.</H3>
-        <P>
-          Start writing a story.
-          <br /> Tweak the settings.
-          <br /> Share it.
-          <br /> Wait for the magic unfold.
-        </P>
-
+    <TwoColumnContent
+      left={() => (
         <section>
-          <Spacer size="xl" />
+          <H3>A ridiculous experiment in collaborative storytelling.</H3>
+          <P>
+            Start writing a story.
+            <br /> Tweak the settings.
+            <br /> Share it.
+            <br /> Wait for the magic unfold.
+          </P>
+        </section>
+      )}
+      right={() => (
+        <ValidatedForm method="post" validator={validator}>
+          <Spacer size="md" />
           <Divider label="Story Editor" />
           <div className="text-center text-xs text-slate-400">
             <em>(click below to begin editing)</em>
           </div>
           <Spacer size="sm" />
-        </section>
-      </Column>
 
-      <ValidatedForm method="post" validator={validator}>
-        <Column size="md+">
           <RichTextEditor initialContent={exampleStory} name="story" />
-        </Column>
 
-        <Column>
           <section>
-            <Spacer size="xl" />
-            <Divider label="Settings" />
-            <Spacer size="md" />
+            <Spacer size="lg" />
             <Checkbox
               label="Visible in our feeds"
               description="Your story could appear in our feeds - e.g. Recent, Top, etc."
@@ -93,17 +85,13 @@ export default function HomepageRoute() {
           </section>
 
           <section>
-            <Spacer size="xl" />
-            <Divider label="Ready?" />
-            <Spacer size="md" />
+            <Spacer size="lg" />
             <div className="text-center">
               <FormSubmitButton>Share It!</FormSubmitButton>
             </div>
           </section>
-
-          <Spacer size="xl" />
-        </Column>
-      </ValidatedForm>
-    </>
+        </ValidatedForm>
+      )}
+    />
   )
 }

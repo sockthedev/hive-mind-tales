@@ -3,6 +3,7 @@ import { Button, ButtonProps } from "./button"
 
 export type FormSubmitButtonProps = ButtonProps & {
   children?: React.ReactNode
+  className?: string
 }
 
 export const FormSubmitButton: React.FC<FormSubmitButtonProps> = ({

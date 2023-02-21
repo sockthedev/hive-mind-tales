@@ -44,6 +44,7 @@ export const action = async ({ request }: ActionArgs) => {
 export default function LoginPickUsernameRoute() {
   return (
     <Column>
+      <Spacer size="xl" />
       <H1>Pick a Username</H1>
       <P>
         This looks like the first time you've logged in. We automatically
@@ -51,9 +52,8 @@ export default function LoginPickUsernameRoute() {
         identity.
       </P>
       <P>If you want to feel free to customize your username below.</P>
-      <Spacer size="sm" />
+      <Spacer size="md" />
       <ValidatedForm method="post" validator={validator}>
-        <Spacer size="md" />
         <FormInput
           autoFocus
           id="username"
@@ -63,7 +63,7 @@ export default function LoginPickUsernameRoute() {
           placeholder="captainmarvel"
         />
         <Spacer size="sm" />
-        <FormSubmitButton>Update Username</FormSubmitButton>
+        <FormSubmitButton className="mr-6">Update Username</FormSubmitButton>
         <Button>Skip</Button>
       </ValidatedForm>
     </Column>
