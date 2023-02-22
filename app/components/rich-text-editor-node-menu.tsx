@@ -38,7 +38,7 @@ export const RichTextEditorNodeMenu: React.FC<{ editor: ReactEditor }> = ({
       editor={editor}
       tippyOptions={{
         duration: 100,
-        offset: () => [0, -60],
+        offset: () => [0, 10],
         popperOptions: {
           // strategy: "absolute",
           placement: "left",

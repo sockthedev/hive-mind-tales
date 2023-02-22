@@ -9,7 +9,13 @@ export type {
 
 export const StoryNavigator: React.FC<StoryNavigatorTreeProps> = (props) => {
   return (
-    <ClientOnly fallback={<div className="h-full w-full">Loading...</div>}>
+    <ClientOnly
+      fallback={
+        <div className="flex h-full w-full items-center justify-center">
+          Loading graph...
+        </div>
+      }
+    >
       {() => <StoryNavigatorTree {...props} />}
     </ClientOnly>
   )

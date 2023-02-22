@@ -1,4 +1,4 @@
-import { Column, H1, Spacer } from "~/components"
+import { H1, Spacer } from "~/components"
 
 import { ActionArgs, json, redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
@@ -7,6 +7,7 @@ import z from "zod"
 
 import { FormInput, P } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
+import { NarrowContent } from "~/components/narrow-content"
 
 export const validator = withZod(
   z.object({
@@ -38,7 +39,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function LoginRoute() {
   return (
-    <Column>
+    <NarrowContent>
       <Spacer size="xl" />
       <H1>Login</H1>
       <Spacer size="sm" />
@@ -56,6 +57,6 @@ export default function LoginRoute() {
         <Spacer size="sm" />
         <FormSubmitButton>Send Code</FormSubmitButton>
       </ValidatedForm>
-    </Column>
+    </NarrowContent>
   )
 }

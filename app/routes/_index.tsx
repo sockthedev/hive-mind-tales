@@ -52,23 +52,22 @@ export default function HomepageRoute() {
   return (
     <TwoColumnContent
       left={() => (
-        <section>
+        <section className="text-gray-600">
           <H3>A ridiculous experiment in collaborative storytelling.</H3>
           <P>
             Start writing a story.
-            <br /> Tweak the settings.
             <br /> Share it.
-            <br /> Wait for the magic unfold.
+            <br /> Watch the magic unfold.
           </P>
         </section>
       )}
       right={() => (
         <ValidatedForm method="post" validator={validator}>
           <Spacer size="md" />
-          <Divider label="Story Editor" />
-          <div className="text-center text-xs text-slate-400">
-            <em>(click below to begin editing)</em>
-          </div>
+          <Divider
+            label="Story Editor"
+            hint="click any of the text below to begin editing"
+          />
           <Spacer size="sm" />
 
           <RichTextEditor initialContent={exampleStory} name="story" />

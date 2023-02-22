@@ -213,7 +213,7 @@ export const StoryNavigatorTree: React.FC<StoryNavigatorTreeProps> = (
 
   return (
     <div
-      className="relative h-full w-full cursor-grab overflow-hidden active:cursor-grabbing"
+      className="relative h-full w-full cursor-grab overflow-hidden border border-red-600 active:cursor-grabbing"
       draggable={false}
       ref={containerRef}
     >

@@ -8,7 +8,10 @@ export type PProps = {
 export const P: React.FC<PProps> = (props) => {
   return (
     <p
-      className={clsx("leading-7 [&:not(:first-child)]:mt-6", props.className)}
+      className={clsx(
+        "text-lg leading-7 [&:not(:first-child)]:mt-6",
+        props.className,
+      )}
     >
       {props.children}
     </p>

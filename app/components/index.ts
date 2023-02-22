@@ -1,3 +1,7 @@
+// TODO:
+// - Remove this file. It's not so bad doing single imports, and likely it
+//   helps with tree shaking anyways.
+
 export * from "./button"
 export * from "./checkbox"
 export * from "./column"

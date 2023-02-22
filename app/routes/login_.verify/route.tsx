@@ -4,8 +4,9 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import z from "zod"
 
 import { Link } from "@remix-run/react"
-import { Column, FormInput, H1, P, Spacer } from "~/components"
+import { FormInput, H1, P, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
+import { NarrowContent } from "~/components/narrow-content"
 
 export const validator = withZod(
   z.object({
@@ -37,7 +38,7 @@ export const action = async ({ request }: ActionArgs) => {
 
 export default function LoginVerifyRoute() {
   return (
-    <Column>
+    <NarrowContent>
       <Spacer size="xl" />
       <H1>Verify Login</H1>
       <Spacer size="sm" />
@@ -63,6 +64,6 @@ export default function LoginVerifyRoute() {
           <Link to="/login">try to send another code</Link>.
         </P>
       </ValidatedForm>
-    </Column>
+    </NarrowContent>
   )
 }

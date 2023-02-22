@@ -17,7 +17,7 @@ export const MenuButton: React.FC<{
   isActive: boolean
   onClick: React.MouseEventHandler<HTMLButtonElement>
 }> = ({ icon, isActive, onClick }) => (
-  <button className="inline-block h-6 w-6" onClick={onClick}>
+  <button className="inline-block h-6 w-6" onClick={onClick} type="button">
     <FontAwesomeIcon
       icon={icon}
       className={clsx("text-sm font-bold text-white", {
