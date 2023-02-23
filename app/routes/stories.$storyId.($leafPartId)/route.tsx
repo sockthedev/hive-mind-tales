@@ -21,7 +21,7 @@ import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
 import { enhanceThread } from "./lib"
 
-export const validator = withZod(
+export const formValidator = withZod(
   z.object({
     story: z.string().min(1, { message: "Story is required" }),
     visibleInFeeds: z.enum(["on", "off"]).optional().default("off"),
@@ -99,11 +99,15 @@ export default function StoryRoute() {
   return (
     <TwoColumnContent
       left={() => (
-        <StoryNavigator
-          tree={data.tree}
-          thread={data.thread}
-          onNodeClick={onNodeClick}
-        />
+        <div className="absolute -top-14 left-0 h-full w-full">
+          <div className="sticky top-0 left-0 h-screen w-full">
+            <StoryNavigator
+              tree={data.tree}
+              thread={data.thread}
+              onNodeClick={onNodeClick}
+            />
+          </div>
+        </div>
       )}
       right={() => (
         <>
@@ -146,7 +150,7 @@ export default function StoryRoute() {
 
           {showEditor && (
             <>
-              <ValidatedForm method="post" validator={validator}>
+              <ValidatedForm method="post" validator={formValidator}>
                 <Spacer size="md" />
                 <Divider
                   label="Continue this thread"

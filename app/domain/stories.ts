@@ -1,5 +1,13 @@
 import invariant from "tiny-invariant"
 
+export type Story = {
+  id: string
+  title: string
+  rootStoryPartId: string
+  createdAt: string
+  createdBy: string
+}
+
 export type StoryPart = {
   id: string
   content: string
@@ -26,12 +34,18 @@ export abstract class Stories {
     return [
       {
         id: "1",
-        content: "<p>Story content goes here.</p>",
+        content: `
+          <p>In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
+          <p>One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>
+        `,
         author: "janedoe",
       },
       {
         id: "2",
-        content: "<p>Second piece of story content goes here.</p>",
+        content: `
+          <p>For days, Ms. Whiskers scurried through dense forests and climbed steep mountains, following the strange voice that guided her every step. She crossed rivers and battled fierce beasts, but her determination never wavered. Finally, after what felt like an eternity, she arrived at a cavernous opening that seemed to lead into the very heart of the earth.</p>
+          <p>With her heart pounding in her chest, Ms. Whiskers crept inside and was immediately enveloped by darkness. She could barely see her own paw in front of her face, but she continued forward, relying on her intuition to guide her. Suddenly, she heard a faint rustling sound, and her whiskers twitched in excitement. She knew that the missing piece of toasted cheese was close at hand. With bated breath, she advanced into the darkness, ready for whatever lay ahead.</p>
+        `,
         author: "johndoe",
         parentStoryPartId: "1",
       },
@@ -43,13 +57,21 @@ export abstract class Stories {
       },
       {
         id: "4",
-        content: "<p>Third piece of story content goes here.</p>",
+        content: ` 
+            <p>As she drew closer, the rustling sound grew louder, until Ms. Whiskers could make out a dim shape in the distance. She approached cautiously, her senses alert for any sign of danger. As she drew closer, the shape became clearer, until she could see that it was a small creature - a fellow mouse, much like herself.<p>
+            <p>"Who are you?" Ms. Whiskers asked, her voice trembling with excitement.</p>
+            <p>The other mouse looked up, startled, and sniffed the air suspiciously. "I am a traveler, much like yourself," she said. "I have been searching for the missing piece of toasted cheese, just like you. But it seems that we are not alone in our quest." With a flick of her tail, she motioned to the shadows, where the glint of sharp eyes could be seen. "There are others who seek the cheese, and they will stop at nothing to find it. We must be careful."</p>
+        `,
         author: "pling",
         parentStoryPartId: "2",
       },
       {
         id: "5",
-        content: "<p>Fourth piece of story content goes here.</p>",
+        content: `
+          <p>Ms. Whiskers peered into the shadows, her heart beating faster with every passing moment. She knew that danger lurked in the darkness, but she was determined to find the missing piece of toasted cheese. "We can't give up now," she said, her voice firm. "We've come too far to turn back."</p>
+          <p>With a nod, the other mouse agreed. "Very well," she said. "But we must be quick. The others are not far behind us." Together, the two mice crept deeper into the darkness, their senses on high alert. The rustling grew louder and more insistent, until they could see the outlines of a dozen or more creatures lurking in the shadows.</p>
+          <p>"We've found it!" one of the creatures hissed, its eyes gleaming with a fierce intensity. "The missing piece of toasted cheese is ours!" Ms. Whiskers and the other mouse exchanged a nervous glance, then darted forward, their paws pounding on the cold stone floor. A fierce battle ensued, with claws and teeth flying in all directions. But in the end, it was Ms. Whiskers who emerged victorious, clutching the missing piece of toasted cheese in her paws. With a triumphant squeak, she and the other mouse made their way back to the light, ready to face whatever challenges lay ahead.</p>
+        `,
         author: "pling",
         parentStoryPartId: "4",
       },
@@ -60,6 +82,17 @@ export abstract class Stories {
         parentStoryPartId: "3",
       },
     ]
+  }
+
+  static async getStory(args: { storyId: string }): Promise<Story> {
+    return {
+      id: args.storyId,
+      title:
+        "The Adventures of the Time-Traveling Mouse and the Missing Piece of Toasted Cheese",
+      rootStoryPartId: "1",
+      createdAt: "2023-02-18T14:30:00.000Z",
+      createdBy: "janedoe",
+    }
   }
 
   // Gets a breadcrumb of story parts from the root to the target left part.

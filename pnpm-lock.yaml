@@ -41,13 +41,13 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   remix-utils: ^6.0.0
-  remix-validated-form: ^4.6.8
+  remix-validated-form: ^4.6.9
   sst: 2.0.35
   tailwindcss: ^3.2.7
   tiny-invariant: ^1.3.1
   typescript: ^4.9.5
   zod: ^3.20.6
-  zod-form-data: ^1.3.1
+  zod-form-data: ^2.0.0
 
 dependencies:
   '@fortawesome/fontawesome-svg-core': 6.3.0
@@ -58,7 +58,7 @@ dependencies:
   '@remix-run/node': 1.13.0
   '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
   '@remix-run/serve': 1.13.0
-  '@remix-validated-form/with-zod': 2.0.5_2qgdakv4laelfclqjuf3z74r4y
+  '@remix-validated-form/with-zod': 2.0.5_grxkjfxs3e3daiuanhp5hez2mu
   '@tiptap/core': 2.0.0-beta.218_@tiptap+pm@2.0.0-beta.218
   '@tiptap/pm': 2.0.0-beta.218_xixjdlstfbsoyvyes7aewz3ng4
   '@tiptap/react': 2.0.0-beta.218_ynkdswu7kzhcpt3m24myhvxkoy
@@ -73,10 +73,10 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   remix-utils: 6.0.0_h4qflqiofbyf4v4ryfwperwui4
-  remix-validated-form: 4.6.8_ksjai2ma4eybfxmjk6eovxnksm
+  remix-validated-form: 4.6.9_ksjai2ma4eybfxmjk6eovxnksm
   tiny-invariant: 1.3.1
   zod: 3.20.6
-  zod-form-data: 1.3.1_zod@3.20.6
+  zod-form-data: 2.0.0_zod@3.20.6
 
 devDependencies:
   '@remix-run/dev': 1.13.0_@remix-run+serve@1.13.0
@@ -3866,13 +3866,13 @@ packages:
     dependencies:
       web-streams-polyfill: 3.2.1
 
-  /@remix-validated-form/with-zod/2.0.5_2qgdakv4laelfclqjuf3z74r4y:
+  /@remix-validated-form/with-zod/2.0.5_grxkjfxs3e3daiuanhp5hez2mu:
     resolution: {integrity: sha512-HDKFlhtBbsVL1EWZkT9l8IVGg/yRgFEzLmNxk36gPBhCFLEZ0rIFlpJRC3lITD22Vm0SDDCG/iI0CqqaXzuRmw==}
     peerDependencies:
       remix-validated-form: ^4.x
       zod: ^3.11.x
     dependencies:
-      remix-validated-form: 4.6.8_ksjai2ma4eybfxmjk6eovxnksm
+      remix-validated-form: 4.6.9_ksjai2ma4eybfxmjk6eovxnksm
       zod: 3.20.6
     dev: false
 
@@ -10671,6 +10671,11 @@ packages:
 
   /remeda/1.6.1:
     resolution: {integrity: sha512-ywn4Tv2cPBj6hk0TEYMHusWVXu72yJNCaWUdMK7kc7x/PjQPBSvtMbmBWP4PQH791kpl3rPBe3ZVkJyPj3c+0g==}
+    dev: true
+
+  /remeda/1.6.2:
+    resolution: {integrity: sha512-4/gci8Crgp6l0ATZEvu/FxHJPjDUMZZ1vhSIROHNNx/cXi77ar/7Cj2Z8Bysd0Vs824QFRfcIKqOxqH+pKDW1Q==}
+    dev: false
 
   /remix-utils/6.0.0_h4qflqiofbyf4v4ryfwperwui4:
     resolution: {integrity: sha512-S7Xec0YHZxGFEDawWpIbU7HQAZC0j51FmAvcCyBRuxjo71aAIMdmez47dgF8T91yxpHV1xlIKPL7LhBzmYsOZw==}
@@ -10694,8 +10699,8 @@ packages:
       - typescript
     dev: false
 
-  /remix-validated-form/4.6.8_ksjai2ma4eybfxmjk6eovxnksm:
-    resolution: {integrity: sha512-9pi2RXLuH+ogp7XsUVKfXgkDBsbh/X+ppUJg+O+8v1ZTvX6Fia7A01gSwMG/rN3wWaQwgRU9xJj7WigOyMKFhg==}
+  /remix-validated-form/4.6.9_ksjai2ma4eybfxmjk6eovxnksm:
+    resolution: {integrity: sha512-4nduNrbn9eGpxkymIND2l705Pbg929XHOgiqK7OrfZIWgbryqZ8W6qLLC4zn1fvKoAqz9sXwzSLa3ahe8IEZDw==}
     peerDependencies:
       '@remix-run/react': 1.x
       '@remix-run/server-runtime': 1.x
@@ -10706,9 +10711,9 @@ packages:
       immer: 9.0.19
       lodash.get: 4.4.2
       react: 18.2.0
-      remeda: 1.6.1
+      remeda: 1.6.2
       tiny-invariant: 1.3.1
-      zustand: 4.3.2_immer@9.0.19+react@18.2.0
+      zustand: 4.3.3_immer@9.0.19+react@18.2.0
     dev: false
 
   /require-directory/2.1.1:
@@ -12293,8 +12298,8 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  /zod-form-data/1.3.1_zod@3.20.6:
-    resolution: {integrity: sha512-Uicl6vXkAqsc58Zj8ktmIJOIa3W+iI1fbfFNlGbfxBXiSZzuOiSKvIQQZAvU8H14kVgpKUpvhnBlrskis5t8HQ==}
+  /zod-form-data/2.0.0_zod@3.20.6:
+    resolution: {integrity: sha512-NmQVAcL4/W1PEWaS3hGXM3DxRSiOsX8p7vHPF3rt6aQs2+Nqxs4QuapZ1ncv3E+iRN86zthbZJRvz6q9Jl5A/g==}
     peerDependencies:
       zod: ^3.11.x
     dependencies:
@@ -12305,8 +12310,8 @@ packages:
     resolution: {integrity: sha512-oyu0m54SGCtzh6EClBVqDDlAYRz4jrVtKwQ7ZnsEmMI9HnzuZFj8QFwAY1M5uniIYACdGvv0PBWPF2kO0aNofA==}
     dev: false
 
-  /zustand/4.3.2_immer@9.0.19+react@18.2.0:
-    resolution: {integrity: sha512-rd4haDmlwMTVWVqwvgy00ny8rtti/klRoZjFbL/MAcDnmD5qSw/RZc+Vddstdv90M5Lv6RPgWvm1Hivyn0QgJw==}
+  /zustand/4.3.3_immer@9.0.19+react@18.2.0:
+    resolution: {integrity: sha512-x2jXq8S0kfLGNwGh87nhRfEc2eZy37tSatpSoSIN+O6HIaBhgQHSONV/F9VNrNcBcKQu/E80K1DeHDYQC/zCrQ==}
     engines: {node: '>=12.7.0'}
     peerDependencies:
       immer: '>=9.0'
