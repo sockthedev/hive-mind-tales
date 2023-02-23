@@ -67,6 +67,16 @@ const StoryNavigateGamepad: React.FC = () => {
   )
 }
 
+const ScrollToMe: React.FC = () => {
+  const ref = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" })
+  }, [])
+
+  return <div ref={ref} />
+}
+
 export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
@@ -75,7 +85,9 @@ export default function StoryRoute() {
 
   function navigateToNode(args: { node: StoryNode }) {
     const { node } = args
-    navigate(`/stories/${data.storyId}/${node.id}`)
+    navigate(`/stories/${data.storyId}/${node.id}`, {
+      preventScrollReset: true,
+    })
   }
 
   const [selectedNode, setSelectedNode] =
@@ -99,8 +111,8 @@ export default function StoryRoute() {
   return (
     <TwoColumnContent
       left={() => (
-        <div className="absolute -top-14 left-0 h-full w-full">
-          <div className="sticky top-0 left-0 h-screen w-full">
+        <div className="absolute -top-14 left-0 h-[calc(100%+9rem)] min-h-full w-full">
+          <div className="sticky top-0 left-0 h-[100vh] min-h-[100vh-3.5rem] w-full pt-14">
             <StoryNavigator
               tree={data.tree}
               thread={data.thread}
@@ -118,8 +130,9 @@ export default function StoryRoute() {
           </span>
           <Spacer size="sm" />
           <div dangerouslySetInnerHTML={{ __html: root.part.content }} />
-          {collaborations.map((collaboration) => (
+          {collaborations.map((collaboration, cIdx) => (
             <Fragment key={collaboration.part.id}>
+              {cIdx + 1 === collaborations.length && <ScrollToMe />}
               <Spacer size="sm" />
               <span className="block text-right text-xs italic text-slate-400">
                 Collaboration by @{collaboration.part.author};
