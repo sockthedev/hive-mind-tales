@@ -19,7 +19,7 @@ import {
 } from "~/components/story-navigator"
 import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
-import { enhanceThread } from "./lib"
+import { enhanceThread } from "../resources.stories.tree/lib"
 
 export const formValidator = withZod(
   z.object({
