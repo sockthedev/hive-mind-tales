@@ -1,132 +1,20 @@
 import useSize from "@react-hook/size"
-import clsx from "clsx"
-import {
-  hierarchy,
-  HierarchyPointLink,
-  HierarchyPointNode,
-  tree as d3tree,
-} from "d3-hierarchy"
 import { select } from "d3-selection"
-import { linkVertical } from "d3-shape"
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom"
 import React from "react"
-import invariant from "tiny-invariant"
-import { StoryNode, StoryPart, StoryTree } from "~/domain/stories"
-import { EnhancedStoryThread } from "~/routes/stories.$storyId.($leafPartId)/lib"
-
-const config = {
-  nodeSize: {
-    x: 90,
-    y: 90,
-  },
-  separation: { siblings: 1, nonSiblings: 2 },
-  translate: { x: 0, y: 0 },
-  scale: 1,
-  scaleExtent: { min: 0.25, max: 1 },
-}
-
-function createNavigatorData(tree: StoryTree): StoryNavigatorData {
-  const d3Tree = d3tree<StoryNode>()
-    .nodeSize([config.nodeSize.x, config.nodeSize.y])
-    .separation((a, b) =>
-      a.parent?.data.id === b.parent?.data.id
-        ? config.separation.siblings
-        : config.separation.nonSiblings,
-    )
-
-  const rootNode = d3Tree(hierarchy(tree, (d) => d.children))
-  const nodes = rootNode.descendants()
-  const links = rootNode.links()
-
-  return { nodes, links }
-}
-
-function findNode(
-  data: StoryNavigatorData,
-  storyPart: StoryPart,
-): StoryNavigatorNode | null {
-  return data.nodes.find((node) => node.data.id === storyPart.id) ?? null
-}
-
-export type StoryNavigatorNode = HierarchyPointNode<StoryNode>
-
-export type StoryNavigatorLink = HierarchyPointLink<StoryNode>
-
-export type StoryNavigatorData = {
-  nodes: StoryNavigatorNode[]
-  links: StoryNavigatorLink[]
-}
-
-const DEFAULT_NODE_CIRCLE_RADIUS = 15
-
-type TreeNodeProps = {
-  node: StoryNavigatorNode
-  thread: EnhancedStoryThread
-  onClick: (node: StoryNavigatorNode) => void
-}
-
-const TreeNode = (props: TreeNodeProps) => {
-  const nodeRef = React.useRef<SVGGElement>(null)
-  const isActive = props.thread.some(
-    (part) => part.node.id === props.node.data.id,
-  )
-
-  return (
-    <g transform={`translate(${props.node.x},${props.node.y})`} ref={nodeRef}>
-      <circle
-        className={clsx(
-          "cursor-pointer stroke-none transition duration-1000",
-          isActive ? "fill-blue-500" : "fill-slate-300",
-        )}
-        r={DEFAULT_NODE_CIRCLE_RADIUS}
-        onClick={() => {
-          props.onClick(props.node)
-        }}
-      />
-      {/* <g className="pointer-events-none"> */}
-      {/*   <text className="fill-white stroke-none font-extrabold"> */}
-      {/*     {props.node.data.author} */}
-      {/*   </text> */}
-      {/* </g> */}
-    </g>
-  )
-}
-
-function drawPath({ source, target }: StoryNavigatorLink) {
-  const path = linkVertical()({
-    source: [source.x, source.y],
-    target: [target.x, target.y],
-  })
-  invariant(path, "path should be defined")
-  return path
-}
-
-type TreeLinkProps = {
-  link: StoryNavigatorLink
-  thread: EnhancedStoryThread
-}
-
-const TreeLink = (props: TreeLinkProps) => {
-  const isActive = props.thread.some(
-    (part) => part.node.id === props.link.target.data.id,
-  )
-
-  return (
-    <path
-      className={clsx(
-        "pointer-events-none fill-none stroke-2 transition duration-1000",
-        isActive ? "stroke-blue-500" : "stroke-slate-300",
-      )}
-      d={drawPath(props.link)}
-      data-source-id={props.link.source.id}
-      data-target-id={props.link.target.id}
-    />
-  )
-}
+import { StoryTree } from "~/domain/stories"
+import { config } from "./config"
+import {
+  createNavigatorData,
+  StoryNavigatorData,
+  StoryNavigatorNode,
+} from "./lib"
+import { TreeLink } from "./tree-link"
+import { TreeNode } from "./tree-node"
 
 export type StoryNavigatorTreeProps = {
-  thread: EnhancedStoryThread
   tree: StoryTree
+  activePartId: string
   onNodeClick: (node: StoryNavigatorNode) => void
 }
 
@@ -174,23 +62,17 @@ export const StoryNavigatorTree: React.FC<StoryNavigatorTreeProps> = (
     [svgId, gId, width, height],
   )
 
-  // "onMount"
   // Initialise the navigator data
   React.useEffect(() => {
-    setData(createNavigatorData(props.tree))
-  }, [props.tree])
+    setData(createNavigatorData(props))
+  }, [props.tree, props.activePartId])
 
   // After data is initialised center the active story node
   React.useEffect(() => {
     if (data == null) return
-
-    const leafStoryPart = props.thread[props.thread.length - 1]
-
-    const activeNode = findNode(data, leafStoryPart.part)
-    invariant(activeNode, "Active node not found")
-
-    centerNode(activeNode, false)
-  }, [data, props.thread])
+    const leafNode = data.thread[data.thread.length - 1]
+    centerNode(leafNode, false)
+  }, [data])
 
   // After the data is initialised ensure than panning and zooming are enabled
   React.useEffect(() => {
@@ -228,14 +110,14 @@ export const StoryNavigatorTree: React.FC<StoryNavigatorTreeProps> = (
               <TreeLink
                 key={link.target.data.id}
                 link={link}
-                thread={props.thread}
+                thread={data.thread}
               />
             ))}
             {data.nodes.map((node) => (
               <TreeNode
                 key={node.data.id}
                 node={node}
-                thread={props.thread}
+                thread={data.thread}
                 onClick={(node) => {
                   props.onNodeClick(node)
                   centerNode(node)

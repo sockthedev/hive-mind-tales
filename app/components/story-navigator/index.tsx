@@ -5,7 +5,7 @@ export type {
   StoryNavigatorData,
   StoryNavigatorLink,
   StoryNavigatorNode,
-} from "./tree"
+} from "./lib"
 
 export const StoryNavigator: React.FC<StoryNavigatorTreeProps> = (props) => {
   return (

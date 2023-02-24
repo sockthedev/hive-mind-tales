@@ -56,6 +56,8 @@ export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
 
+  console.log("🤡", data)
+
   const [showEditor, setShowEditor] = React.useState(false)
 
   function navigateToNode(args: { node: StoryNode }) {
@@ -83,7 +85,7 @@ export default function StoryRoute() {
           <div className="sticky top-0 left-0 h-[100vh] min-h-[100vh-3.5rem] w-full pt-14">
             <StoryNavigatorServerComponent
               storyId={data.story.id}
-              endPartId={data.currentPart.id}
+              activePartId={data.currentPart.id}
               onNodeClick={onNodeClick}
             />
           </div>
