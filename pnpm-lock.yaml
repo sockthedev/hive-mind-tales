@@ -6,6 +6,7 @@ specifiers:
   '@fortawesome/react-fontawesome': ^0.2.0
   '@headlessui/react': ^1.7.11
   '@react-hook/size': ^2.1.2
+  '@react-hook/window-size': ^3.1.1
   '@remix-run/dev': 1.13.0
   '@remix-run/eslint-config': 1.13.0
   '@remix-run/node': 1.13.0
@@ -55,6 +56,7 @@ dependencies:
   '@fortawesome/react-fontawesome': 0.2.0_d5rbrisxfyemehbvmdbryvgjte
   '@headlessui/react': 1.7.11_biqbaboplfbrettd7655fr4n2y
   '@react-hook/size': 2.1.2_react@18.2.0
+  '@react-hook/window-size': 3.1.1_react@18.2.0
   '@remix-run/node': 1.13.0
   '@remix-run/react': 1.13.0_biqbaboplfbrettd7655fr4n2y
   '@remix-run/serve': 1.13.0
@@ -3592,6 +3594,23 @@ packages:
     resolution: {integrity: sha512-50/17A98tWUfQ176raKiOGXuYpLyyVMkxxG6oylzL3BPOlA6ADGdK7EYunSa4I064xerltq9TGXs8HmOk5E+vw==}
     dev: false
 
+  /@react-hook/debounce/3.0.0_react@18.2.0:
+    resolution: {integrity: sha512-ir/kPrSfAzY12Gre0sOHkZ2rkEmM4fS5M5zFxCi4BnCeXh2nvx9Ujd+U4IGpKCuPA+EQD0pg1eK2NGLvfWejag==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@react-hook/latest': 1.0.3_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-hook/event/1.2.6_react@18.2.0:
+    resolution: {integrity: sha512-JUL5IluaOdn5w5Afpe/puPa1rj8X6udMlQ9dt4hvMuKmTrBS1Ya6sb4sVgvfe2eU4yDuOfAhik8xhbcCekbg9Q==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      react: 18.2.0
+    dev: false
+
   /@react-hook/latest/1.0.3_react@18.2.0:
     resolution: {integrity: sha512-dy6duzl+JnAZcDbNTfmaP3xHiKtbXYOaz3G51MGVljh548Y8MWzTr+PHLOfvpypEVW9zwvl+VyKjbWKEVbV1Rg==}
     peerDependencies:
@@ -3626,6 +3645,26 @@ packages:
     dependencies:
       '@react-hook/passive-layout-effect': 1.2.1_react@18.2.0
       '@react-hook/resize-observer': 1.2.6_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-hook/throttle/2.2.0_react@18.2.0:
+    resolution: {integrity: sha512-LJ5eg+yMV8lXtqK3lR+OtOZ2WH/EfWvuiEEu0M3bhR7dZRfTyEJKxH1oK9uyBxiXPtWXiQggWbZirMCXam51tg==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@react-hook/latest': 1.0.3_react@18.2.0
+      react: 18.2.0
+    dev: false
+
+  /@react-hook/window-size/3.1.1_react@18.2.0:
+    resolution: {integrity: sha512-yWnVS5LKnOUIrEsI44oz3bIIUYqflamPL27n+k/PC//PsX/YeWBky09oPeAoc9As6jSH16Wgo8plI+ECZaHk3g==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@react-hook/debounce': 3.0.0_react@18.2.0
+      '@react-hook/event': 1.2.6_react@18.2.0
+      '@react-hook/throttle': 2.2.0_react@18.2.0
       react: 18.2.0
     dev: false
 

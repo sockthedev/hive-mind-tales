@@ -2,6 +2,7 @@ import { json, LoaderArgs } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import React from "react"
+import { ClientOnly } from "remix-utils"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
 import { Button, Divider, H1, RichTextEditor, Spacer } from "~/components"
@@ -9,7 +10,7 @@ import { FormSubmitButton } from "~/components/form-submit-button"
 import { StoryNavigatorNode } from "~/components/story-navigator"
 import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
-import { StoryNavigatorServerComponent } from "../resources.stories.tree/route"
+import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 export const formValidator = withZod(
   z.object({
@@ -56,8 +57,6 @@ export default function StoryRoute() {
   const data = useLoaderData<typeof loader>()
   const navigate = useNavigate()
 
-  console.log("🤡", data)
-
   const [showEditor, setShowEditor] = React.useState(false)
 
   function navigateToNode(args: { node: StoryNode }) {
@@ -81,15 +80,24 @@ export default function StoryRoute() {
   return (
     <TwoColumnContent
       left={() => (
-        <div className="absolute -top-14 left-0 h-[calc(100%+9rem)] min-h-full w-full">
-          <div className="sticky top-0 left-0 h-[100vh] min-h-[100vh-3.5rem] w-full pt-14">
-            <StoryNavigatorServerComponent
+        // TODO:
+        // - Need to figure out the mobile view for this
+
+        <ClientOnly
+          fallback={
+            <div className="flex h-full w-full items-center justify-center">
+              Loading graph...
+            </div>
+          }
+        >
+          {() => (
+            <ResponsiveStoryNavigator
               storyId={data.story.id}
               activePartId={data.currentPart.id}
               onNodeClick={onNodeClick}
             />
-          </div>
-        </div>
+          )}
+        </ClientOnly>
       )}
       right={() => (
         <>

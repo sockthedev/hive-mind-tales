@@ -3,8 +3,8 @@ import { useFetcher } from "@remix-run/react"
 import React from "react"
 import { zfd } from "zod-form-data"
 import {
-  StoryNavigator,
   StoryNavigatorNode,
+  StoryNavigatorTree,
 } from "~/components/story-navigator"
 import { Stories } from "~/domain/stories"
 
@@ -46,7 +46,7 @@ export const StoryNavigatorServerComponent: React.FC<
   }
 
   return (
-    <StoryNavigator
+    <StoryNavigatorTree
       tree={tree}
       activePartId={props.activePartId}
       onNodeClick={props.onNodeClick}
