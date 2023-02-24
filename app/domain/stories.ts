@@ -1,37 +1,6 @@
 import invariant from "tiny-invariant"
 
-export type Story = {
-  id: string
-  title: string
-  rootStoryPartId: string
-  createdAt: string
-  createdBy: string
-}
-
-export type StoryPart = {
-  id: string
-  content: string
-  author: string
-  parentStoryPartId?: string
-}
-
-export type StoryNode = Omit<StoryPart, "content"> & {
-  children: StoryTree[]
-}
-
-export type StoryTree = StoryNode
-
-export type StoryThread = StoryPart[]
-
-export abstract class Stories {
-  // Gets all the parts of a story
-  private static async getParts(args: {
-    storyId: string
-  }): Promise<StoryPart[]> {
-    // TODO:
-    // - Convert this to a database call
-    // - This is just returning mock data for now
-    return [
+const mockStoryParts: StoryPart[] = [
       {
         id: "1",
         content: `
@@ -82,6 +51,39 @@ export abstract class Stories {
         parentStoryPartId: "3",
       },
     ]
+
+export type Story = {
+  id: string
+  title: string
+  rootStoryPartId: string
+  createdAt: string
+  createdBy: string
+}
+
+export type StoryPart = {
+  id: string
+  content: string
+  author: string
+  parentStoryPartId?: string
+}
+
+export type StoryNode = Omit<StoryPart, "content"> & {
+  children: StoryTree[]
+}
+
+export type StoryTree = StoryNode
+
+export type StoryThread = StoryPart[]
+
+export abstract class Stories {
+  // Gets all the parts of a story
+  private static async getParts(args: {
+    storyId: string
+  }): Promise<StoryPart[]> {
+    // TODO:
+    // - Convert this to a database call
+    // - This is just returning mock data for now
+    return mockStoryParts; 
   }
 
   static async getStory(args: { storyId: string }): Promise<Story> {
@@ -93,6 +95,18 @@ export abstract class Stories {
       createdAt: "2023-02-18T14:30:00.000Z",
       createdBy: "janedoe",
     }
+  }
+
+  static async getPart(args: { partId: string }): Promise<StoryPart> {
+    const part = mockStoryParts.find((part) => part.id === args.partId)
+    invariant(part, `Could not find story part with id ${args.partId}`)
+    return part
+  }
+
+  static async getPartOrRootPart(args: { storyId: string, partId?: string }): Promise<StoryPart> {
+    const story = await this.getStory(args);
+    const part = await this.getPart({ partId: args.partId ?? story.rootStoryPartId })
+    return part;
   }
 
   // Gets a breadcrumb of story parts from the root to the target left part.
