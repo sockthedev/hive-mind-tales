@@ -3,5 +3,5 @@ export type {
   StoryNavigatorLink,
   StoryNavigatorNode,
 } from "./lib"
-export { StoryNavigatorTree } from "./tree"
-export type { StoryNavigatorTreeProps } from "./tree"
+export { StoryNavigator } from "./tree"
+export type { StoryNavigatorProps } from "./tree"

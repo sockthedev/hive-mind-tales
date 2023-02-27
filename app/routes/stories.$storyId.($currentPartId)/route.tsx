@@ -8,7 +8,6 @@ import { z } from "zod"
 import { Button, Divider, H1, RichTextEditor, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 import { StoryNavigatorNode } from "~/components/story-navigator"
-import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
@@ -46,8 +45,13 @@ export const loader = async ({ params }: LoaderArgs) => {
 const ScrollToMe: React.FC<{ scrollId: string }> = (props) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
+  const prevScrollId = React.useRef<string | null>(null)
+
   React.useEffect(() => {
-    ref.current?.scrollIntoView({ behavior: "smooth" })
+    if (prevScrollId.current && prevScrollId.current !== props.scrollId) {
+      ref.current?.scrollIntoView({ behavior: "smooth" })
+    }
+    prevScrollId.current = props.scrollId
   }, [props.scrollId])
 
   return <div ref={ref} />
@@ -78,18 +82,9 @@ export default function StoryRoute() {
   )
 
   return (
-    <TwoColumnContent
-      left={() => (
-        // TODO:
-        // - Need to figure out the mobile view for this
-
-        <ClientOnly
-          fallback={
-            <div className="flex h-full w-full items-center justify-center">
-              Loading graph...
-            </div>
-          }
-        >
+    <div className="relative flex flex-col lg:flex-row">
+      <div className="relative h-0 w-0 lg:h-full lg:w-2/5">
+        <ClientOnly fallback={null}>
           {() => (
             <ResponsiveStoryNavigator
               storyId={data.story.id}
@@ -98,16 +93,16 @@ export default function StoryRoute() {
             />
           )}
         </ClientOnly>
-      )}
-      right={() => (
+      </div>
+      <div className="overflow-auto lg:w-3/5 lg:pl-7">
         <>
-          <Spacer size="lg" />
           <ScrollToMe scrollId={data.currentPart.id} />
+          <Spacer size="lg" />
           <H1>{data.story.title}</H1>
           <span className="block text-xs italic text-slate-400">
             A story initiated by @{data.story.createdBy}.
           </span>
-          <Spacer size="sm" />
+          <Spacer size="lg" />
           {data.story.rootStoryPartId !== data.currentPart.id && (
             <span className="block text-right text-xs italic text-slate-400">
               Collaboration by @{data.currentPart.author};
@@ -150,7 +145,7 @@ export default function StoryRoute() {
             </>
           )}
         </>
-      )}
-    />
+      </div>
+    </div>
   )
 }

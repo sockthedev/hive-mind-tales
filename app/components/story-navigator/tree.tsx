@@ -12,15 +12,13 @@ import {
 import { TreeLink } from "./tree-link"
 import { TreeNode } from "./tree-node"
 
-export type StoryNavigatorTreeProps = {
+export type StoryNavigatorProps = {
   tree: StoryTree
   activePartId: string
   onNodeClick: (node: StoryNavigatorNode) => void
 }
 
-export const StoryNavigatorTree: React.FC<StoryNavigatorTreeProps> = (
-  props,
-) => {
+export const StoryNavigator: React.FC<StoryNavigatorProps> = (props) => {
   const [data, setData] = React.useState<StoryNavigatorData | null>(null)
   const containerRef = React.useRef<HTMLDivElement>(null)
   const [width, height] = useSize(containerRef)

@@ -8,6 +8,16 @@ import invariant from "tiny-invariant"
 import { StoryNode, StoryTree } from "~/domain/stories"
 import { config } from "./config"
 
+export type StoryNavigatorNode = HierarchyPointNode<StoryNode>
+
+export type StoryNavigatorLink = HierarchyPointLink<StoryNode>
+
+export type StoryNavigatorData = {
+  nodes: StoryNavigatorNode[]
+  links: StoryNavigatorLink[]
+  thread: StoryNavigatorNode[]
+}
+
 function findNode(args: {
   nodes: StoryNavigatorNode[]
   storyPartId: string
@@ -47,14 +57,4 @@ export function createNavigatorData(args: {
   thread.reverse()
 
   return { nodes, links, thread }
-}
-
-export type StoryNavigatorNode = HierarchyPointNode<StoryNode>
-
-export type StoryNavigatorLink = HierarchyPointLink<StoryNode>
-
-export type StoryNavigatorData = {
-  nodes: StoryNavigatorNode[]
-  links: StoryNavigatorLink[]
-  thread: StoryNavigatorNode[]
 }

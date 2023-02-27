@@ -3,8 +3,8 @@ import { useFetcher } from "@remix-run/react"
 import React from "react"
 import { zfd } from "zod-form-data"
 import {
+  StoryNavigator,
   StoryNavigatorNode,
-  StoryNavigatorTree,
 } from "~/components/story-navigator"
 import { Stories } from "~/domain/stories"
 
@@ -23,15 +23,15 @@ export const loader = async ({ request }: LoaderArgs) => {
   return json({ tree }, 200)
 }
 
-export type StoryNavigatorServerComponentProps = {
+export type FullStackStoryNavigatorProps = {
   storyId: string
   activePartId: string
   onNodeClick: (node: StoryNavigatorNode) => void
 }
 
-export const StoryNavigatorServerComponent: React.FC<
-  StoryNavigatorServerComponentProps
-> = (props) => {
+export const FullStackStoryNavigator: React.FC<FullStackStoryNavigatorProps> = (
+  props,
+) => {
   const fetcher = useFetcher<typeof loader>()
 
   React.useEffect(() => {
@@ -46,7 +46,7 @@ export const StoryNavigatorServerComponent: React.FC<
   }
 
   return (
-    <StoryNavigatorTree
+    <StoryNavigator
       tree={tree}
       activePartId={props.activePartId}
       onNodeClick={props.onNodeClick}
