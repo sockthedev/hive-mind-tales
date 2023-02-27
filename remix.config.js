@@ -5,5 +5,16 @@ module.exports = {
     unstable_tailwind: true,
     v2_routeConvention: true,
   },
-  serverDependenciesToBundle: ["lodash-es", /^d3-.*/],
+  serverDependenciesToBundle: [
+    /^d3-.*/,
+    "codsen-utils",
+    "lodash-es",
+    "ranges-apply",
+    "ranges-merge",
+    "ranges-push",
+    "ranges-sort",
+    "string-collapse-leading-whitespace",
+    "string-left-right",
+    "string-strip-html",
+  ],
 }

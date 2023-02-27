@@ -1,14 +1,17 @@
 import { ActionArgs, json, redirect } from "@remix-run/server-runtime"
 import { withZod } from "@remix-validated-form/with-zod"
+import DomPurify from "isomorphic-dompurify"
 import React from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
+import { stripHtml } from "string-strip-html"
 import { z } from "zod"
 import { Checkbox, Divider, H3, P, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 import { RichTextEditor } from "~/components/rich-text-editor"
 import { TwoColumnContent } from "~/components/two-column-content"
 
-// TODO: Pull from a pool of example stories from the backend;
+// TODO:
+// - Pull from a pool of example stories from the backend;
 const exampleStory = `
 <h1>The Adventures of the Time-Traveling Mouse and the Missing Piece of Toasted Cheese</h1>
 <p>In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
@@ -28,6 +31,10 @@ export const action = async ({ request }: ActionArgs) => {
       if (data.error) {
         return validationError(data.error)
       }
+      const purified = DomPurify.sanitize(data.data.story)
+      console.log("💩", stripHtml(purified).result.length)
+      console.log(purified)
+      console.log(data.data.story)
       // TODO:
       // - Check if the user is logged in
       // - Save the story to the DB
@@ -53,12 +60,17 @@ export default function HomepageRoute() {
     <TwoColumnContent
       left={() => (
         <section className="text-gray-600">
-          <H3>A ridiculous experiment in collaborative storytelling.</H3>
+          <H3>
+            A ridiculous experiment in
+            <br />
+            collaborative storytelling.
+          </H3>
           <P>
             Start writing a story.
             <br /> Share it.
             <br /> Watch the magic unfold.
           </P>
+          <Spacer size="lg" />
         </section>
       )}
       right={() => (

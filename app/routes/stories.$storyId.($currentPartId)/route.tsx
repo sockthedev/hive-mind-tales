@@ -8,13 +8,13 @@ import { z } from "zod"
 import { Button, Divider, H1, RichTextEditor, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 import { StoryNavigatorNode } from "~/components/story-navigator"
+import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 export const formValidator = withZod(
   z.object({
     story: z.string().min(1, { message: "Story is required" }),
-    visibleInFeeds: z.enum(["on", "off"]).optional().default("off"),
   }),
 )
 
@@ -42,7 +42,9 @@ export const loader = async ({ params }: LoaderArgs) => {
   )
 }
 
-const ScrollToMe: React.FC<{ scrollId: string }> = (props) => {
+const ScrollToMe: React.FC<{ className?: string; scrollId: string }> = (
+  props,
+) => {
   const ref = React.useRef<HTMLDivElement>(null)
 
   const prevScrollId = React.useRef<string | null>(null)
@@ -54,7 +56,7 @@ const ScrollToMe: React.FC<{ scrollId: string }> = (props) => {
     prevScrollId.current = props.scrollId
   }, [props.scrollId])
 
-  return <div ref={ref} />
+  return <div className={props.className} key={props.scrollId} ref={ref} />
 }
 
 export default function StoryRoute() {
@@ -82,8 +84,8 @@ export default function StoryRoute() {
   )
 
   return (
-    <div className="relative flex flex-col lg:flex-row">
-      <div className="relative h-0 w-0 lg:h-full lg:w-2/5">
+    <TwoColumnContent
+      left={() => (
         <ClientOnly fallback={null}>
           {() => (
             <ResponsiveStoryNavigator
@@ -93,27 +95,34 @@ export default function StoryRoute() {
             />
           )}
         </ClientOnly>
-      </div>
-      <div className="overflow-auto lg:w-3/5 lg:pl-7">
+      )}
+      right={() => (
         <>
-          <ScrollToMe scrollId={data.currentPart.id} />
+          <ScrollToMe
+            className="-translate-y-14"
+            scrollId={data.currentPart.id}
+          />
+
           <Spacer size="lg" />
+
           <H1>{data.story.title}</H1>
           <span className="block text-xs italic text-slate-400">
             A story initiated by @{data.story.createdBy}.
           </span>
-          <Spacer size="lg" />
+
+          <Spacer size="xl" />
+
           {data.story.rootStoryPartId !== data.currentPart.id && (
             <span className="block text-right text-xs italic text-slate-400">
               Collaboration by @{data.currentPart.author};
             </span>
           )}
           <div dangerouslySetInnerHTML={{ __html: data.currentPart.content }} />
-          <Spacer size="sm" />
+
+          <Spacer size="xl" />
 
           {!showEditor && (
             <>
-              <Spacer size="md" />
               <Divider
                 label="Want to continue this thread?"
                 hint="Click the button to add your spin"
@@ -128,7 +137,6 @@ export default function StoryRoute() {
           {showEditor && (
             <>
               <ValidatedForm method="post" validator={formValidator}>
-                <Spacer size="md" />
                 <Divider
                   label="Continue this thread"
                   hint="Add your own spin by clicking the text below"
@@ -145,7 +153,7 @@ export default function StoryRoute() {
             </>
           )}
         </>
-      </div>
-    </div>
+      )}
+    />
   )
 }

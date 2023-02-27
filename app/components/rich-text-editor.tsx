@@ -1,8 +1,11 @@
+import { CharacterCount } from "@tiptap/extension-character-count"
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import React from "react"
 import { RichTextEditorMarkMenu } from "./rich-text-editor-mark-menu"
 import { RichTextEditorNodeMenu } from "./rich-text-editor-node-menu"
+
+const CHARACTER_LIMIT = 3000
 
 export type RichTextEditorProps = {
   className?: string
@@ -15,10 +18,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
 
   const editor = useEditor({
     onUpdate: ({ editor }) => {
-      // TODO: This gets executed for every update. I'm wondering if we should
-      // use a debounce callback instead? Current Discord thread seems to think
-      // it's fine:
-      // https://discord.com/channels/818568566479257641/818569721934774272/1014793086414626866
       setHtml(editor.getHTML())
     },
     extensions: [
@@ -36,15 +35,18 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         },
         paragraph: {
           HTMLAttributes: {
-            class: "leading-7 [&:not(:first-child)]:mt-6",
+            class: "text-lg leading-7 mt-6",
           },
         },
+      }),
+      CharacterCount.configure({
+        limit: CHARACTER_LIMIT,
       }),
     ],
     content: props.initialContent ?? `<h1></h1><p></p>`,
     editorProps: {
       attributes: {
-        class: "cursor-pointer focus:cursor-auto transition-all outline-none",
+        class: "cursor-pointer focus:cursor-auto outline-none",
       },
     },
   })
@@ -59,6 +61,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = (props) => {
         {editor && <RichTextEditorMarkMenu editor={editor} />}
         {editor && <RichTextEditorNodeMenu editor={editor} />}
       </EditorContent>
+      <span className="block text-right text-xs italic text-slate-400">
+        {editor?.storage.characterCount.characters()} / {CHARACTER_LIMIT}{" "}
+        characters
+      </span>
       <input type="hidden" name={props.name} value={html} />
     </>
   )

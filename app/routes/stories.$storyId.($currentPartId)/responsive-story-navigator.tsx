@@ -27,7 +27,8 @@ export const ResponsiveStoryNavigator: React.FC<
   }, [width])
 
   // TODO:
-  // - Need to figure out the mobile view for this
+  // - Look into doing the mobile view without the use of JS logic. i.e. pure
+  //   CSS approach.
 
   return isMobile ? (
     <div className="pointer-events-none fixed top-0 left-0 z-50 h-screen w-screen">
