@@ -7,5 +7,5 @@ export type FormInputProps = InputProps & {
 
 export const FormInput: React.FC<FormInputProps> = (props) => {
   const { error, getInputProps } = useField(props.name)
-  return <Input {...getInputProps(props)} error={error} />
+  return <Input {...props} {...getInputProps(props)} error={error} />
 }

@@ -40,16 +40,12 @@ export default function LoginVerifyRoute() {
   return (
     <NarrowContent>
       <Spacer size="xl" />
-      <H1>Verify Login</H1>
-      <Spacer size="sm" />
+      <H1>Check your email</H1>
+      <Spacer size="xl" />
       <ValidatedForm method="post" validator={validator}>
-        <P>
-          Drop the code we <em>sent to your email</em> * in the prompt below to
-          complete your login.
-        </P>
+        <P>Enter the verification code that was sent to your email address.</P>
         <Spacer size="md" />
         <FormInput
-          autoFocus
           id="code"
           name="code"
           type="text"
@@ -57,12 +53,11 @@ export default function LoginVerifyRoute() {
           placeholder="123456"
         />
         <Spacer size="sm" />
-        <FormSubmitButton>Complete Login</FormSubmitButton>
-        <P className="text-sm italic">
-          * You may need to wait a minute or two to receive the code within your
-          inbox. If you still haven't received it after this time you can{" "}
-          <Link to="/login">try to send another code</Link>.
-        </P>
+        <FormSubmitButton className="w-full">Continue</FormSubmitButton>
+        <Spacer size="sm" />
+        <Link className="font-semibold text-indigo-700" to="/login">
+          Use another method
+        </Link>
       </ValidatedForm>
     </NarrowContent>
   )

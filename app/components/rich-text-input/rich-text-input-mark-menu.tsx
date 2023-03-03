@@ -10,7 +10,7 @@ import type { EditorView } from "@tiptap/pm/view"
 import type { Editor as ReactEditor } from "@tiptap/react"
 import { BubbleMenu } from "@tiptap/react"
 
-import { MenuButton, MenuContainer } from "./rich-text-editor-menu"
+import { MenuButton, MenuContainer } from "./rich-text-input-menu"
 
 const shouldShow: (props: {
   editor: Editor

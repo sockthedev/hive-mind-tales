@@ -1,26 +1,46 @@
 import { ActionArgs, json, redirect } from "@remix-run/server-runtime"
 import { withZod } from "@remix-validated-form/with-zod"
-import DomPurify from "isomorphic-dompurify"
-import React from "react"
 import { ValidatedForm, validationError } from "remix-validated-form"
-import { stripHtml } from "string-strip-html"
 import { z } from "zod"
-import { Checkbox, Divider, H3, P, Spacer } from "~/components"
+import * as zfd from "zod-form-data"
+import { Divider, H3, P, Spacer } from "~/components"
+import { FormCheckbox } from "~/components/form-checkbox"
+import { FormRichTextInput } from "~/components/form-rich-text-input"
 import { FormSubmitButton } from "~/components/form-submit-button"
-import { RichTextEditor } from "~/components/rich-text-editor"
+import { FormTitleInput } from "~/components/form-title-input"
 import { TwoColumnContent } from "~/components/two-column-content"
+import {
+  MAX_CONTENT_TEXT_LENGTH,
+  MIN_CONTENT_TEXT_LENGTH,
+  StoriesValidation,
+} from "~/domain/stories-validation"
 
 // TODO:
 // - Pull from a pool of example stories from the backend;
 const exampleStory = `
-<h1>The Adventures of the Time-Traveling Mouse and the Missing Piece of Toasted Cheese</h1>
 <p>In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
 <p>One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>`
 
+// TODO:
+// - Need to handle validation on the client. This requires extending the
+//   input components with error display capabilities and then wrapping them
+//   with a form handler.
 export const formValidator = withZod(
   z.object({
-    story: z.string().min(1, { message: "Story is required" }),
-    visibleInFeeds: z.enum(["on", "off"]).optional().default("off"),
+    title: z
+      .string()
+      .min(1, { message: "Title is required" })
+      .max(130, { message: "Title is too long" }),
+    story: z
+      .string()
+      .min(1, { message: "Story is required" })
+      .refine((story) => {
+        return StoriesValidation.isValidContentLength(story)
+      }, `Story character count must be between ${MIN_CONTENT_TEXT_LENGTH} and ${MAX_CONTENT_TEXT_LENGTH} in length`),
+    visibleInFeeds: zfd.checkbox({ trueValue: "true" }),
+    acceptTerms: zfd
+      .checkbox({ trueValue: "true" })
+      .refine((value) => value, "You must accept the terms of service"),
   }),
 )
 
@@ -31,10 +51,6 @@ export const action = async ({ request }: ActionArgs) => {
       if (data.error) {
         return validationError(data.error)
       }
-      const purified = DomPurify.sanitize(data.data.story)
-      console.log("💩", stripHtml(purified).result.length)
-      console.log(purified)
-      console.log(data.data.story)
       // TODO:
       // - Check if the user is logged in
       // - Save the story to the DB
@@ -55,7 +71,6 @@ export const action = async ({ request }: ActionArgs) => {
 }
 
 export default function HomepageRoute() {
-  const [visibleInFeeds, setVisibleInFeeds] = React.useState(true)
   return (
     <TwoColumnContent
       left={() => (
@@ -82,16 +97,37 @@ export default function HomepageRoute() {
           />
           <Spacer size="sm" />
 
-          <RichTextEditor initialContent={exampleStory} name="story" />
+          <FormTitleInput
+            name="title"
+            defaultValue="The Adventures of the Time-Traveling Mouse and the Missing Piece of Toasted Cheese"
+          />
+
+          <FormRichTextInput name="story" defaultValue={exampleStory} />
 
           <section>
             <Spacer size="lg" />
-            <Checkbox
-              label="Visible in our feeds"
-              description="Your story could appear in our feeds - e.g. Recent, Top, etc."
-              checked={visibleInFeeds}
-              onChange={setVisibleInFeeds}
+            <FormCheckbox
+              label="Visible in our feeds?"
+              description="Allow your story to appear in our feeds (e.g. Recent, Top, etc.). This will enable more people to read and collaborate with you. If you choose not to enable this then only those whom you share your link with will be able contribute to your story."
               name="visibleInFeeds"
+              defaultChecked={true}
+              value="true"
+            />
+            <Spacer size="lg" />
+            <FormCheckbox
+              label="Contains adult content?"
+              description="Help keep our community safe by indicating if your story contains any violence, explitives,or content not appropriate for younger readers."
+              name="containsAdultContent"
+              defaultChecked={true}
+              value="true"
+            />
+            <Spacer size="lg" />
+            <FormCheckbox
+              label="Accept our terms and conditions?"
+              description="By checking this box you agree to our terms and conditions and confirm that your story falls in line with our rules and guidelines. Any content found to break our rules and guidelines will be removed without warning."
+              name="acceptTerms"
+              defaultChecked={false}
+              value="true"
             />
           </section>
 

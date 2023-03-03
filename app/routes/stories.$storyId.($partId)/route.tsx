@@ -5,8 +5,9 @@ import React from "react"
 import { ClientOnly } from "remix-utils"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
-import { Button, Divider, H1, RichTextEditor, Spacer } from "~/components"
+import { Button, Divider, H1, Spacer } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
+import { RichTextInput } from "~/components/rich-text-input"
 import { StoryNavigatorNode } from "~/components/story-navigator"
 import { TwoColumnContent } from "~/components/two-column-content"
 import { Stories, StoryNode } from "~/domain/stories"
@@ -20,15 +21,15 @@ export const formValidator = withZod(
 
 const paramsSchema = z.object({
   storyId: z.string(),
-  currentPartId: z.string().optional(),
+  partId: z.string().optional(),
 })
 
 export const loader = async ({ params }: LoaderArgs) => {
-  const { storyId, currentPartId } = paramsSchema.parse(params)
+  const { storyId, partId } = paramsSchema.parse(params)
 
-  const [story, currentPart] = await Promise.all([
+  const [story, part] = await Promise.all([
     Stories.getStory({ storyId }),
-    Stories.getPartOrRootPart({ storyId, partId: currentPartId }),
+    Stories.getPartOrRootPart({ storyId, partId }),
   ])
 
   // TODO:
@@ -36,7 +37,7 @@ export const loader = async ({ params }: LoaderArgs) => {
   return json(
     {
       story,
-      currentPart,
+      part,
     },
     200,
   )
@@ -90,7 +91,7 @@ export default function StoryRoute() {
           {() => (
             <ResponsiveStoryNavigator
               storyId={data.story.id}
-              activePartId={data.currentPart.id}
+              activePartId={data.part.id}
               onNodeClick={onNodeClick}
             />
           )}
@@ -98,10 +99,7 @@ export default function StoryRoute() {
       )}
       right={() => (
         <>
-          <ScrollToMe
-            className="-translate-y-14"
-            scrollId={data.currentPart.id}
-          />
+          <ScrollToMe className="-translate-y-14" scrollId={data.part.id} />
 
           <Spacer size="lg" />
 
@@ -112,12 +110,12 @@ export default function StoryRoute() {
 
           <Spacer size="xl" />
 
-          {data.story.rootStoryPartId !== data.currentPart.id && (
+          {data.story.rootStoryPartId !== data.part.id && (
             <span className="block text-right text-xs italic text-slate-400">
-              Collaboration by @{data.currentPart.author};
+              Collaboration by @{data.part.author};
             </span>
           )}
-          <div dangerouslySetInnerHTML={{ __html: data.currentPart.content }} />
+          <div dangerouslySetInnerHTML={{ __html: data.part.content }} />
 
           <Spacer size="xl" />
 
@@ -142,8 +140,8 @@ export default function StoryRoute() {
                   hint="Add your own spin by clicking the text below"
                 />
                 <Spacer size="sm" />
-                <RichTextEditor
-                  initialContent={"<p>The story didn't end there...</p>"}
+                <RichTextInput
+                  defaultValue={"<p>The story didn't end there...</p>"}
                 />
                 <Spacer size="lg" />
                 <div className="text-center">

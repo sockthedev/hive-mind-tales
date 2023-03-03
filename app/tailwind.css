@@ -78,7 +78,8 @@ img.ProseMirror-separator {
   opacity: 0;
 }
 
-.ProseMirror h1.is-empty:first-child::before {
+/* This enables placeholder text for empty text editor */
+.ProseMirror p.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
   float: left;
@@ -86,7 +87,8 @@ img.ProseMirror-separator {
   pointer-events: none;
 }
 
-.ProseMirror p.is-empty:first-of-type::before {
+/* This enables placeholder text for empty heading editor */
+.ProseMirror h.is-editor-empty:first-child::before {
   color: #adb5bd;
   content: attr(data-placeholder);
   float: left;

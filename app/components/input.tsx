@@ -10,7 +10,7 @@ export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
 
 export const Input: React.FC<InputProps> = (props) => {
   const uniqId = React.useId()
-  const { label, ...inputProps } = props
+  const { label, error, ...inputProps } = props
   const errorMessageElementId = `${inputProps.id ?? uniqId}-error`
   const errorProps = props.error
     ? {
@@ -30,6 +30,7 @@ export const Input: React.FC<InputProps> = (props) => {
         <input
           {...inputProps}
           {...errorProps}
+          id={inputProps.id ?? uniqId}
           className={clsx(
             "block w-full rounded-md pr-10 focus:outline-none sm:text-sm",
             props.error
@@ -37,7 +38,7 @@ export const Input: React.FC<InputProps> = (props) => {
               : "border-gray-300 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-indigo-500",
           )}
         />
-        {props.error && (
+        {error && (
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
             <FontAwesomeIcon
               icon={faCircleExclamation}
@@ -48,7 +49,7 @@ export const Input: React.FC<InputProps> = (props) => {
         )}
       </div>
       <p className="mt-2 text-sm text-red-600" id={errorMessageElementId}>
-        {props.error}
+        {error}
       </p>
     </div>
   )

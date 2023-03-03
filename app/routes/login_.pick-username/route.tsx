@@ -1,10 +1,11 @@
-import { Button, H1, Spacer } from "~/components"
+import { H1, Spacer } from "~/components"
 
 import { ActionArgs, json, redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import z from "zod"
 
+import { Link } from "@remix-run/react"
 import { FormInput, P } from "~/components"
 import { FormSubmitButton } from "~/components/form-submit-button"
 import { NarrowContent } from "~/components/narrow-content"
@@ -46,17 +47,15 @@ export default function LoginPickUsernameRoute() {
   return (
     <NarrowContent>
       <Spacer size="xl" />
-      <H1>Pick a Username</H1>
-      <P>
-        This looks like the first time you've logged in. We automatically
-        assigned a username to you. We utilize usernames to protect your
-        identity.
-      </P>
-      <P>If you want to feel free to customize your username below.</P>
-      <Spacer size="md" />
+      <H1>Update Username</H1>
+      <Spacer size="xl" />
       <ValidatedForm method="post" validator={validator}>
+        <P>
+          We've automatically assigned a username to you. You can customize it
+          now, or update it later.
+        </P>
+        <Spacer size="md" />
         <FormInput
-          autoFocus
           id="username"
           name="username"
           type="text"
@@ -64,8 +63,13 @@ export default function LoginPickUsernameRoute() {
           placeholder="captainmarvel"
         />
         <Spacer size="sm" />
-        <FormSubmitButton className="mr-6">Update Username</FormSubmitButton>
-        <Button>Skip</Button>
+        <FormSubmitButton className="w-full">
+          Save and continue
+        </FormSubmitButton>
+        <Spacer size="sm" />
+        <Link className="font-semibold text-indigo-700" to="/login">
+          Skip and continue
+        </Link>
       </ValidatedForm>
     </NarrowContent>
   )

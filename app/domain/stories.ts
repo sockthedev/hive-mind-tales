@@ -1,56 +1,60 @@
+import sanitizeHtml from "sanitize-html"
 import invariant from "tiny-invariant"
+import { ulid } from "ulid"
+import { ValidationError } from "./errors"
+import { StoriesValidation } from "./stories-validation"
 
 const mockStoryParts: StoryPart[] = [
-      {
-        id: "1",
-        content: `
+  {
+    id: "1",
+    content: `
           <p>In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
           <p>One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>
         `,
-        author: "janedoe",
-      },
-      {
-        id: "2",
-        content: `
+    author: "janedoe",
+  },
+  {
+    id: "2",
+    content: `
           <p>For days, Ms. Whiskers scurried through dense forests and climbed steep mountains, following the strange voice that guided her every step. She crossed rivers and battled fierce beasts, but her determination never wavered. Finally, after what felt like an eternity, she arrived at a cavernous opening that seemed to lead into the very heart of the earth.</p>
           <p>With her heart pounding in her chest, Ms. Whiskers crept inside and was immediately enveloped by darkness. She could barely see her own paw in front of her face, but she continued forward, relying on her intuition to guide her. Suddenly, she heard a faint rustling sound, and her whiskers twitched in excitement. She knew that the missing piece of toasted cheese was close at hand. With bated breath, she advanced into the darkness, ready for whatever lay ahead.</p>
         `,
-        author: "johndoe",
-        parentStoryPartId: "1",
-      },
-      {
-        id: "3",
-        content: "<p>Second alt piece of story content goes here.</p>",
-        author: "pling",
-        parentStoryPartId: "1",
-      },
-      {
-        id: "4",
-        content: ` 
+    author: "johndoe",
+    parentStoryPartId: "1",
+  },
+  {
+    id: "3",
+    content: "<p>Second alt piece of story content goes here.</p>",
+    author: "pling",
+    parentStoryPartId: "1",
+  },
+  {
+    id: "4",
+    content: ` 
             <p>As she drew closer, the rustling sound grew louder, until Ms. Whiskers could make out a dim shape in the distance. She approached cautiously, her senses alert for any sign of danger. As she drew closer, the shape became clearer, until she could see that it was a small creature - a fellow mouse, much like herself.<p>
             <p>"Who are you?" Ms. Whiskers asked, her voice trembling with excitement.</p>
             <p>The other mouse looked up, startled, and sniffed the air suspiciously. "I am a traveler, much like yourself," she said. "I have been searching for the missing piece of toasted cheese, just like you. But it seems that we are not alone in our quest." With a flick of her tail, she motioned to the shadows, where the glint of sharp eyes could be seen. "There are others who seek the cheese, and they will stop at nothing to find it. We must be careful."</p>
         `,
-        author: "pling",
-        parentStoryPartId: "2",
-      },
-      {
-        id: "5",
-        content: `
+    author: "pling",
+    parentStoryPartId: "2",
+  },
+  {
+    id: "5",
+    content: `
           <p>Ms. Whiskers peered into the shadows, her heart beating faster with every passing moment. She knew that danger lurked in the darkness, but she was determined to find the missing piece of toasted cheese. "We can't give up now," she said, her voice firm. "We've come too far to turn back."</p>
           <p>With a nod, the other mouse agreed. "Very well," she said. "But we must be quick. The others are not far behind us." Together, the two mice crept deeper into the darkness, their senses on high alert. The rustling grew louder and more insistent, until they could see the outlines of a dozen or more creatures lurking in the shadows.</p>
           <p>"We've found it!" one of the creatures hissed, its eyes gleaming with a fierce intensity. "The missing piece of toasted cheese is ours!" Ms. Whiskers and the other mouse exchanged a nervous glance, then darted forward, their paws pounding on the cold stone floor. A fierce battle ensued, with claws and teeth flying in all directions. But in the end, it was Ms. Whiskers who emerged victorious, clutching the missing piece of toasted cheese in her paws. With a triumphant squeak, she and the other mouse made their way back to the light, ready to face whatever challenges lay ahead.</p>
         `,
-        author: "pling",
-        parentStoryPartId: "4",
-      },
-      {
-        id: "6",
-        content: "<p>Third piece of story content goes here.</p>",
-        author: "pling",
-        parentStoryPartId: "3",
-      },
-    ]
+    author: "pling",
+    parentStoryPartId: "4",
+  },
+  {
+    id: "6",
+    content: "<p>Third piece of story content goes here.</p>",
+    author: "pling",
+    parentStoryPartId: "3",
+  },
+]
 
 export type Story = {
   id: string
@@ -83,7 +87,47 @@ export abstract class Stories {
     // TODO:
     // - Convert this to a database call
     // - This is just returning mock data for now
-    return mockStoryParts; 
+    return mockStoryParts
+  }
+
+  static async create(args: {
+    title: string
+    content: string
+    createdBy: string
+  }): Promise<Story> {
+    // TODO:
+    // - validate max length
+    // - purify content
+
+    const purifiedContent = sanitizeHtml(args.content, {
+      allowedTags: ["b", "i", "em", "s", "strong", "p", "br"],
+      allowedAttributes: {
+        p: ["class"],
+      },
+    })
+
+    if (!StoriesValidation.isValidContentLength(args.content)) {
+      throw new ValidationError("Content is too long")
+    }
+
+    const story: Story = {
+      id: ulid(),
+      title: args.title,
+      rootStoryPartId: ulid(),
+      createdAt: new Date().toISOString(),
+      createdBy: args.createdBy,
+    }
+
+    const rootStoryPart: StoryPart = {
+      id: story.rootStoryPartId,
+      author: args.createdBy,
+      content: purifiedContent,
+    }
+
+    // TODO:
+    // - save story and part to db within a transaction
+
+    return Promise.resolve(story)
   }
 
   static async getStory(args: { storyId: string }): Promise<Story> {
@@ -103,10 +147,15 @@ export abstract class Stories {
     return part
   }
 
-  static async getPartOrRootPart(args: { storyId: string, partId?: string }): Promise<StoryPart> {
-    const story = await this.getStory(args);
-    const part = await this.getPart({ partId: args.partId ?? story.rootStoryPartId })
-    return part;
+  static async getPartOrRootPart(args: {
+    storyId: string
+    partId?: string
+  }): Promise<StoryPart> {
+    const story = await this.getStory(args)
+    const part = await this.getPart({
+      partId: args.partId ?? story.rootStoryPartId,
+    })
+    return part
   }
 
   // Gets a breadcrumb of story parts from the root to the target left part.

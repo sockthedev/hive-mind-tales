@@ -3,6 +3,9 @@ module.exports = {
   content: ["./app/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      fontFamily: {
+        inherit: "inherit",
+      },
       gridTemplateRows: {
         layout: "auto 1fr auto",
       },
