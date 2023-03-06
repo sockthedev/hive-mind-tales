@@ -1,13 +1,15 @@
 {
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", ".sst/types/index.ts"],
+  "exclude": ["node_modules", ".sst", ".cache", "build"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "resolveJsonModule": true,
-    "target": "ES2019",
+    "target": "ES2021",
     "strict": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
@@ -16,5 +18,8 @@
       "~/*": ["./app/*"]
     },
     "noEmit": true
+  },
+  "ts-node": {
+    "esm": true
   }
 }

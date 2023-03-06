@@ -1,25 +1,26 @@
 import type { SSTConfig } from "sst"
-import { RemixSite } from "sst/constructs"
+import { Config, RemixSite, StackContext } from "sst/constructs"
 
-const PROFILE: Record<string, string> = {
-  default: "sockthedev",
-  production: "hmt-production",
-}
-
-const REGION: Record<string, string> = {
-  default: "ap-southeast-1",
-  production: "us-east-1",
+function Site(ctx: StackContext) {
+  const DATABASE_URL = new Config.Secret(ctx.stack, "DATABASE_URL")
+  const site = new RemixSite(ctx.stack, "site", {
+    customDomain: {
+      domainName: "hivemindtales.com",
+      hostedZone: "hivemindtales.com",
+    },
+    bind: [DATABASE_URL],
+  })
+  ctx.stack.addOutputs({
+    url: site.url ?? "http://localhost:3000",
+  })
 }
 
 export default {
   config(input) {
-    const profile = PROFILE[input.stage || "default"]
-    const region = REGION[input.stage || "default"]
-
     return {
       name: "hmt",
-      region,
-      profile,
+      region: input.stage === "production" ? "us-east-1" : "ap-southeast-1",
+      profile: "sockthedev",
     }
   },
   stacks(app) {
@@ -36,11 +37,6 @@ export default {
       logRetention: "one_day",
     })
 
-    app.stack(function Site(ctx) {
-      const site = new RemixSite(ctx.stack, "site")
-      ctx.stack.addOutputs({
-        url: site.url ?? "http://localhost:3000",
-      })
-    })
+    app.stack(Site)
   },
 } satisfies SSTConfig

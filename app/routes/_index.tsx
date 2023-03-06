@@ -115,10 +115,10 @@ export default function HomepageRoute() {
             />
             <Spacer size="lg" />
             <FormCheckbox
-              label="Contains adult content?"
-              description="Help keep our community safe by indicating if your story contains any violence, explitives,or content not appropriate for younger readers."
-              name="containsAdultContent"
-              defaultChecked={true}
+              label="Contains mature content?"
+              description="Help keep it clean and safe for all members of our community by indicating if your story contains any violence, explitives, or content not appropriate for younger readers."
+              name="containsMatureContent"
+              defaultChecked={false}
               value="true"
             />
             <Spacer size="lg" />
