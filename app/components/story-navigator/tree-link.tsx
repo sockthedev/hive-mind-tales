@@ -19,7 +19,7 @@ export type TreeLinkProps = {
 
 export const TreeLink = (props: TreeLinkProps) => {
   const isActive = props.thread.some(
-    (node) => node.data.id === props.link.target.data.id,
+    (node) => node.data.partId === props.link.target.data.partId,
   )
 
   return (

@@ -3,17 +3,19 @@ import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 import * as zfd from "zod-form-data"
-import { Divider, H3, P, Spacer } from "~/components"
-import { FormCheckbox } from "~/components/form-checkbox"
-import { FormRichTextInput } from "~/components/form-rich-text-input"
-import { FormSubmitButton } from "~/components/form-submit-button"
-import { FormTitleInput } from "~/components/form-title-input"
-import { TwoColumnContent } from "~/components/two-column-content"
+import { Divider, H3, P, Spacer } from "~/app/components"
+import { FormCheckbox } from "~/app/components/form-checkbox"
+import { FormRichTextInput } from "~/app/components/form-rich-text-input"
+import { FormSubmitButton } from "~/app/components/form-submit-button"
+import { FormTitleInput } from "~/app/components/form-title-input"
+import { TwoColumnContent } from "~/app/components/two-column-content"
+import { getSessionData } from "~/app/session.server"
 import {
   MAX_CONTENT_TEXT_LENGTH,
   MIN_CONTENT_TEXT_LENGTH,
   StoriesValidation,
 } from "~/domain/stories-validation"
+import { Stories } from "~/domain/stories.server"
 
 // TODO:
 // - Pull from a pool of example stories from the backend;
@@ -47,22 +49,45 @@ export const formValidator = withZod(
 export const action = async ({ request }: ActionArgs) => {
   switch (request.method) {
     case "POST": {
-      const data = await formValidator.validate(await request.formData())
-      if (data.error) {
-        return validationError(data.error)
+      const form = await formValidator.validate(await request.formData())
+      if (form.error) {
+        return validationError(form.error)
       }
-      // TODO:
-      // - Check if the user is logged in
-      // - Save the story to the DB
-      // - If the user is logged in forward them to share page,
-      // - Else forward them to login page first
-      const storyId = "abc123"
-      return redirect("/login", {
-        headers: {
-          "Set-Cookie": `story=${encodeURIComponent(storyId)}`,
-        },
-        status: 302,
-      })
+
+      const sessionData = await getSessionData(request)
+
+      if (sessionData) {
+        // Logged in
+        const { story } = await Stories.create({
+          title: form.data.title,
+          content: form.data.story,
+          createdBy: sessionData.userId,
+          visibleInFeeds: form.data.visibleInFeeds,
+        })
+        return redirect(`/stories/${story.storyId}/share`, {
+          status: 302,
+        })
+      } else {
+        // Not logged in
+        const { story } = await Stories.create({
+          title: form.data.title,
+          content: form.data.story,
+          createdBy: "system",
+          visibleInFeeds: form.data.visibleInFeeds,
+        })
+        const loginAction = {
+          action: "created_story",
+          storyId: story.storyId,
+        }
+        return redirect("/login", {
+          headers: {
+            "Set-Cookie": `loginAction=${encodeURIComponent(
+              JSON.stringify(loginAction),
+            )}`,
+          },
+          status: 302,
+        })
+      }
     }
     default: {
       return json({ message: "Method not allowed" }, 405)

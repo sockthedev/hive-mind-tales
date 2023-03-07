@@ -1,7 +1,7 @@
 import { faClose, faSitemap } from "@fortawesome/free-solid-svg-icons"
 import { useWindowSize } from "@react-hook/window-size"
 import React from "react"
-import { IconButton } from "~/components/icon-button"
+import { IconButton } from "~/app/components/icon-button"
 import {
   FullStackStoryNavigator,
   FullStackStoryNavigatorProps,
@@ -11,7 +11,7 @@ export type {
   StoryNavigatorData,
   StoryNavigatorLink,
   StoryNavigatorNode,
-} from "~/components/story-navigator"
+} from "~/app/components/story-navigator"
 
 export const ResponsiveStoryNavigator: React.FC<
   FullStackStoryNavigatorProps

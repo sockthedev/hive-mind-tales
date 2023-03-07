@@ -1,14 +1,11 @@
-import { H1, Spacer } from "~/components"
-
 import { ActionArgs, json, redirect } from "@remix-run/node"
+import { Link } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import z from "zod"
-
-import { Link } from "@remix-run/react"
-import { FormInput, P } from "~/components"
-import { FormSubmitButton } from "~/components/form-submit-button"
-import { NarrowContent } from "~/components/narrow-content"
+import { FormInput, H1, P, Spacer } from "~/app/components"
+import { FormSubmitButton } from "~/app/components/form-submit-button"
+import { NarrowContent } from "~/app/components/narrow-content"
 
 export const validator = withZod(
   z.object({

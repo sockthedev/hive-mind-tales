@@ -2,7 +2,7 @@ import useSize from "@react-hook/size"
 import { select } from "d3-selection"
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom"
 import React from "react"
-import { StoryTree } from "~/domain/stories"
+import type { StoryTree } from "~/domain/stories.server"
 import { config } from "./config"
 import {
   createNavigatorData,
@@ -106,14 +106,14 @@ export const StoryNavigator: React.FC<StoryNavigatorProps> = (props) => {
           >
             {data.links.map((link) => (
               <TreeLink
-                key={link.target.data.id}
+                key={link.target.data.partId}
                 link={link}
                 thread={data.thread}
               />
             ))}
             {data.nodes.map((node) => (
               <TreeNode
-                key={node.data.id}
+                key={node.data.partId}
                 node={node}
                 thread={data.thread}
                 onClick={(node) => {

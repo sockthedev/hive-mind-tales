@@ -13,7 +13,7 @@ export type TreeNodeProps = {
 export const TreeNode = (props: TreeNodeProps) => {
   const nodeRef = React.useRef<SVGGElement>(null)
   const isActive = props.thread.some(
-    (node) => node.data.id === props.node.data.id,
+    (node) => node.data.partId === props.node.data.partId,
   )
 
   return (

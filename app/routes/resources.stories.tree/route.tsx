@@ -5,8 +5,8 @@ import { zfd } from "zod-form-data"
 import {
   StoryNavigator,
   StoryNavigatorNode,
-} from "~/components/story-navigator"
-import { Stories } from "~/domain/stories"
+} from "~/app/components/story-navigator"
+import { Stories } from "~/domain/stories.server"
 
 const searchParamsSchema = zfd.formData({
   storyId: zfd.text(),

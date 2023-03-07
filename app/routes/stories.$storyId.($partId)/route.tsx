@@ -5,12 +5,12 @@ import React from "react"
 import { ClientOnly } from "remix-utils"
 import { ValidatedForm } from "remix-validated-form"
 import { z } from "zod"
-import { Button, Divider, H1, Spacer } from "~/components"
-import { FormSubmitButton } from "~/components/form-submit-button"
-import { RichTextInput } from "~/components/rich-text-input"
-import { StoryNavigatorNode } from "~/components/story-navigator"
-import { TwoColumnContent } from "~/components/two-column-content"
-import { Stories, StoryNode } from "~/domain/stories"
+import { Button, Divider, H1, Spacer } from "~/app/components"
+import { FormSubmitButton } from "~/app/components/form-submit-button"
+import { RichTextInput } from "~/app/components/rich-text-input"
+import { StoryNavigatorNode } from "~/app/components/story-navigator"
+import { TwoColumnContent } from "~/app/components/two-column-content"
+import { Stories, StoryNode } from "~/domain/stories.server"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 export const formValidator = withZod(
@@ -68,7 +68,7 @@ export default function StoryRoute() {
 
   function navigateToNode(args: { node: StoryNode }) {
     const { node } = args
-    navigate(`/stories/${data.story.id}/${node.id}`, {
+    navigate(`/stories/${data.story.storyId}/${node.partId}`, {
       preventScrollReset: true,
     })
   }
@@ -90,8 +90,8 @@ export default function StoryRoute() {
         <ClientOnly fallback={null}>
           {() => (
             <ResponsiveStoryNavigator
-              storyId={data.story.id}
-              activePartId={data.part.id}
+              storyId={data.story.storyId}
+              activePartId={data.part.partId}
               onNodeClick={onNodeClick}
             />
           )}
@@ -99,7 +99,7 @@ export default function StoryRoute() {
       )}
       right={() => (
         <>
-          <ScrollToMe className="-translate-y-14" scrollId={data.part.id} />
+          <ScrollToMe className="-translate-y-14" scrollId={data.part.partId} />
 
           <Spacer size="lg" />
 
@@ -110,9 +110,9 @@ export default function StoryRoute() {
 
           <Spacer size="xl" />
 
-          {data.story.rootStoryPartId !== data.part.id && (
+          {data.story.rootPartId !== data.part.partId && (
             <span className="block text-right text-xs italic text-slate-400">
-              Collaboration by @{data.part.author};
+              Collaboration by @{data.part.createdBy};
             </span>
           )}
           <div dangerouslySetInnerHTML={{ __html: data.part.content }} />

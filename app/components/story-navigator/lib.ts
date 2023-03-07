@@ -5,7 +5,7 @@ import {
   tree as d3tree,
 } from "d3-hierarchy"
 import invariant from "tiny-invariant"
-import { StoryNode, StoryTree } from "~/domain/stories"
+import type { StoryNode, StoryTree } from "~/domain/stories.server"
 import { config } from "./config"
 
 export type StoryNavigatorNode = HierarchyPointNode<StoryNode>
@@ -22,7 +22,9 @@ function findNode(args: {
   nodes: StoryNavigatorNode[]
   storyPartId: string
 }): StoryNavigatorNode | null {
-  return args.nodes.find((node) => node.data.id === args.storyPartId) ?? null
+  return (
+    args.nodes.find((node) => node.data.partId === args.storyPartId) ?? null
+  )
 }
 
 export function createNavigatorData(args: {
@@ -32,7 +34,7 @@ export function createNavigatorData(args: {
   const d3Tree = d3tree<StoryNode>()
     .nodeSize([config.nodeSize.x, config.nodeSize.y])
     .separation((a, b) =>
-      a.parent?.data.id === b.parent?.data.id
+      a.parent?.data.partId === b.parent?.data.partId
         ? config.separation.siblings
         : config.separation.nonSiblings,
     )
@@ -45,10 +47,10 @@ export function createNavigatorData(args: {
   let currentNode = findNode({ nodes, storyPartId: args.activePartId })
   invariant(currentNode, "Could not find active node in tree")
   thread.push(currentNode)
-  while (currentNode.data.parentStoryPartId) {
+  while (currentNode.data.parentPartId) {
     const parentNode = findNode({
       nodes,
-      storyPartId: currentNode.data.parentStoryPartId,
+      storyPartId: currentNode.data.parentPartId,
     })
     invariant(parentNode, "Could not node in tree")
     thread.push(parentNode)

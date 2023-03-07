@@ -6,7 +6,7 @@ specifiers:
   '@fortawesome/free-solid-svg-icons': ^6.3.0
   '@fortawesome/react-fontawesome': ^0.2.0
   '@headlessui/react': ^1.7.13
-  '@planetscale/database': ^1.5.0
+  '@planetscale/database': ^1.6.0
   '@react-hook/size': ^2.1.2
   '@react-hook/window-size': ^3.1.1
   '@remix-run/dev': 1.14.0
@@ -27,6 +27,7 @@ specifiers:
   '@types/d3-selection': ^3.0.4
   '@types/d3-shape': ^3.1.1
   '@types/d3-zoom': ^3.0.2
+  '@types/node': '16'
   '@types/react': ^18.0.28
   '@types/react-dom': ^18.0.11
   '@types/sanitize-html': ^2.8.1
@@ -38,9 +39,11 @@ specifiers:
   d3-selection: ^3.0.0
   d3-shape: ^3.2.0
   d3-zoom: ^3.0.0
+  dayjs: ^1.11.7
   eslint: ^8.35.0
+  fast-jwt: ^2.2.0
   isbot: ^3.6.6
-  kysely: ^0.23.4
+  kysely: ^0.23.5
   kysely-codegen: ^0.9.0
   kysely-planetscale: ^1.3.0
   mysql2: ^3.2.0
@@ -54,14 +57,14 @@ specifiers:
   remix-utils: ^6.0.0
   remix-validated-form: ^4.6.9
   sanitize-html: ^2.10.0
-  sst: 2.1.8
+  sst: 2.1.12
   string-strip-html: ^13.2.0
   tailwindcss: ^3.2.7
   tiny-invariant: ^1.3.1
   tsx: ^3.12.3
   typescript: ^4.9.5
   ulid: ^2.3.0
-  zod: ^3.21.2
+  zod: ^3.21.3
   zod-form-data: ^2.0.0
 
 dependencies:
@@ -70,13 +73,13 @@ dependencies:
   '@fortawesome/free-solid-svg-icons': 6.3.0
   '@fortawesome/react-fontawesome': 0.2.0_d5rbrisxfyemehbvmdbryvgjte
   '@headlessui/react': 1.7.13_biqbaboplfbrettd7655fr4n2y
-  '@planetscale/database': 1.5.0
+  '@planetscale/database': 1.6.0
   '@react-hook/size': 2.1.2_react@18.2.0
   '@react-hook/window-size': 3.1.1_react@18.2.0
   '@remix-run/node': 1.14.0
   '@remix-run/react': 1.14.0_biqbaboplfbrettd7655fr4n2y
   '@remix-run/serve': 1.14.0
-  '@remix-validated-form/with-zod': 2.0.5_ybh6xyvdy7e6gvck3bbjf2foka
+  '@remix-validated-form/with-zod': 2.0.5_rwmfhytrnzkjamsfpt75feekvu
   '@tiptap/core': 2.0.0-beta.220_@tiptap+pm@2.0.0-beta.220
   '@tiptap/extension-character-count': 2.0.0-beta.220_ohumfzynigfck3hzagxvh2a4ky
   '@tiptap/extension-placeholder': 2.0.0-beta.220_ohumfzynigfck3hzagxvh2a4ky
@@ -89,21 +92,23 @@ dependencies:
   d3-selection: 3.0.0
   d3-shape: 3.2.0
   d3-zoom: 3.0.0
+  dayjs: 1.11.7
+  fast-jwt: 2.2.0
   isbot: 3.6.6
-  kysely: 0.23.4
-  kysely-planetscale: 1.3.0_3b4ga6arylazwmj6lzyyulo5vq
+  kysely: 0.23.5
+  kysely-planetscale: 1.3.0_5atypkpng7wf55nwilyueqjtqa
   mysql2: 3.2.0
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-textarea-autosize: 8.4.0_pmekkgnqduwlme35zpnqhenc34
-  remix-utils: 6.0.0_bdmieo5665gmqz5tfeqkg6rrpi
+  remix-utils: 6.0.0_je5j72h2sdbmnd6dc7wsmge7ta
   remix-validated-form: 4.6.9_3wvswj7wadadzebxn3dzyvtqaa
   sanitize-html: 2.10.0
   string-strip-html: 13.2.0
   tiny-invariant: 1.3.1
   ulid: 2.3.0
-  zod: 3.21.2
-  zod-form-data: 2.0.0_zod@3.21.2
+  zod: 3.21.3
+  zod-form-data: 2.0.0_zod@3.21.3
 
 devDependencies:
   '@remix-run/dev': 1.14.0_@remix-run+serve@1.14.0
@@ -114,18 +119,19 @@ devDependencies:
   '@types/d3-selection': 3.0.4
   '@types/d3-shape': 3.1.1
   '@types/d3-zoom': 3.0.2
+  '@types/node': 16.18.14
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
   '@types/sanitize-html': 2.8.1
   aws-cdk-lib: 2.62.2_constructs@10.1.156
   constructs: 10.1.156
   eslint: 8.35.0
-  kysely-codegen: 0.9.0_kysely@0.23.4+mysql2@3.2.0
+  kysely-codegen: 0.9.0_kysely@0.23.5+mysql2@3.2.0
   npm-run-all: 4.1.5
   prettier: 2.8.4
   prettier-plugin-organize-imports: 3.2.2_silln3pw57har7jydmecgzoypa
   prettier-plugin-tailwindcss: 0.2.4_tnxajtglrwt6ss4l7qpdnez62i
-  sst: 2.1.8_b3cz4yz5fvlhmz2lnwgflyst4e
+  sst: 2.1.12_b3cz4yz5fvlhmz2lnwgflyst4e
   tailwindcss: 3.2.7
   tsx: 3.12.3
   typescript: 4.9.5
@@ -4417,8 +4423,8 @@ packages:
       tslib: 2.5.0
     dev: true
 
-  /@planetscale/database/1.5.0:
-    resolution: {integrity: sha512-Qwh7Or1W5dB5mZ9EQqDkgvkDKhBBmQe58KIVUy0SGocNtr5fP4JAWtvZ6EdLAV6C6hVpzNlCA2xIg9lKTswm1Q==}
+  /@planetscale/database/1.6.0:
+    resolution: {integrity: sha512-eb02567S706Xme/nVwx+EN/wyoHhHBXl1a7+67R/Xm91myEpLn0vZNl58TvLZztBxje4gga16lc8dLt0elNrJA==}
     engines: {node: '>=16'}
     dev: false
 
@@ -4738,14 +4744,14 @@ packages:
     dependencies:
       web-streams-polyfill: 3.2.1
 
-  /@remix-validated-form/with-zod/2.0.5_ybh6xyvdy7e6gvck3bbjf2foka:
+  /@remix-validated-form/with-zod/2.0.5_rwmfhytrnzkjamsfpt75feekvu:
     resolution: {integrity: sha512-HDKFlhtBbsVL1EWZkT9l8IVGg/yRgFEzLmNxk36gPBhCFLEZ0rIFlpJRC3lITD22Vm0SDDCG/iI0CqqaXzuRmw==}
     peerDependencies:
       remix-validated-form: ^4.x
       zod: ^3.11.x
     dependencies:
       remix-validated-form: 4.6.9_3wvswj7wadadzebxn3dzyvtqaa
-      zod: 3.21.2
+      zod: 3.21.3
     dev: false
 
   /@rollup/pluginutils/4.2.1:
@@ -5094,7 +5100,7 @@ packages:
     dependencies:
       '@types/http-cache-semantics': 4.0.1
       '@types/keyv': 3.1.4
-      '@types/node': 18.14.3
+      '@types/node': 16.18.14
       '@types/responselike': 1.0.0
     dev: true
 
@@ -5162,7 +5168,7 @@ packages:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 18.14.3
+      '@types/node': 16.18.14
     dev: true
 
   /@types/hast/2.3.4:
@@ -5186,7 +5192,7 @@ packages:
   /@types/keyv/3.1.4:
     resolution: {integrity: sha512-BQ5aZNSCpj7D6K2ksrRCTmKRLEpnPvWDiLPfoGyhZ++8YtiK9d/3DBKPJgry359X/P1PfruyYwvnvwFjuEiEIg==}
     dependencies:
-      '@types/node': 18.14.3
+      '@types/node': 16.18.14
     dev: true
 
   /@types/mdast/3.0.10:
@@ -5211,8 +5217,8 @@ packages:
     resolution: {integrity: sha512-FXKWbsJ6a1hIrRxv+FoukuHnGTgEzKYGi7kilfMae96AL9UNkPFNWJEEYWzdRI9ooIkbr4AKldyuSTLql06vLQ==}
     dev: true
 
-  /@types/node/18.14.3:
-    resolution: {integrity: sha512-1y36CC5iL5CMyKALzwX9cwwxcWIxvIBe3gzs4GrXWXEQ8klQnCZ2U/WDGiNrXHmQcUhnaun17XG9TEIDlGj2RA==}
+  /@types/node/16.18.14:
+    resolution: {integrity: sha512-wvzClDGQXOCVNU4APPopC2KtMYukaF1MN/W3xAmslx22Z4/IF1/izDMekuyoUlwfnDHYCIZGaj7jMwnJKBTxKw==}
     dev: true
 
   /@types/object.omit/3.0.0:
@@ -5242,7 +5248,7 @@ packages:
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
-      '@types/node': 18.14.3
+      '@types/node': 16.18.14
     dev: true
 
   /@types/sanitize-html/2.8.1:
@@ -5269,7 +5275,7 @@ packages:
   /@types/ws/8.5.4:
     resolution: {integrity: sha512-zdQDHKUgcX/zBc4GrwsE/7dVdAD8JR4EuiAXiiUhhfyIJXXb2+PrGshFyeXWQPMmmZ2XxgaqclgpIC7eTXc1mg==}
     dependencies:
-      '@types/node': 18.14.3
+      '@types/node': 16.18.14
     dev: true
 
   /@types/yoga-layout/1.9.2:
@@ -5722,7 +5728,6 @@ packages:
       inherits: 2.0.4
       minimalistic-assert: 1.0.1
       safer-buffer: 2.1.2
-    dev: true
 
   /ast-types-flow/0.0.7:
     resolution: {integrity: sha512-eBvWn1lvIApYMhzQMsu9ciLfkBY499mFZlNqG+/9WR7PVlroQw0vG30cOQQbaKz3sCEc44TAOu2ykzqXSNnwag==}
@@ -6017,7 +6022,6 @@ packages:
 
   /bn.js/4.12.0:
     resolution: {integrity: sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==}
-    dev: true
 
   /body-parser/1.20.1:
     resolution: {integrity: sha512-jWi7abTbYwajOytWCQc37VulmWiRae5RyTpaCyDcS5/lMdtwSz5lOpDE67srw/HYe35f1z3fDQw+3txg7gNtWw==}
@@ -6928,6 +6932,10 @@ packages:
     engines: {node: '>=0.11'}
     dev: false
 
+  /dayjs/1.11.7:
+    resolution: {integrity: sha512-+Yw9U6YO5TQohxLcIkrXBeY73WP3ejHWVvx8XCk3gxvQDCTEmS48ZrSZCKciI7Bhl/uCMyxYtE9UqRILmFphkQ==}
+    dev: false
+
   /deasync/0.1.28:
     resolution: {integrity: sha512-QqLF6inIDwiATrfROIyQtwOQxjZuek13WRYZ7donU5wJPLoP67MnYxA6QtqdvdBy2mMqv5m3UefBVdJjvevOYg==}
     engines: {node: '>=0.11.0'}
@@ -7230,7 +7238,6 @@ packages:
     resolution: {integrity: sha512-nagl3RYrbNv6kQkeJIpt6NJZy8twLB/2vtz6yN9Z4vRKHN4/QZJIEbqohALSgwKdnksuY3k5Addp5lg8sVoVcQ==}
     dependencies:
       safe-buffer: 5.2.1
-    dev: true
 
   /ee-first/1.1.1:
     resolution: {integrity: sha1-WQxhFWsK4vTwJVcyoViyZrxWsh0=}
@@ -8043,6 +8050,15 @@ packages:
       ecdsa-sig-formatter: 1.0.11
       mnemonist: 0.39.5
     dev: true
+
+  /fast-jwt/2.2.0:
+    resolution: {integrity: sha512-0KSVmXROvYRCHzmmNzFMEDkd1mfbKopW1TfM2fELv5hZb/blUhfc7bxY7dJiagvR116Vhg6itk9LPUGFRQjRSg==}
+    engines: {node: '>=14 <20'}
+    dependencies:
+      asn1.js: 5.4.1
+      ecdsa-sig-formatter: 1.0.11
+      mnemonist: 0.39.5
+    dev: false
 
   /fast-levenshtein/2.0.6:
     resolution: {integrity: sha512-DCXu6Ifhqcks7TZKY3Hxp3y6qphY5SJZmrWMDrKcERSOXWQdMhU9Ig/PYrzyw/ul9jOIyh0N4M0tbC5hodg8dw==}
@@ -9351,7 +9367,7 @@ packages:
     engines: {node: '>=6'}
     dev: true
 
-  /kysely-codegen/0.9.0_kysely@0.23.4+mysql2@3.2.0:
+  /kysely-codegen/0.9.0_kysely@0.23.5+mysql2@3.2.0:
     resolution: {integrity: sha512-VCkrEY0WPwObvT4LGJkwLn29DXmvwG2oAv94qa+yAXDPAWtYTfO8NQSqyeEiNHEWmuKI+Sl+ANSn63by2Xn1tw==}
     hasBin: true
     peerDependencies:
@@ -9369,35 +9385,35 @@ packages:
     dependencies:
       chalk: 4.1.2
       dotenv: 16.0.3
-      kysely: 0.23.4
+      kysely: 0.23.5
       micromatch: 4.0.5
       minimist: 1.2.8
       mysql2: 3.2.0
     dev: true
 
-  /kysely-data-api/0.2.0_mw5yj24emorir33vi6uk6vcs7u:
+  /kysely-data-api/0.2.0_f35k2uml32z7se3dwowbq3m5iy:
     resolution: {integrity: sha512-Jkuqoxs8XInYeUnKDFKraA1lmuW8flY5hse59EmFIKbWDv0diRjkthCrc21egEwpfqVmLYq0/zj+SWWrH8a0hw==}
     peerDependencies:
       '@aws-sdk/client-rds-data': 3.x
       kysely: 0.x
     dependencies:
       '@aws-sdk/client-rds-data': 3.279.0
-      kysely: 0.23.4
+      kysely: 0.23.5
     dev: true
 
-  /kysely-planetscale/1.3.0_3b4ga6arylazwmj6lzyyulo5vq:
+  /kysely-planetscale/1.3.0_5atypkpng7wf55nwilyueqjtqa:
     resolution: {integrity: sha512-lAldOF+Yg2raVvRfyXjBqlZ63ONpNZRpfWUK9WrtEdVUIYJxOhbgzihYaRtb4lHVFNyAZyuSCvatEsK7hszcJg==}
     peerDependencies:
       '@planetscale/database': '*'
       kysely: '*'
     dependencies:
-      '@planetscale/database': 1.5.0
+      '@planetscale/database': 1.6.0
       date-fns: 2.29.3
-      kysely: 0.23.4
+      kysely: 0.23.5
     dev: false
 
-  /kysely/0.23.4:
-    resolution: {integrity: sha512-3icLnj1fahUtZsP9zzOvF4DcdhekGsLX4ZaoBaIz0ZeHegyRDdbwpJD7zezAJ+KwQZNDeKchel6MikFNLsSZIA==}
+  /kysely/0.23.5:
+    resolution: {integrity: sha512-TH+b56pVXQq0tsyooYLeNfV11j6ih7D50dyN8tkM0e7ndiUH28Nziojiog3qRFlmEj9XePYdZUrNJ2079Qjdow==}
     engines: {node: '>=14.0.0'}
 
   /language-subtag-registry/0.3.22:
@@ -10142,7 +10158,6 @@ packages:
 
   /minimalistic-assert/1.0.1:
     resolution: {integrity: sha512-UtJcAD4yEaGtjPezWuO9wC4nwUnVH/8/Im3yEHQP4b67cXlD/Qr9hdITCU1xDbSEXg2XKNaP8jsReV7vQd00/A==}
-    dev: true
 
   /minimatch/3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
@@ -10256,7 +10271,6 @@ packages:
     resolution: {integrity: sha512-FPUtkhtJ0efmEFGpU14x7jGbTB+s18LrzRL2KgoWz9YvcY3cPomz8tih01GbHwnGk/OmkOKfqd/RAQoc8Lm7DQ==}
     dependencies:
       obliterator: 2.0.4
-    dev: true
 
   /morgan/1.10.0:
     resolution: {integrity: sha512-AbegBVI4sh6El+1gNwvD5YIck7nSA36weD7xvIxG4in80j/UoK8AEGaWnnz8v1GxonMCltmlNs5ZKbGvl9b1XQ==}
@@ -10576,7 +10590,6 @@ packages:
 
   /obliterator/2.0.4:
     resolution: {integrity: sha512-lgHwxlxV1qIg1Eap7LgIeoBWIMFibOjbrYPIPJZcI1mmGAI2m3lNYpK12Y+GBdPQ0U1hRwSord7GIaawz962qQ==}
-    dev: true
 
   /oidc-token-hash/5.0.1:
     resolution: {integrity: sha512-EvoOtz6FIEBzE+9q253HsLCVRiK/0doEJ2HCvvqMQb3dHZrP3WlJKYtJ55CRTw4jmYomzH4wkPuCj/I3ZvpKxQ==}
@@ -11819,7 +11832,7 @@ packages:
   /remeda/1.6.2:
     resolution: {integrity: sha512-4/gci8Crgp6l0ATZEvu/FxHJPjDUMZZ1vhSIROHNNx/cXi77ar/7Cj2Z8Bysd0Vs824QFRfcIKqOxqH+pKDW1Q==}
 
-  /remix-utils/6.0.0_bdmieo5665gmqz5tfeqkg6rrpi:
+  /remix-utils/6.0.0_je5j72h2sdbmnd6dc7wsmge7ta:
     resolution: {integrity: sha512-S7Xec0YHZxGFEDawWpIbU7HQAZC0j51FmAvcCyBRuxjo71aAIMdmez47dgF8T91yxpHV1xlIKPL7LhBzmYsOZw==}
     engines: {node: '>=14'}
     peerDependencies:
@@ -11836,7 +11849,7 @@ packages:
       schema-dts: 1.1.0_typescript@4.9.5
       type-fest: 2.19.0
       uuid: 8.3.2
-      zod: 3.21.2
+      zod: 3.21.3
     transitivePeerDependencies:
       - typescript
     dev: false
@@ -12298,8 +12311,8 @@ packages:
       minipass: 3.3.6
     dev: true
 
-  /sst/2.1.8_b3cz4yz5fvlhmz2lnwgflyst4e:
-    resolution: {integrity: sha512-fcEdvRsKKYXIiCnpT/FOdABfurXseoU+dcD70ZzSt23RtC8oAm8MmUYOqgtnV2CEjfGNxQhq9SmlS7tzmLRb/w==}
+  /sst/2.1.12_b3cz4yz5fvlhmz2lnwgflyst4e:
+    resolution: {integrity: sha512-llmQkn+23V7+pfQ6Ukh6okYCuhLmZAQg/TA4vlTzsI1LsTogIeTFz7imya/ohhQ7yfd08nVdSdIG7Rz0Pp0Kng==}
     hasBin: true
     peerDependencies:
       '@sls-next/lambda-at-edge': ^3.7.0
@@ -12362,9 +12375,9 @@ packages:
       immer: 9.0.19
       ink: 3.2.0_jguntkfjozdfrzd4l22x7bdnx4
       ink-spinner: 4.0.3_ink@3.2.0+react@17.0.2
-      kysely: 0.23.4
-      kysely-codegen: 0.9.0_kysely@0.23.4+mysql2@3.2.0
-      kysely-data-api: 0.2.0_mw5yj24emorir33vi6uk6vcs7u
+      kysely: 0.23.5
+      kysely-codegen: 0.9.0_kysely@0.23.5+mysql2@3.2.0
+      kysely-data-api: 0.2.0_f35k2uml32z7se3dwowbq3m5iy
       minimatch: 6.1.6
       openid-client: 5.3.4
       ora: 6.1.2
@@ -13542,16 +13555,16 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  /zod-form-data/2.0.0_zod@3.21.2:
+  /zod-form-data/2.0.0_zod@3.21.3:
     resolution: {integrity: sha512-NmQVAcL4/W1PEWaS3hGXM3DxRSiOsX8p7vHPF3rt6aQs2+Nqxs4QuapZ1ncv3E+iRN86zthbZJRvz6q9Jl5A/g==}
     peerDependencies:
       zod: ^3.11.x
     dependencies:
-      zod: 3.21.2
+      zod: 3.21.3
     dev: false
 
-  /zod/3.21.2:
-    resolution: {integrity: sha512-0Ygy2/IZNIxHterZdHjE5Vb8hp1fUHJD/BGvSHj8QJx+UipEVNvo9WLchoyBpz5JIaN6KmdGDGYdloGzpFK98g==}
+  /zod/3.21.3:
+    resolution: {integrity: sha512-tz1QgJomEhMTQhOBvQxnnrTo8q77EjpGLlaWicCoEEkMzScuONzDkJKIHr83CS89fGY24iGCStj2ZOCHpPOEyA==}
     dev: false
 
   /zustand/4.3.3_immer@9.0.19+react@18.2.0:

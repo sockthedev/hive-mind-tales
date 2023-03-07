@@ -1,9 +1,10 @@
 import invariant from "tiny-invariant"
-import { StoryNode, StoryPart, StoryThread, StoryTree } from "~/domain/stories"
+import { Part } from "~/db/db.types"
+import { StoryNode, StoryThread, StoryTree } from "~/domain/stories.server"
 
 export type EnhancedStoryThreadItem = {
   node: StoryNode
-  part: StoryPart
+  part: Part
 }
 
 export type EnhancedStoryThread = EnhancedStoryThreadItem[]
@@ -24,13 +25,15 @@ export function enhanceThread(args: {
   // Handle the root part
   let [part, ...otherParts] = args.thread
   let node = args.tree
-  invariant(node.id === part.id, "Thread does not match tree")
+  invariant(node.partId === part.partId, "Thread does not match tree")
   enhancedThread.push({ part, node })
 
   // Handle all the other parts
   while (otherParts.length > 0) {
     const [nextPart, ...remainingParts] = otherParts
-    const nextNode = node.children.find((child) => child.id === nextPart.id)
+    const nextNode = node.children.find(
+      (child) => child.partId === nextPart.partId,
+    )
     invariant(nextNode, "Thread does not match tree")
     enhancedThread.push({ part: nextPart, node: nextNode })
     node = nextNode
