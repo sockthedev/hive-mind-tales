@@ -1,5 +1,7 @@
+// @ts-ignore
 import { CharacterCount } from "@tiptap/extension-character-count"
 import Placeholder from "@tiptap/extension-placeholder"
+// @ts-ignore
 import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import React from "react"
@@ -31,6 +33,7 @@ export const RichTextInput: React.FC<RichTextInputProps> = (props) => {
   const [html, setHtml] = React.useState(props.defaultValue)
 
   const editor = useEditor({
+    // @ts-ignore
     onUpdate: ({ editor }) => {
       setHtml(editor.getHTML())
     },
@@ -66,6 +69,7 @@ export const RichTextInput: React.FC<RichTextInputProps> = (props) => {
       attributes: {
         class: "cursor-pointer focus:cursor-auto outline-none",
       },
+      // @ts-ignore
       transformPastedHTML: (html) => {
         return sanitizeHtml(html, {
           allowedTags: ["b", "i", "em", "strong", "p", "br"],

@@ -1,4 +1,4 @@
-import clsx from "clsx"
+import { clsx } from "clsx"
 import { linkVertical } from "d3-shape"
 import invariant from "tiny-invariant"
 import { StoryNavigatorLink, StoryNavigatorNode } from "./lib"

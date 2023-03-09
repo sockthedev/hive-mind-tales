@@ -1,4 +1,4 @@
-import clsx from "clsx"
+import { clsx } from "clsx"
 
 export type ButtonProps = React.ComponentPropsWithoutRef<"button"> & {
   size?: "sm" | "md" | "lg" | "xl" | "2xl"

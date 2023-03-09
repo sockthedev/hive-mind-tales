@@ -1,5 +1,5 @@
 import { Switch } from "@headlessui/react"
-import clsx from "clsx"
+import { clsx } from "clsx"
 import React, { Fragment } from "react"
 
 export type CheckboxProps = React.ComponentPropsWithoutRef<"input"> & {

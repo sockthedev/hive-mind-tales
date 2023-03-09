@@ -1,7 +1,7 @@
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import type { Editor } from "@tiptap/react"
-import clsx from "clsx"
+import { clsx } from "clsx"
 
 export const MenuContainer: React.FC<{ children: React.ReactNode }> = ({
   children,

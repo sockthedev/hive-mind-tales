@@ -1,7 +1,7 @@
 import { faCheck, faChevronDown } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { Combobox } from "@headlessui/react"
-import clsx from "clsx"
+import { clsx } from "clsx"
 import { useState } from "react"
 
 export type ComboBoxOption = { name: string; value: string }

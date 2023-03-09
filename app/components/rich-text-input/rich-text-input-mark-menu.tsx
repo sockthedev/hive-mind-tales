@@ -3,11 +3,12 @@ import {
   faItalic,
   faStrikethrough,
 } from "@fortawesome/free-solid-svg-icons"
-import type { Editor } from "@tiptap/core"
+// @ts-ignore
 import { isTextSelection } from "@tiptap/core"
 import type { EditorState } from "@tiptap/pm/state"
 import type { EditorView } from "@tiptap/pm/view"
-import type { Editor as ReactEditor } from "@tiptap/react"
+import type { Editor } from "@tiptap/react"
+// @ts-ignore
 import { BubbleMenu } from "@tiptap/react"
 
 import { MenuButton, MenuContainer } from "./rich-text-input-menu"
@@ -43,7 +44,7 @@ const shouldShow: (props: {
   return true
 }
 
-export const RichTextEditorMarkMenu: React.FC<{ editor: ReactEditor }> = ({
+export const RichTextEditorMarkMenu: React.FC<{ editor: Editor }> = ({
   editor,
 }) => (
   <BubbleMenu

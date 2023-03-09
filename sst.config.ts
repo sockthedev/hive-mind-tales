@@ -7,13 +7,19 @@ function Database(ctx: StackContext) {
     DATABASE_URL,
   }
 }
+
 function Site(ctx: StackContext) {
   const { DATABASE_URL } = use(Database)
   const site = new RemixSite(ctx.stack, "site", {
-    customDomain: {
-      domainName: "hivemindtales.com",
-      hostedZone: "hivemindtales.com",
-    },
+    runtime: "nodejs16.x",
+    customDomain:
+      ctx.app.stage === "production"
+        ? {
+            domainName: "hivemindtales.com",
+            hostedZone: "hivemindtales.com",
+            domainAlias: "www.hivemindtales.com",
+          }
+        : undefined,
     bind: [DATABASE_URL],
   })
   ctx.stack.addOutputs({

@@ -1,4 +1,4 @@
-import clsx from "clsx"
+import { clsx } from "clsx"
 
 export type SpacerProps = {
   size: "xs" | "sm" | "md" | "lg" | "xl"

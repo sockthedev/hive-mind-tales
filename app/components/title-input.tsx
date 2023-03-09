@@ -1,4 +1,4 @@
-import clsx from "clsx"
+import { clsx } from "clsx"
 import React, { Fragment } from "react"
 import ReactTextareaAutosize from "react-textarea-autosize"
 
@@ -21,6 +21,7 @@ export const TitleInput: React.FC<TitleInputProps> = (props) => {
     : {}
   return (
     <Fragment>
+      {/* @ts-ignore */}
       <ReactTextareaAutosize
         {...inputProps}
         {...errorProps}

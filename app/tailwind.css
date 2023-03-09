@@ -1,6 +1,5 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 .ProseMirror {
   position: relative;
@@ -95,3 +94,5 @@ img.ProseMirror-separator {
   height: 0;
   pointer-events: none;
 }
+
+@tailwind utilities;

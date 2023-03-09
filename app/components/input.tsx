@@ -1,6 +1,6 @@
 import { faCircleExclamation } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import clsx from "clsx"
+import { clsx } from "clsx"
 import React from "react"
 
 export type InputProps = React.ComponentPropsWithoutRef<"input"> & {
