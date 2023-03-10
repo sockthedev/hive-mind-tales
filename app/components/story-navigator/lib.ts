@@ -5,7 +5,7 @@ import {
   tree as d3tree,
 } from "d3-hierarchy"
 import invariant from "tiny-invariant"
-import type { StoryNode, StoryTree } from "~/domain/stories.server"
+import type { StoryNode, StoryTree } from "~/server/domain/stories.types"
 import { config } from "./config"
 
 export type StoryNavigatorNode = HierarchyPointNode<StoryNode>

@@ -2,7 +2,7 @@ import useSize from "@react-hook/size"
 import { select } from "d3-selection"
 import { zoom as d3Zoom, zoomIdentity } from "d3-zoom"
 import React from "react"
-import type { StoryTree } from "~/domain/stories.server"
+import type { StoryTree } from "~/server/domain/stories.types"
 import { config } from "./config"
 import {
   createNavigatorData,

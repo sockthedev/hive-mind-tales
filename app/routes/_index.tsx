@@ -1,4 +1,4 @@
-import { ActionArgs, json, redirect } from "@remix-run/server-runtime"
+import { ActionArgs, json, redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
@@ -9,13 +9,13 @@ import { FormRichTextInput } from "~/app/components/form-rich-text-input"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { FormTitleInput } from "~/app/components/form-title-input"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { getSessionData } from "~/app/session.server"
+import { getToken } from "~/app/session.server"
+import { trpc } from "~/app/trpc.server"
 import {
   MAX_CONTENT_TEXT_LENGTH,
   MIN_CONTENT_TEXT_LENGTH,
   StoriesValidation,
-} from "~/domain/stories-validation"
-import { Stories } from "~/domain/stories.server"
+} from "~/lib/stories-validation"
 
 // TODO:
 // - Pull from a pool of example stories from the backend;
@@ -54,30 +54,25 @@ export const action = async ({ request }: ActionArgs) => {
         return validationError(form.error)
       }
 
-      const sessionData = await getSessionData(request)
+      const token = await getToken(request)
 
-      if (sessionData) {
-        // Logged in
-        const { story } = await Stories.create({
+      if (token) {
+        const { story } = await trpc(token).stories.create.mutate({
           title: form.data.title,
           content: form.data.story,
-          createdBy: sessionData.userId,
           visibleInFeeds: form.data.visibleInFeeds,
         })
         return redirect(`/stories/${story.storyId}/share`, {
           status: 302,
         })
       } else {
-        // Not logged in
-        const { story } = await Stories.create({
-          title: form.data.title,
-          content: form.data.story,
-          createdBy: "system",
-          visibleInFeeds: form.data.visibleInFeeds,
-        })
         const loginAction = {
-          action: "created_story",
-          storyId: story.storyId,
+          action: "create_story",
+          payload: {
+            title: form.data.title,
+            content: form.data.story,
+            visibleInFeeds: form.data.visibleInFeeds,
+          },
         }
         return redirect("/login", {
           headers: {

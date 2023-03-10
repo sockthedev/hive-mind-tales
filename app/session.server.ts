@@ -27,7 +27,8 @@ function parseToken(token: string): SessionData | null {
   return parseResult.success ? parseResult.data.properties : null
 }
 
-// TODO: Make this secret an environment variable;
+// TODO:
+// - Make this an .env variable;
 const SESSION_SECRET = "you-will-never-know"
 
 const SESSION_TOKEN_KEY = "token"
@@ -100,6 +101,23 @@ export async function requireSessionData(
     throw redirect(`/login?${searchParams}`)
   }
   return user
+}
+
+export async function getToken(request: Request): Promise<string | undefined> {
+  const session = await getSession(request)
+  return session.get(SESSION_TOKEN_KEY)
+}
+
+export async function requireToken(
+  request: Request,
+  redirectTo: string = new URL(request.url).pathname,
+) {
+  const token = await getToken(request)
+  if (!token) {
+    const searchParams = new URLSearchParams([["redirectTo", redirectTo]])
+    throw redirect(`/login?${searchParams}`)
+  }
+  return token
 }
 
 export async function logout(request: Request) {

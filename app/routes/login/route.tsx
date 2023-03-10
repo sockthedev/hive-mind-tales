@@ -19,7 +19,6 @@ export const validator = withZod(
 )
 
 export const action = async ({ request }: ActionArgs) => {
-  console.log("🥸 request.method", request.method)
   switch (request.method) {
     case "POST": {
       const data = await validator.validate(await request.formData())

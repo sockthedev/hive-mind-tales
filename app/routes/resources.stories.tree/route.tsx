@@ -6,7 +6,7 @@ import {
   StoryNavigator,
   StoryNavigatorNode,
 } from "~/app/components/story-navigator"
-import { Stories } from "~/domain/stories.server"
+import { trpc } from "~/app/trpc.server"
 
 const searchParamsSchema = zfd.formData({
   storyId: zfd.text(),
@@ -16,7 +16,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url)
   const { storyId } = searchParamsSchema.parse(url.searchParams)
 
-  const tree = await Stories.getTree({ storyId })
+  const tree = await trpc().stories.getTree.query({ storyId })
 
   // TODO:
   // - Consider a caching strategy here.

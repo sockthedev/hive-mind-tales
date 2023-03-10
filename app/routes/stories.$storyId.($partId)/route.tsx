@@ -10,7 +10,8 @@ import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { RichTextInput } from "~/app/components/rich-text-input"
 import { StoryNavigatorNode } from "~/app/components/story-navigator"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { Stories, StoryNode } from "~/domain/stories.server"
+import { trpc } from "~/app/trpc.server"
+import { StoryNode } from "~/server/domain/stories.types"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 export const formValidator = withZod(
@@ -28,8 +29,8 @@ export const loader = async ({ params }: LoaderArgs) => {
   const { storyId, partId } = paramsSchema.parse(params)
 
   const [story, part] = await Promise.all([
-    Stories.getStory({ storyId }),
-    Stories.getPartOrRootPart({ storyId, partId }),
+    trpc().stories.getStory.query({ storyId }),
+    trpc().stories.getPartOrRootPart.query({ storyId, partId }),
   ])
 
   // TODO:

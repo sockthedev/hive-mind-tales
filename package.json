@@ -1,14 +1,13 @@
 {
   "private": true,
   "sideEffects": false,
-  "type": "module",
   "name": "hive-mind-tales",
   "scripts": {
     "build": "remix build",
-    "db:generate-types": "sst bind 'pnpm tsx scripts/generate-db-types.mts'",
+    "db:generate-types": "sst bind 'pnpm tsx scripts/generate-db-types.ts'",
     "dev": "run-p \"dev:*\"",
     "dev:sst": "sst dev",
-    "dev:remix": "sst bind 'remix dev'",
+    "dev:remix": "sst env 'remix dev'",
     "deploy": "sst deploy --stage production",
     "typecheck": "tsc",
     "update:dependencies": "sst update && pnpm install && pnpm up -i -L"
@@ -28,6 +27,7 @@
     "@remix-run/react": "1.14.1",
     "@remix-run/serve": "1.14.1",
     "@remix-validated-form/with-zod": "^2.0.5",
+    "@tanstack/react-query": "^4.26.1",
     "@tiptap/core": "2.0.0-beta.220",
     "@tiptap/extension-character-count": "2.0.0-beta.220",
     "@tiptap/extension-placeholder": "2.0.0-beta.220",
@@ -48,6 +48,7 @@
     "isbot": "^3.6.6",
     "kysely": "^0.23.5",
     "kysely-planetscale": "^1.3.0",
+    "memoize-one": "^6.0.0",
     "mysql2": "^3.2.0",
     "p-retry": "^5.1.2",
     "react": "^18.2.0",

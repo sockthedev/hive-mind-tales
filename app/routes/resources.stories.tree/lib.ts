@@ -1,6 +1,10 @@
 import invariant from "tiny-invariant"
-import type { Part } from "~/db/db.types"
-import { StoryNode, StoryThread, StoryTree } from "~/domain/stories.server"
+import type {
+  Part,
+  StoryNode,
+  StoryThread,
+  StoryTree,
+} from "~/server/domain/stories.types"
 
 export type EnhancedStoryThreadItem = {
   node: StoryNode

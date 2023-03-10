@@ -1,19 +1,17 @@
 import sanitizeHtml from "sanitize-html"
 import invariant from "tiny-invariant"
 import { ulid } from "ulid"
+import { StoriesValidation } from "~/lib/stories-validation"
 import { db } from "~/server/db/db"
 import { Part, Story } from "~/server/db/db.types"
-import { ValidationError } from "./errors"
-import { dbNow } from "./lib/dates"
-import { StoriesValidation } from "./stories-validation"
-
-export type StoryNode = Omit<Part, "content" | "createdAt" | "storyId"> & {
-  children: StoryTree[]
-}
-
-export type StoryTree = StoryNode
-
-export type StoryThread = Part[]
+import { Auth } from "~/server/domain/auth"
+import { UnauthorizedError, ValidationError } from "~/server/domain/errors"
+import { dbNow } from "~/server/domain/lib/dates"
+import type {
+  StoryNode,
+  StoryThread,
+  StoryTree,
+} from "~/server/domain/stories.types"
 
 export abstract class Stories {
   // Gets all the parts of a story
@@ -31,9 +29,14 @@ export abstract class Stories {
   static async create(args: {
     title: string
     content: string
-    createdBy: string
     visibleInFeeds: boolean
   }): Promise<{ story: Story; part: Part }> {
+    const authContext = Auth.useAuthContext()
+
+    if (authContext.isAnonymous()) {
+      throw new UnauthorizedError()
+    }
+
     const purifiedContent = sanitizeHtml(args.content, {
       allowedTags: ["b", "i", "em", "s", "strong", "p", "br"],
       allowedAttributes: {
@@ -53,12 +56,12 @@ export abstract class Stories {
       title: args.title,
       rootPartId,
       createdAt: dbNow(),
-      createdBy: args.createdBy,
+      createdBy: authContext.user.userId,
     }
 
     const part: Part = {
       partId: ulid(),
-      createdBy: args.createdBy,
+      createdBy: authContext.user.userId,
       content: purifiedContent,
       createdAt: dbNow(),
       storyId,

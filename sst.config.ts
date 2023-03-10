@@ -49,7 +49,6 @@ function Bus(ctx: StackContext) {
 }
 
 function Site(ctx: StackContext) {
-  const { DATABASE_URL } = use(Database)
   const site = new RemixSite(ctx.stack, "site", {
     runtime: "nodejs16.x",
     customDomain:
@@ -60,7 +59,12 @@ function Site(ctx: StackContext) {
             domainAlias: "www.hivemindtales.com",
           }
         : undefined,
-    bind: [DATABASE_URL],
+    environment: {
+      API_URL:
+        ctx.app.stage === "production"
+          ? "https://api.hivemindtales.com"
+          : `https://api.${ctx.app.stage}.hivemindtales.com`,
+    },
   })
   ctx.stack.addOutputs({
     url: site.url ?? "http://localhost:3000",
