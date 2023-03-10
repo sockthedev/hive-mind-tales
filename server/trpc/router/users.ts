@@ -1,4 +1,4 @@
-import { Users } from "~/domain/users"
+import { Users } from "~/server/domain/users"
 
 import { authProcedure } from "./lib/auth-procedure.js"
 import { t } from "./lib/builder.js"

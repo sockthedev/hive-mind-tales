@@ -2,7 +2,7 @@ import { AuthHandler, GoogleAdapter, LinkAdapter, Session } from "sst/node/auth"
 import { Config } from "sst/node/config"
 import invariant from "tiny-invariant"
 import { Auth } from "~/server/domain/auth"
-import { EventBus } from "~/server/domain/event-bus"
+import { Bus } from "~/server/domain/event-bus"
 import { Users } from "~/server/domain/users"
 
 async function handleSuccess(args: { email: string }) {
@@ -33,8 +33,8 @@ async function handleSuccess(args: { email: string }) {
     headers: {
       location: `${
         // @ts-ignore-error
-        Config.AUTH_SUCCESS_REDIRECT_URL
-      }?isFirstLogin=${isFirstLogin.toString()}&token=${token}`,
+        Config.SITE_URL
+      }/login/sso-callback?isFirstLogin=${isFirstLogin.toString()}&token=${token}`,
     },
   }
 }
@@ -46,7 +46,7 @@ export const handler = AuthHandler({
         const email = claims["email"]
         invariant(email != null, 'Expected "email" to be defined')
 
-        await EventBus.publish({
+        await Bus.publish({
           type: "send-magic-link",
           properties: {
             email: claims["email"],
@@ -56,9 +56,10 @@ export const handler = AuthHandler({
         return {
           statusCode: 302,
           headers: {
-            location:
+            location: `${
               // @ts-ignore-error
-              Config.AUTH_MAGIC_LINK_SENT_REDIRECT_URL,
+              Config.SITE_URL
+            }/login/magic-link-sent`,
           },
         }
       },
@@ -66,9 +67,10 @@ export const handler = AuthHandler({
         return {
           statusCode: 302,
           headers: {
-            location:
+            location: `${
               // @ts-ignore-error
-              Config.AUTH_MAGIC_LINK_FAILED_REDIRECT_URL,
+              Config.SITE_URL
+            }/login/magic-link-failed`,
           },
         }
       },

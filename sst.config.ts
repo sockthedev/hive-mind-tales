@@ -1,11 +1,51 @@
+import * as iam from "aws-cdk-lib/aws-iam"
 import type { SSTConfig } from "sst"
-import { Api, Auth, Config, RemixSite, StackContext, use } from "sst/constructs"
+import {
+  Api,
+  Auth,
+  Config,
+  EventBus,
+  Queue,
+  RemixSite,
+  StackContext,
+  use,
+} from "sst/constructs"
 
 function Database(ctx: StackContext) {
   const DATABASE_URL = new Config.Secret(ctx.stack, "DATABASE_URL")
   return {
     DATABASE_URL,
   }
+}
+
+function Bus(ctx: StackContext) {
+  const bus = new EventBus(ctx.stack, "bus", {
+    rules: {
+      send_magic_link: {
+        pattern: {
+          detailType: ["send-magic-link"],
+        },
+        targets: {
+          auth: new Queue(ctx.stack, "auth-on-send-magic-link-queue", {
+            consumer: {
+              function: {
+                handler: "server/functions/bus/auth.onSendMagicLink",
+                permissions: [
+                  new iam.PolicyStatement({
+                    actions: ["ses:SendEmail", "SES:SendRawEmail"],
+                    resources: ["*"],
+                    effect: iam.Effect.ALLOW,
+                  }),
+                ],
+              },
+            },
+          }),
+        },
+      },
+    },
+  })
+
+  return { bus }
 }
 
 function Site(ctx: StackContext) {
@@ -27,9 +67,9 @@ function Site(ctx: StackContext) {
   })
 }
 
-function Authentication(ctx: StackContext) {
+function ApiGateway(ctx: StackContext) {
   const { DATABASE_URL } = use(Database)
-  const GOOGLE_CLIENT_ID = new Config.Secret(ctx.stack, "GOOGLE_CLIENT_ID")
+  const { bus } = use(Bus)
   const api = new Api(ctx.stack, "api", {
     customDomain: {
       domainName:
@@ -40,17 +80,57 @@ function Authentication(ctx: StackContext) {
     },
     defaults: {
       function: {
-        bind: [DATABASE_URL],
+        bind: [bus, DATABASE_URL],
       },
     },
     routes: {
-      "GET /session": "functions/session.handler",
+      // We need to define GET and POST instead of ANY otherwise our CORS
+      // policy will not work.
+      // https://github.com/trpc/trpc/discussions/2095#discussioncomment-3116235
+      "GET /trpc/{proxy+}": "server/functions/trpc.handler",
+      "POST /trpc/{proxy+}": "server/functions/trpc.handler",
     },
+    // TODO:
+    // - Review this, I think we may never need to enable as we will only call
+    //   the API via the actions/loaders of the site.
+    //
+    // cors: {
+    //   allowCredentials: true,
+    //   allowHeaders: ["Accept", "Content-Type", "Authorization"],
+    //   allowMethods: [
+    //     "DELETE",
+    //     "GET",
+    //     "HEAD",
+    //     "OPTIONS",
+    //     "PATCH",
+    //     "POST",
+    //     "PUT",
+    //   ],
+    //   allowOrigins: [ctx.app.local
+    //     ? "http://localhost:3000"
+    //     : `https://www.hivemindtales.com`],
+    //   maxAge: "1 day",
+    // },
+  })
+  return {
+    api,
+  }
+}
+
+function Authentication(ctx: StackContext) {
+  const { DATABASE_URL } = use(Database)
+  const { api } = use(ApiGateway)
+  const GOOGLE_CLIENT_ID = new Config.Secret(ctx.stack, "GOOGLE_CLIENT_ID")
+  const SITE_URL = new Config.Parameter(ctx.stack, "SITE_URL", {
+    value:
+      ctx.app.stage === "production"
+        ? "https://www.hivemindtales.com"
+        : "http://localhost:3000",
   })
   const auth = new Auth(ctx.stack, "auth", {
     authenticator: {
-      handler: "functions/auth.handler",
-      bind: [DATABASE_URL, GOOGLE_CLIENT_ID],
+      handler: "server/functions/auth.handler",
+      bind: [DATABASE_URL, GOOGLE_CLIENT_ID, SITE_URL],
       environment: {
         SITE_URL:
           ctx.app.stage === "production"
@@ -91,7 +171,9 @@ export default {
     })
 
     app.stack(Database)
-    app.stack(Site)
+    app.stack(Bus)
+    app.stack(ApiGateway)
     app.stack(Authentication)
+    app.stack(Site)
   },
 } satisfies SSTConfig
