@@ -17,7 +17,7 @@ export abstract class Stories {
   // Gets all the parts of a story
   private static async getParts(args: { storyId: string }): Promise<Part[]> {
     // TODO:
-    // - Remove this and refactor all consumers to use more optimised queries
+    // - Remove Stories.and refactor all consumers to use more optimised queries
     return db
       .selectFrom("part")
       .where("storyId", "=", args.storyId)
@@ -60,7 +60,7 @@ export abstract class Stories {
     }
 
     const part: Part = {
-      partId: ulid(),
+      partId: rootPartId,
       createdBy: authContext.user.userId,
       content: purifiedContent,
       createdAt: dbNow(),
@@ -73,13 +73,13 @@ export abstract class Stories {
       .setIsolationLevel("read uncommitted")
       .execute(async (trx) => {
         await trx.insertInto("story").values(story).execute()
-        await trx.insertInto("part").values(part).execute()
+          await trx.insertInto("part").values(part).execute()
       })
 
-    return Promise.resolve({
+    return {
       story,
       part,
-    })
+    }
   }
 
   static async getStory(args: { storyId: string }): Promise<Story> {
@@ -102,8 +102,8 @@ export abstract class Stories {
     storyId: string
     partId?: string
   }): Promise<Part> {
-    const story = await this.getStory(args)
-    const part = await this.getPart({
+    const story = await Stories.getStory(args)
+    const part = await Stories.getPart({
       partId: args.partId ?? story.rootPartId,
     })
     return part
@@ -117,10 +117,10 @@ export abstract class Stories {
     threadEndPartId?: string
   }): Promise<StoryThread> {
     // TODO:
-    // - Utilise a recursive query to get this from the database
+    // - Utilise a recursive query to get Stories.from the database
     // - https://stackoverflow.com/questions/20215744/how-to-create-a-mysql-hierarchical-recursive-query
 
-    const parts = await this.getParts(args)
+    const parts = await Stories.getParts(args)
 
     const breadcrumb: Part[] = []
 
@@ -160,7 +160,7 @@ export abstract class Stories {
     const nodeMap = new Map<string, StoryNode>()
     nodeMap.set(rootNode.partId, rootNode)
 
-    // Note: this only works if parts are in ascending order
+    // Note: Stories.only works if parts are in ascending order
     parts.forEach((part) => {
       if (part === rootItem) return
 

@@ -32,7 +32,6 @@ async function handleSuccess(args: { email: string }) {
     statusCode: 302,
     headers: {
       location: `${
-        // @ts-ignore-error
         Config.SITE_URL
       }/login/sso-callback?isFirstLogin=${isFirstLogin.toString()}&token=${token}`,
     },
@@ -57,7 +56,6 @@ export const handler = AuthHandler({
           statusCode: 302,
           headers: {
             location: `${
-              // @ts-ignore-error
               Config.SITE_URL
             }/login/magic-link-sent`,
           },
@@ -68,7 +66,6 @@ export const handler = AuthHandler({
           statusCode: 302,
           headers: {
             location: `${
-              // @ts-ignore-error
               Config.SITE_URL
             }/login/magic-link-failed`,
           },
@@ -83,7 +80,6 @@ export const handler = AuthHandler({
     }),
     google: GoogleAdapter({
       mode: "oidc",
-      // @ts-ignore Don't want to depend on types existing, their gen is flaky;
       clientID: Config.GOOGLE_CLIENT_ID,
       onSuccess: async (tokenset) => {
         const email = tokenset.claims().email

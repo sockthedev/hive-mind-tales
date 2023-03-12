@@ -28,7 +28,7 @@ const USERNAME_REGEX = /^[a-z0-9]+$/
 export abstract class Users {
   private static async generateUsername() {
     const username = `rando${Numbers.getRandomInt(1000000000, 9999999999)}`
-    const exists = await this.getByUsername({ username })
+    const exists = await Users.getByUsername({ username })
     if (exists) {
       return null
     }
@@ -36,7 +36,7 @@ export abstract class Users {
   }
 
   private static async runGenerateUsername() {
-    const username = await this.generateUsername()
+    const username = await Users.generateUsername()
     if (username == null) {
       throw new AbortError("Failed to generate a unique username")
     }
@@ -152,7 +152,7 @@ export abstract class Users {
     actorId: string
     username: string
   }): Promise<User> {
-    this.validateUsername(args)
+    Users.validateUsername(args)
 
     const authContext = Auth.useAuthContext()
 
@@ -160,7 +160,7 @@ export abstract class Users {
       throw new UnauthorizedError()
     }
 
-    const userToUpdate = await this.get(args)
+    const userToUpdate = await Users.get(args)
 
     if (userToUpdate == null) {
       throw new InvalidArgumentError("User does not exist")
@@ -182,7 +182,7 @@ export abstract class Users {
       .where("userId", "=", args.actorId)
       .execute()
 
-    const updatedUser = await this.get(args)
+    const updatedUser = await Users.get(args)
 
     if (updatedUser == null) {
       throw new InternalError("Expected user to exist")
@@ -195,7 +195,7 @@ export abstract class Users {
     username: string
     email: string
   }): Promise<User> {
-    this.validateUsername(args)
+    Users.validateUsername(args)
 
     if (!Validators.isEmail(args.email)) {
       throw new InvalidArgumentError("Invalid email")
@@ -217,7 +217,7 @@ export abstract class Users {
       })
       .execute()
 
-    const user = await this.get({ actorId: userId })
+    const user = await Users.get({ actorId: userId })
 
     if (user == null) {
       throw new InternalError("Actor does not exist")
@@ -229,7 +229,7 @@ export abstract class Users {
   public static async signUpWithGeneratedUsername(args: {
     email: string
   }): Promise<User> {
-    const username = await pRetry(this.runGenerateUsername, { retries: 10 })
-    return this.signUp({ ...args, username })
+    const username = await pRetry(Users.runGenerateUsername, { retries: 10 })
+    return Users.signUp({ ...args, username })
   }
 }

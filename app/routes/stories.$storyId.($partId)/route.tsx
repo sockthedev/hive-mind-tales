@@ -10,7 +10,7 @@ import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { RichTextInput } from "~/app/components/rich-text-input"
 import { StoryNavigatorNode } from "~/app/components/story-navigator"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { trpc } from "~/app/trpc.server"
+import { trpc } from "~/app/server/trpc.server"
 import { StoryNode } from "~/server/domain/stories.types"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 

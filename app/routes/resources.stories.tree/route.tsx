@@ -6,7 +6,7 @@ import {
   StoryNavigator,
   StoryNavigatorNode,
 } from "~/app/components/story-navigator"
-import { trpc } from "~/app/trpc.server"
+import { trpc } from "~/app/server/trpc.server"
 
 const searchParamsSchema = zfd.formData({
   storyId: zfd.text(),

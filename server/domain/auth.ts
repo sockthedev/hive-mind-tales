@@ -28,7 +28,7 @@ export const SystemActor: User = {
   googleId: null,
 }
 
-const UserContext = Context.create<User>(() => AnonymousActor)
+const AuthContext = Context.create<User>(() => AnonymousActor)
 
 declare module "sst/node/auth" {
   export interface SessionTypes {
@@ -70,12 +70,12 @@ export abstract class Auth {
           throw new UnauthorizedError("Invalid user type for API authorization")
         }
 
-        UserContext.provide(user)
+        AuthContext.provide(user)
       }
 
       return user
     } else {
-      UserContext.provide(AnonymousActor)
+      AuthContext.provide(AnonymousActor)
       return null
     }
   }
@@ -85,7 +85,7 @@ export abstract class Auth {
    * handler etc.
    */
   public static useSystemAuthentication() {
-    UserContext.provide(SystemActor)
+    AuthContext.provide(SystemActor)
   }
 
   public static async parseToken(args: { token: string }) {
@@ -122,7 +122,7 @@ export abstract class Auth {
       throw new InternalError(`Failed to get actor for token`)
     }
 
-    UserContext.provide(actor)
+    AuthContext.provide(actor)
   }
 
   /**
@@ -131,11 +131,11 @@ export abstract class Auth {
    * @returns The current authenticated Actor, or null.
    */
   public static useAuthContextActor() {
-    return UserContext.use()
+    return AuthContext.use()
   }
 
   public static useAuthContext() {
-    const user = UserContext.use()
+    const user = AuthContext.use()
 
     return {
       user,

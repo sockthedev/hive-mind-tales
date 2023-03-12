@@ -1,4 +1,5 @@
-import { ActionArgs, json, redirect } from "@remix-run/node"
+import type { ActionArgs } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
@@ -9,8 +10,9 @@ import { FormRichTextInput } from "~/app/components/form-rich-text-input"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { FormTitleInput } from "~/app/components/form-title-input"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { getToken } from "~/app/session.server"
-import { trpc } from "~/app/trpc.server"
+import { createLoginActionCookie } from "~/app/server/login-action-cookie.server"
+import { getToken } from "~/app/server/session.server"
+import { trpc } from "~/app/server/trpc.server"
 import {
   MAX_CONTENT_TEXT_LENGTH,
   MIN_CONTENT_TEXT_LENGTH,
@@ -57,28 +59,22 @@ export const action = async ({ request }: ActionArgs) => {
       const token = await getToken(request)
 
       if (token) {
-        const { story } = await trpc(token).stories.create.mutate({
+        const { story, part } = await trpc(token).stories.create.mutate({
           title: form.data.title,
           content: form.data.story,
           visibleInFeeds: form.data.visibleInFeeds,
         })
-        return redirect(`/stories/${story.storyId}/share`, {
+        return redirect(`/stories/${story.storyId}/${part.partId}/share`, {
           status: 302,
         })
       } else {
-        const loginAction = {
-          action: "create_story",
-          payload: {
-            title: form.data.title,
-            content: form.data.story,
-            visibleInFeeds: form.data.visibleInFeeds,
-          },
-        }
         return redirect("/login", {
           headers: {
-            "Set-Cookie": `loginAction=${encodeURIComponent(
-              JSON.stringify(loginAction),
-            )}`,
+           "Set-Cookie": await createLoginActionCookie("create-story", {
+              title: form.data.title,
+              content: form.data.story,
+              visibleInFeeds: form.data.visibleInFeeds,
+            }),
           },
           status: 302,
         })
