@@ -1,22 +1,37 @@
-import { json, LoaderArgs } from "@remix-run/node"
+import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import React from "react"
-import { ClientOnly } from "remix-utils"
-import { ValidatedForm } from "remix-validated-form"
+import { badRequest, ClientOnly } from "remix-utils"
+import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
+
 import { Button, Divider, H1, Spacer } from "~/app/components"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { RichTextInput } from "~/app/components/rich-text-input"
-import { StoryNavigatorNode } from "~/app/components/story-navigator"
+import type { StoryNavigatorNode } from "~/app/components/story-navigator"
 import { TwoColumnContent } from "~/app/components/two-column-content"
+import { createLoginActionCookie } from "~/app/server/login-action-cookie.server"
+import { getToken } from "~/app/server/session.server"
 import { trpc } from "~/app/server/trpc.server"
-import { StoryNode } from "~/server/domain/stories.types"
+import {
+  MAX_CONTENT_TEXT_LENGTH,
+  MIN_CONTENT_TEXT_LENGTH,
+  StoriesValidation,
+} from "~/lib/stories-validation"
+import type { StoryNode } from "~/server/domain/stories.types"
+
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
-export const formValidator = withZod(
+export const formSchema = withZod(
   z.object({
-    story: z.string().min(1, { message: "Story is required" }),
+    storyId: z.string().min(1, "Story ID is required"),
+    content: z
+      .string()
+      .min(1, { message: "Story is required" })
+      .refine((story) => {
+        return StoriesValidation.isValidContentLength(story)
+      }, `Story character count must be between ${MIN_CONTENT_TEXT_LENGTH} and ${MAX_CONTENT_TEXT_LENGTH} in length`),
   }),
 )
 
@@ -25,7 +40,7 @@ const paramsSchema = z.object({
   partId: z.string().optional(),
 })
 
-export const loader = async ({ params }: LoaderArgs) => {
+export async function loader({ params }: LoaderArgs) {
   const { storyId, partId } = paramsSchema.parse(params)
 
   const [story, part] = await Promise.all([
@@ -42,6 +57,39 @@ export const loader = async ({ params }: LoaderArgs) => {
     },
     200,
   )
+}
+
+export async function action({ request }: ActionArgs) {
+  if (request.method !== "POST") {
+    throw badRequest("Method not allowed")
+  }
+
+  const form = await formSchema.validate(await request.formData())
+  if (form.error) {
+    return validationError(form.error)
+  }
+
+  const token = await getToken(request)
+
+  if (token) {
+    const part = await trpc(token).stories.addPart.mutate({
+      storyId: form.data.storyId,
+      content: form.data.content,
+    })
+    return redirect(`/stories/${form.data.storyId}/${part.partId}/share`, {
+      status: 302,
+    })
+  } else {
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await createLoginActionCookie("create-part", {
+          storyId: form.data.storyId,
+          content: form.data.content,
+        }),
+      },
+      status: 302,
+    })
+  }
 }
 
 const ScrollToMe: React.FC<{ className?: string; scrollId: string }> = (
@@ -67,22 +115,21 @@ export default function StoryRoute() {
 
   const [showEditor, setShowEditor] = React.useState(false)
 
-  function navigateToNode(args: { node: StoryNode }) {
-    const { node } = args
-    navigate(`/stories/${data.story.storyId}/${node.partId}`, {
-      preventScrollReset: true,
-    })
-  }
-
-  const [selectedNode, setSelectedNode] =
-    React.useState<StoryNavigatorNode | null>(null)
+  const navigateToNode = React.useCallback(
+    (args: { node: StoryNode }) => {
+      const { node } = args
+      navigate(`/stories/${data.story.storyId}/${node.partId}`, {
+        preventScrollReset: true,
+      })
+    },
+    [data.story.storyId, navigate],
+  )
 
   const onNodeClick = React.useCallback(
     (node: StoryNavigatorNode) => {
-      setSelectedNode(node)
       navigateToNode({ node: node.data })
     },
-    [setSelectedNode, selectedNode],
+    [navigateToNode],
   )
 
   return (
@@ -135,7 +182,7 @@ export default function StoryRoute() {
 
           {showEditor && (
             <>
-              <ValidatedForm method="post" validator={formValidator}>
+              <ValidatedForm method="post" validator={formSchema}>
                 <Divider
                   label="Continue this thread"
                   hint="Add your own spin by clicking the text below"
@@ -146,6 +193,11 @@ export default function StoryRoute() {
                 />
                 <Spacer size="lg" />
                 <div className="text-center">
+                  <input
+                    type="hidden"
+                    name="storyId"
+                    value={data.story.storyId}
+                  />
                   <FormSubmitButton>Submit</FormSubmitButton>
                 </div>
               </ValidatedForm>

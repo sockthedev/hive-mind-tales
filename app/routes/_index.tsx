@@ -1,9 +1,11 @@
 import type { ActionArgs } from "@remix-run/node"
-import { json, redirect } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
 import { withZod } from "@remix-validated-form/with-zod"
+import { badRequest } from "remix-utils"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 import * as zfd from "zod-form-data"
+
 import { Divider, H3, P, Spacer } from "~/app/components"
 import { FormCheckbox } from "~/app/components/form-checkbox"
 import { FormRichTextInput } from "~/app/components/form-rich-text-input"
@@ -22,8 +24,8 @@ import {
 // TODO:
 // - Pull from a pool of example stories from the backend;
 const exampleStory = `
-<p>In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
-<p>One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>`
+<p class="text-lg leading-7 mt-6">In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
+<p class="text-lg leading-7 mt-6">One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>`
 
 // TODO:
 // - Need to handle validation on the client. This requires extending the
@@ -49,40 +51,37 @@ export const formValidator = withZod(
 )
 
 export const action = async ({ request }: ActionArgs) => {
-  switch (request.method) {
-    case "POST": {
-      const form = await formValidator.validate(await request.formData())
-      if (form.error) {
-        return validationError(form.error)
-      }
+  if (request.method !== "POST") {
+    throw badRequest("Method not allowed")
+  }
 
-      const token = await getToken(request)
+  const form = await formValidator.validate(await request.formData())
+  if (form.error) {
+    return validationError(form.error)
+  }
 
-      if (token) {
-        const { story, part } = await trpc(token).stories.create.mutate({
+  const token = await getToken(request)
+
+  if (token) {
+    const { story, part } = await trpc(token).stories.create.mutate({
+      title: form.data.title,
+      content: form.data.story,
+      visibleInFeeds: form.data.visibleInFeeds,
+    })
+    return redirect(`/stories/${story.storyId}/${part.partId}/share`, {
+      status: 302,
+    })
+  } else {
+    return redirect("/login", {
+      headers: {
+        "Set-Cookie": await createLoginActionCookie("create-story", {
           title: form.data.title,
           content: form.data.story,
           visibleInFeeds: form.data.visibleInFeeds,
-        })
-        return redirect(`/stories/${story.storyId}/${part.partId}/share`, {
-          status: 302,
-        })
-      } else {
-        return redirect("/login", {
-          headers: {
-           "Set-Cookie": await createLoginActionCookie("create-story", {
-              title: form.data.title,
-              content: form.data.story,
-              visibleInFeeds: form.data.visibleInFeeds,
-            }),
-          },
-          status: 302,
-        })
-      }
-    }
-    default: {
-      return json({ message: "Method not allowed" }, 405)
-    }
+        }),
+      },
+      status: 302,
+    })
   }
 }
 

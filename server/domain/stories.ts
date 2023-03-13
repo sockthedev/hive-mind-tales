@@ -1,11 +1,16 @@
 import sanitizeHtml from "sanitize-html"
 import invariant from "tiny-invariant"
 import { ulid } from "ulid"
+
 import { StoriesValidation } from "~/lib/stories-validation"
 import { db } from "~/server/db/db"
-import { Part, Story } from "~/server/db/db.types"
+import type { Part, Story } from "~/server/db/db.types"
 import { Auth } from "~/server/domain/auth"
-import { UnauthorizedError, ValidationError } from "~/server/domain/errors"
+import {
+  InvalidArgumentError,
+  UnauthorizedError,
+  ValidationError,
+} from "~/server/domain/errors"
 import { dbNow } from "~/server/domain/lib/dates"
 import type {
   StoryNode,
@@ -24,6 +29,46 @@ export abstract class Stories {
       .orderBy("partId", "asc")
       .selectAll()
       .execute()
+  }
+
+  static async addPart(args: {
+    storyId: string
+    content: string
+  }): Promise<Part> {
+    const authContext = Auth.useAuthContext()
+
+    if (authContext.isAnonymous()) {
+      throw new UnauthorizedError()
+    }
+
+    const story = await Stories.getStory(args)
+    if (!story) {
+      throw new InvalidArgumentError("Story not found")
+    }
+
+    const purifiedContent = sanitizeHtml(args.content, {
+      allowedTags: ["b", "i", "em", "s", "strong", "p", "br"],
+      allowedAttributes: {
+        p: ["class"],
+      },
+    })
+
+    if (!StoriesValidation.isValidContentLength(args.content)) {
+      throw new ValidationError("Content is too long")
+    }
+
+    const part: Part = {
+      partId: ulid(),
+      createdBy: authContext.user.userId,
+      content: purifiedContent,
+      createdAt: dbNow(),
+      storyId: args.storyId,
+      parentPartId: null,
+    }
+
+    await db.insertInto("part").values(part).execute()
+
+    return part
   }
 
   static async create(args: {
@@ -73,7 +118,7 @@ export abstract class Stories {
       .setIsolationLevel("read uncommitted")
       .execute(async (trx) => {
         await trx.insertInto("story").values(story).execute()
-          await trx.insertInto("part").values(part).execute()
+        await trx.insertInto("part").values(part).execute()
       })
 
     return {
@@ -183,5 +228,23 @@ export abstract class Stories {
     })
 
     return rootNode
+  }
+
+  static async getMyStories() {
+    const authContext = Auth.useAuthContext()
+
+    if (authContext.isAnonymous()) {
+      throw new UnauthorizedError()
+    }
+
+    const stories = await db
+      .selectFrom("story as s")
+      .innerJoin("part as p", "p.partId", "s.rootPartId")
+      .where("s.createdBy", "=", authContext.user.userId)
+      .select(["s.storyId", "s.title", "s.rootPartId", "p.content"])
+      .orderBy("s.createdAt", "desc")
+      .execute()
+
+    return stories
   }
 }

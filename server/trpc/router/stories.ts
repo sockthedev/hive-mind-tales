@@ -1,9 +1,12 @@
 import { z } from "zod"
+
 import { Stories } from "~/server/domain/stories.js"
+
 import { authProcedure } from "./lib/auth-procedure.js"
 import { t } from "./lib/builder.js"
 
 export const stories = t.router({
+  // Mutations
   create: authProcedure
     .input(
       z.object({
@@ -19,6 +22,21 @@ export const stories = t.router({
         visibleInFeeds: input.visibleInFeeds,
       })
     }),
+  addPart: authProcedure
+    .input(
+      z.object({
+        storyId: z.string(),
+        content: z.string(),
+      }),
+    )
+    .mutation(({ input }) => {
+      return Stories.addPart({
+        storyId: input.storyId,
+        content: input.content,
+      })
+    }),
+
+  // Queries
   getTree: t.procedure
     .input(z.object({ storyId: z.string() }))
     .query(({ input }) => {
@@ -37,4 +55,7 @@ export const stories = t.router({
         partId: input.partId,
       })
     }),
+  mine: authProcedure.query(() => {
+    return Stories.getMyStories()
+  }),
 })

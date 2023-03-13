@@ -4,6 +4,7 @@ import { EditorContent, useEditor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import React from "react"
 import sanitizeHtml from "sanitize-html"
+
 import { RichTextEditorMarkMenu } from "./rich-text-input-mark-menu"
 
 const CHARACTER_LIMIT = 3000
@@ -23,17 +24,17 @@ export const RichTextInput: React.FC<RichTextInputProps> = (props) => {
   const errorMessageElementId = `${inputProps.id ?? uniqId}-error`
   const errorProps = props.error
     ? {
-        "aria-invalid": true,
-        "aria-describedby": errorMessageElementId,
-      }
+      "aria-invalid": true,
+      "aria-describedby": errorMessageElementId,
+    }
     : {}
 
   const [html, setHtml] = React.useState(props.defaultValue)
 
   const editor = useEditor({
-    // @ts-ignore
     onUpdate: ({ editor }) => {
-      setHtml(editor.getHTML())
+      const html = editor.getHTML()
+      setHtml(html)
     },
     extensions: [
       StarterKit.configure({

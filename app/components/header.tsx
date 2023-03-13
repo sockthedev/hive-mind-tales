@@ -12,13 +12,13 @@ export const Header: React.FC = () => {
       <nav>
         <ul className="flex space-x-4">
           <li>
-            <Link to="/recent">Recent</Link>
+            <Link to="/stories/recent">Recent</Link>
           </li>
           <li>
-            <Link to="/top-rated">Top Rated</Link>
+            <Link to="/stories/top-rated">Top Rated</Link>
           </li>
           <li>
-            <Link to="/account/stories">My Stories</Link>
+            <Link to="/my/stories">My Stories</Link>
           </li>
         </ul>
       </nav>

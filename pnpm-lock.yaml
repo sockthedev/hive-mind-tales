@@ -47,6 +47,7 @@ specifiers:
   d3-zoom: ^3.0.0
   dayjs: ^1.11.7
   eslint: ^8.36.0
+  eslint-plugin-simple-import-sort: ^10.0.0
   fast-jwt: ^2.2.0
   isbot: ^3.6.6
   kysely: ^0.23.5
@@ -57,6 +58,7 @@ specifiers:
   npm-run-all: ^4.1.5
   p-retry: ^5.1.2
   prettier: ^2.8.4
+  prettier-plugin-organize-imports: ^3.2.2
   prettier-plugin-tailwindcss: ^0.2.4
   react: ^18.2.0
   react-dom: ^18.2.0
@@ -68,10 +70,10 @@ specifiers:
   string-strip-html: ^13.2.1
   tailwindcss: ^3.2.7
   tiny-invariant: ^1.3.1
-  tsx: ^3.12.4
+  tsx: ^3.12.5
   typescript: ^4.9.5
   ulid: ^2.3.0
-  undici: ^5.20.0
+  undici: ^5.21.0
   zod: ^3.21.4
   zod-form-data: ^2.0.0
 
@@ -121,7 +123,7 @@ dependencies:
   string-strip-html: 13.2.1
   tiny-invariant: 1.3.1
   ulid: 2.3.0
-  undici: 5.20.0
+  undici: 5.21.0
   zod: 3.21.4
   zod-form-data: 2.0.0_zod@3.21.4
 
@@ -143,13 +145,15 @@ devDependencies:
   aws-cdk-lib: 2.62.2_constructs@10.1.156
   constructs: 10.1.156
   eslint: 8.36.0
+  eslint-plugin-simple-import-sort: 10.0.0_eslint@8.36.0
   kysely-codegen: 0.9.0_kysely@0.23.5+mysql2@3.2.0
   npm-run-all: 4.1.5
   prettier: 2.8.4
-  prettier-plugin-tailwindcss: 0.2.4_prettier@2.8.4
+  prettier-plugin-organize-imports: 3.2.2_silln3pw57har7jydmecgzoypa
+  prettier-plugin-tailwindcss: 0.2.4_tnxajtglrwt6ss4l7qpdnez62i
   sst: 2.1.25_b3cz4yz5fvlhmz2lnwgflyst4e
   tailwindcss: 3.2.7
-  tsx: 3.12.4
+  tsx: 3.12.5
   typescript: 4.9.5
 
 packages:
@@ -8306,6 +8310,14 @@ packages:
       string.prototype.matchall: 4.0.8
     dev: true
 
+  /eslint-plugin-simple-import-sort/10.0.0_eslint@8.36.0:
+    resolution: {integrity: sha512-AeTvO9UCMSNzIHRkg8S6c3RPy5YEwKWSQPx3DYghLedo2ZQxowPFLGDN1AZ2evfg6r6mjBSZSLxLFsWSu3acsw==}
+    peerDependencies:
+      eslint: '>=5.0.0'
+    dependencies:
+      eslint: 8.36.0
+    dev: true
+
   /eslint-plugin-testing-library/5.10.2_vgl77cfdswitgr47lm5swmv43m:
     resolution: {integrity: sha512-f1DmDWcz5SDM+IpCkEX0lbFqrrTs8HRsEElzDEqN/EBI0hpRj8Cns5+IVANXswE8/LeybIJqPAOQIFu2j5Y5sw==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0, npm: '>=6'}
@@ -11691,7 +11703,24 @@ packages:
     engines: {node: '>= 0.8.0'}
     dev: true
 
-  /prettier-plugin-tailwindcss/0.2.4_prettier@2.8.4:
+  /prettier-plugin-organize-imports/3.2.2_silln3pw57har7jydmecgzoypa:
+    resolution: {integrity: sha512-e97lE6odGSiHonHJMTYC0q0iLXQyw0u5z/PJpvP/3vRy6/Zi9kLBwFAbEGjDzIowpjQv8b+J04PDamoUSQbzGA==}
+    peerDependencies:
+      '@volar/vue-language-plugin-pug': ^1.0.4
+      '@volar/vue-typescript': ^1.0.4
+      prettier: '>=2.0'
+      typescript: '>=2.9'
+    peerDependenciesMeta:
+      '@volar/vue-language-plugin-pug':
+        optional: true
+      '@volar/vue-typescript':
+        optional: true
+    dependencies:
+      prettier: 2.8.4
+      typescript: 4.9.5
+    dev: true
+
+  /prettier-plugin-tailwindcss/0.2.4_tnxajtglrwt6ss4l7qpdnez62i:
     resolution: {integrity: sha512-wMyugRI2yD8gqmMpZSS8kTA0gGeKozX/R+w8iWE+yiCZL09zY0SvfiHfHabNhjGhzxlQ2S2VuTxPE3T72vppCQ==}
     engines: {node: '>=12.17.0'}
     peerDependencies:
@@ -11744,6 +11773,7 @@ packages:
         optional: true
     dependencies:
       prettier: 2.8.4
+      prettier-plugin-organize-imports: 3.2.2_silln3pw57har7jydmecgzoypa
     dev: true
 
   /prettier/2.7.1:
@@ -12952,7 +12982,7 @@ packages:
       promptly: 3.2.0
       react: 17.0.2
       remeda: 1.8.1
-      undici: 5.20.0
+      undici: 5.21.0
       uuid: 9.0.0
       ws: 8.12.1
       yaml: 1.10.2
@@ -13393,8 +13423,8 @@ packages:
       typescript: 4.9.5
     dev: true
 
-  /tsx/3.12.4:
-    resolution: {integrity: sha512-IZ0Sqm2AwB3pgE+n/g63jLNoZZXinbXfdvNWB06wdwey+/7dlOurdS1Vb5pBGa7VO9nTjAOODbQgKCgHk7JsPA==}
+  /tsx/3.12.5:
+    resolution: {integrity: sha512-/TLj30xF1zcN9JkoFCyROtIQUi8cRQG+AFchsg5YkWou3+RXxTZS/ffWB3nCxyZPoBqF2+8ohs07N815dNb1wQ==}
     hasBin: true
     dependencies:
       '@esbuild-kit/cjs-loader': 2.4.2
@@ -13488,8 +13518,8 @@ packages:
       which-boxed-primitive: 1.0.2
     dev: true
 
-  /undici/5.20.0:
-    resolution: {integrity: sha512-J3j60dYzuo6Eevbawwp1sdg16k5Tf768bxYK4TUJRH7cBM4kFCbf3mOnM/0E3vQYXvpxITbbWmBafaDbxLDz3g==}
+  /undici/5.21.0:
+    resolution: {integrity: sha512-HOjK8l6a57b2ZGXOcUsI5NLfoTrfmbOl90ixJDl0AEFG4wgHNDQxtZy15/ZQp7HhjkpaGlp/eneMgtsu1dIlUA==}
     engines: {node: '>=12.18'}
     dependencies:
       busboy: 1.6.0
