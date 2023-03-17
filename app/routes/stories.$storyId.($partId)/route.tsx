@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import React from "react"
-import { badRequest, ClientOnly } from "remix-utils"
+import { ClientOnly, badRequest } from "remix-utils"
 import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
@@ -22,6 +22,7 @@ import {
 } from "~/lib/stories-validation"
 import type { StoryNode } from "~/server/domain/stories.types"
 
+import { FullStackUsername } from "../resources/components/username/route"
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 const DEFAULT_COLLABORATE_CONTENT = "<p>The story didn't end there...</p>"
@@ -170,14 +171,16 @@ export default function StoryRoute() {
 
           <H1>{data.story.title}</H1>
           <span className="block text-xs italic text-slate-400">
-            A story initiated by @{data.story.createdBy}.
+            A story initiated by{" "}
+            <FullStackUsername userId={data.story.createdBy} />.
           </span>
 
           <Spacer size="xl" />
 
           {data.story.rootPartId !== data.part.partId && (
             <span className="block text-right text-xs italic text-slate-400">
-              Collaboration by @{data.part.createdBy};
+              Collaboration by{" "}
+              <FullStackUsername userId={data.part.createdBy} />;
             </span>
           )}
           <div dangerouslySetInnerHTML={{ __html: data.part.content }} />

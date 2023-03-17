@@ -81,7 +81,7 @@ export default function HomepageRoute() {
       left={() => (
         <section>
           <Spacer size="lg" />
-          <img src="/logo-large.png" alt="Hive Mind Tales" className="w-1/2" />
+          <img src="/logo-large.png" alt="Hive Mind Tales" className="w-1/3" />
           <H3>
             A ridiculous experiment in
             <br />
