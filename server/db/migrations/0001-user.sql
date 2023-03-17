@@ -4,7 +4,7 @@ create table user (
   user_id varchar(30) not null,
 
   user_type varchar(15) not null,
-  username varchar(15) not null,
+  username varchar(20) not null,
   email varchar(320) null,
   twitter_id varchar(320) null,
   google_id varchar(320) null,

@@ -1,5 +1,7 @@
 import { useField } from "remix-validated-form"
-import { Input, InputProps } from "./input"
+
+import type { InputProps } from "./input"
+import { Input } from "./input"
 
 export type FormInputProps = InputProps & {
   name: string

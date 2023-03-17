@@ -39,7 +39,9 @@ export const FullStackStoryNavigator: React.FC<FullStackStoryNavigatorProps> = (
 
   React.useEffect(() => {
     if (fetcher.type === "init") {
-      fetcher.load(`/resources/stories/tree?storyId=${props.storyId}`)
+      fetcher.load(
+        `/resources/components/stories/tree?storyId=${props.storyId}`,
+      )
     }
   }, [fetcher, props.storyId])
 

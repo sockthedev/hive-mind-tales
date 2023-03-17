@@ -79,7 +79,9 @@ export default function HomepageRoute() {
   return (
     <TwoColumnContent
       left={() => (
-        <section className="text-gray-600">
+        <section>
+          <Spacer size="lg" />
+          <img src="/logo-large.png" alt="Hive Mind Tales" className="w-1/2" />
           <H3>
             A ridiculous experiment in
             <br />

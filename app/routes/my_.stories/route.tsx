@@ -25,6 +25,8 @@ export default function MyStoriesRoute() {
 
   return (
     <NarrowContent>
+      <Spacer size="lg" />
+
       <H1>My Stories</H1>
       <P>Here are all the stories you've started...</P>
 

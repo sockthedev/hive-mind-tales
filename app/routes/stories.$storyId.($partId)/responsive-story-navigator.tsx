@@ -4,8 +4,8 @@ import React from "react"
 
 import { IconButton } from "~/app/components/icon-button"
 
-import type { FullStackStoryNavigatorProps } from "../resources.stories.tree/route"
-import { FullStackStoryNavigator } from "../resources.stories.tree/route"
+import type { FullStackStoryNavigatorProps } from "../resources/components/stories.tree/route"
+import { FullStackStoryNavigator } from "../resources/components/stories.tree/route"
 
 export type {
   StoryNavigatorData,

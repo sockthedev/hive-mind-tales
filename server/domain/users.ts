@@ -1,16 +1,21 @@
 import pRetry, { AbortError } from "p-retry"
 import { ulid } from "ulid"
+
 import { db } from "~/server/db/db"
 import type { DB } from "~/server/db/db.types"
 import { Dates } from "~/server/lib/dates"
-import { Numbers } from "~/server/lib/numbers.js"
 import { Validators } from "~/server/lib/validators.js"
+
+import { getRandomItemFromArray } from "../lib/arrays"
+import { getRandomInt } from "../lib/numbers"
 import { Auth } from "./auth"
 import {
+  ForbiddenError,
   InternalError,
   InvalidArgumentError,
   UnauthorizedError,
 } from "./errors.js"
+import { animals } from "./lib/animals"
 
 export type User = DB["user"]
 
@@ -27,7 +32,10 @@ const USERNAME_REGEX = /^[a-z0-9]+$/
 
 export abstract class Users {
   private static async generateUsername() {
-    const username = `rando${Numbers.getRandomInt(1000000000, 9999999999)}`
+    const randomAnimal: string = getRandomItemFromArray(animals)
+    const randomNumber: number = getRandomInt(0, 99999)
+    // Note: there is a maximum of 22 million variations for this
+    const username = `${randomAnimal}${randomNumber}`
     const exists = await Users.getByUsername({ username })
     if (exists) {
       return null
@@ -148,6 +156,19 @@ export abstract class Users {
     }
   }
 
+  public static async getUsername(args: { userId: string }) {
+    const user = await db
+      .selectFrom("user")
+      .select("username")
+      .where("userId", "=", args.userId)
+      .executeTakeFirst()
+
+    if (user == null) {
+      throw new InvalidArgumentError("User does not exist")
+    }
+    return user.username
+  }
+
   public static async setUsername(args: {
     actorId: string
     username: string
@@ -167,11 +188,11 @@ export abstract class Users {
     }
 
     if (userToUpdate.userType === UserType.System) {
-      throw new UnauthorizedError()
+      throw new ForbiddenError()
     }
 
     if (authContext.isUser() && !authContext.isMe(userToUpdate)) {
-      throw new UnauthorizedError()
+      throw new ForbiddenError()
     }
 
     await db
@@ -183,6 +204,36 @@ export abstract class Users {
       .execute()
 
     const updatedUser = await Users.get(args)
+
+    if (updatedUser == null) {
+      throw new InternalError("Expected user to exist")
+    }
+
+    return updatedUser
+  }
+
+  public static async updateMyUsername(args: {
+    username: string
+  }): Promise<User> {
+    const authContext = Auth.useAuthContext()
+
+    if (!authContext.isHuman()) {
+      throw new ForbiddenError()
+    }
+
+    await db
+      .updateTable("user")
+      .set({
+        username: args.username,
+      })
+      .where("userId", "=", authContext.user.userId)
+      .execute()
+
+    const updatedUser = await db
+      .selectFrom("user")
+      .where("userId", "=", authContext.user.userId)
+      .selectAll()
+      .executeTakeFirst()
 
     if (updatedUser == null) {
       throw new InternalError("Expected user to exist")

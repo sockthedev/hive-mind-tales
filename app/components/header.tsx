@@ -5,8 +5,9 @@ export const Header: React.FC = () => {
     <header className="sticky top-0 left-0 z-50 flex h-14 items-center justify-between bg-yellow-50 py-2">
       <Link
         to="/"
-        className="text-1xl font-extrabold tracking-tight text-slate-800 lg:text-2xl"
+        className="text-1xl flex items-center gap-2 font-extrabold tracking-tight text-slate-800 lg:text-2xl"
       >
+        <img src="/logo.png" width="30" alt="Hive Mind Tales" />
         Hive Mind Tales
       </Link>
       <nav>
