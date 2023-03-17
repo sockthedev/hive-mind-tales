@@ -12,9 +12,8 @@ import { FormRichTextInput } from "~/app/components/form-rich-text-input"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { FormTitleInput } from "~/app/components/form-title-input"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { createLoginActionCookie } from "~/app/server/login-action-cookie.server"
-import { getToken } from "~/app/server/session.server"
-import { trpc } from "~/app/server/trpc.server"
+import { apiClient } from "~/app/server/api-client.server"
+import { createStoryAction } from "~/app/server/login-action.server"
 import {
   MAX_CONTENT_TEXT_LENGTH,
   MIN_CONTENT_TEXT_LENGTH,
@@ -27,10 +26,6 @@ const exampleStory = `
 <p class="text-lg leading-7 mt-6">In the heart of the mystical forest, lived a curious mouse named Ms. Whiskers. She was an enigma to all those who crossed her path. With her striking black fur and piercing green eyes, she always managed to leave a lasting impression. But what truly set her apart was her ability to traverse the fabric of time. Some said she was a wizard, while others whispered that she was cursed. Regardless of their beliefs, everyone in the village agreed that Ms. Whiskers was a creature unlike any other.</p>
 <p class="text-lg leading-7 mt-6">One fateful morning, Ms. Whiskers was suddenly awoken by a voice that echoed through her mind. It was a voice she had never heard before, yet it felt familiar. It whispered words that she couldn't understand but she knew she had to listen. With a sense of urgency, Ms. Whiskers set off on a journey that would take her far beyond the boundaries of the mystical forest and beyond the reach of time itself. In search of the missing piece of toasted cheese, she would unravel the secrets of the universe and discover the truth about herself.</p>`
 
-// TODO:
-// - Need to handle validation on the client. This requires extending the
-//   input components with error display capabilities and then wrapping them
-//   with a form handler.
 export const formValidator = withZod(
   z.object({
     title: z
@@ -60,29 +55,24 @@ export const action = async ({ request }: ActionArgs) => {
     return validationError(form.error)
   }
 
-  const token = await getToken(request)
-
-  if (token) {
-    const { story, part } = await trpc(token).stories.create.mutate({
+  const { story, part } = await apiClient({
+    request,
+    auth: true,
+    loginAction: createStoryAction({
       title: form.data.title,
       content: form.data.story,
       visibleInFeeds: form.data.visibleInFeeds,
-    })
-    return redirect(`/stories/${story.storyId}/${part.partId}/share`, {
-      status: 302,
-    })
-  } else {
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await createLoginActionCookie("create-story", {
-          title: form.data.title,
-          content: form.data.story,
-          visibleInFeeds: form.data.visibleInFeeds,
-        }),
-      },
-      status: 302,
-    })
-  }
+    }),
+    thunk: (client) =>
+      client.stories.create.mutate({
+        title: form.data.title,
+        content: form.data.story,
+        visibleInFeeds: form.data.visibleInFeeds,
+      }),
+  })
+  return redirect(`/stories/${story.storyId}/${part.partId}/share`, {
+    status: 302,
+  })
 }
 
 export default function HomepageRoute() {

@@ -1,12 +1,13 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core"
+import type { IconProp } from "@fortawesome/fontawesome-svg-core"
 import { faGoogle, faTwitter } from "@fortawesome/free-brands-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { json} from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useLoaderData } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import { ValidatedForm } from "remix-validated-form"
 import invariant from "tiny-invariant"
 import z from "zod"
+
 import { FormInput, H1, Spacer } from "~/app/components"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
 import { NarrowContent } from "~/app/components/narrow-content"
@@ -21,18 +22,22 @@ export const validator = withZod(
 )
 
 export const loader = async () => {
-  invariant(process.env["API_URL"], "API_URL is required");
+  invariant(process.env["API_URL"], "API_URL is required")
   return json({
     apiUrl: process.env["API_URL"],
-  });
-};
+  })
+}
 
 type IconButtonProps = React.ComponentPropsWithoutRef<"button"> & {
   children: React.ReactNode
   icon: IconProp
 }
 
-const IconButton: React.FC<IconButtonProps> = ({ children, icon, ...props}) => {
+const IconButton: React.FC<IconButtonProps> = ({
+  children,
+  icon,
+  ...props
+}) => {
   return (
     <button
       {...props}
@@ -49,7 +54,7 @@ const IconButton: React.FC<IconButtonProps> = ({ children, icon, ...props}) => {
 }
 
 export default function LoginRoute() {
-  const { apiUrl } = useLoaderData<typeof loader>();
+  const { apiUrl } = useLoaderData<typeof loader>()
   return (
     <NarrowContent>
       <Spacer size="xl" />
@@ -58,22 +63,23 @@ export default function LoginRoute() {
       <hr />
 
       <form method="get" action={`${apiUrl}/auth/twitter/authorize`}>
-        <IconButton icon={faTwitter} type="submit">Continue with Twitter</IconButton>
+        <IconButton icon={faTwitter} type="submit">
+          Continue with Twitter
+        </IconButton>
       </form>
 
       <Spacer size="sm" />
 
       <form method="get" action={`${apiUrl}/auth/google/authorize`}>
-        <IconButton icon={faGoogle} type="submit">Continue with Google</IconButton>
+        <IconButton icon={faGoogle} type="submit">
+          Continue with Google
+        </IconButton>
       </form>
 
       <Spacer size="md" />
 
       <div className="relative">
-        <div
-          className="absolute inset-0 flex items-center"
-          aria-hidden="true"
-        >
+        <div className="absolute inset-0 flex items-center" aria-hidden="true">
           <div className="w-full border-t border-gray-300" />
         </div>
         <div className="relative flex justify-center">

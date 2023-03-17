@@ -2,8 +2,8 @@ import { z } from "zod"
 
 import { Stories } from "~/server/domain/stories.js"
 
-import { authProcedure } from "./lib/auth-procedure.js"
 import { t } from "./lib/builder.js"
+import { authProcedure } from "./middleware/auth-procedure.js"
 
 export const stories = t.router({
   // Mutations
@@ -26,12 +26,14 @@ export const stories = t.router({
     .input(
       z.object({
         storyId: z.string(),
+        parentId: z.string(),
         content: z.string(),
       }),
     )
     .mutation(({ input }) => {
       return Stories.addPart({
         storyId: input.storyId,
+        parentId: input.parentId,
         content: input.content,
       })
     }),

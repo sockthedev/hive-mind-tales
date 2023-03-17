@@ -2,8 +2,10 @@ import { createVerifier } from "fast-jwt"
 import { Context } from "sst/context"
 import type { SessionValue } from "sst/node/auth"
 import { getPublicKey, useSession } from "sst/node/auth"
+
 import { db } from "~/server/db/db"
 import { Dates } from "~/server/lib/dates.js"
+
 import { InternalError, UnauthorizedError } from "./errors.js"
 import type { User } from "./users"
 import { UserType } from "./users"
@@ -46,37 +48,51 @@ export abstract class Auth {
    *
    * @returns - The authenticated actor user or null
    *
-   * @throws
-   *
-   * `UnauthorizedError`
-   *
    * If the user session contains an invalid user type.
    */
-  public static async useApiAuthentication() {
-    const session = useSession()
+  public static async useApiAuthentication(): Promise<
+    User | UnauthorizedError
+  > {
+    try {
+      const session = useSession()
 
-    if (session.type === "user") {
-      const user = await db
-        .selectFrom("user")
-        .where("userId", "=", session.properties.userId)
-        .selectAll()
-        .executeTakeFirst()
+      if (session.type === "user") {
+        const user = await db
+          .selectFrom("user")
+          .where("userId", "=", session.properties.userId)
+          .selectAll()
+          .executeTakeFirst()
 
-      if (user != null) {
+        if (!user) {
+          return new UnauthorizedError("Invalid user for authentication token")
+        }
+
         if (
           user.userType !== UserType.User &&
           user.userType !== UserType.Admin
         ) {
-          throw new UnauthorizedError("Invalid user type for API authorization")
+          return new UnauthorizedError(
+            "Invalid user type for authentication token",
+          )
         }
 
         AuthContext.provide(user)
-      }
 
-      return user
-    } else {
-      AuthContext.provide(AnonymousActor)
-      return null
+        return user
+      } else {
+        AuthContext.provide(AnonymousActor)
+        return AnonymousActor
+      }
+    } catch (err: any) {
+      if (typeof err === "object" && err.code) {
+        if (err.code === "FAST_JWT_INVALID_SIGNATURE") {
+          return new UnauthorizedError("Invalid user token")
+        }
+        if (err.code === "FAST_JWT_EXPIRED") {
+          return new UnauthorizedError("Expired user token")
+        }
+      }
+      throw err
     }
   }
 

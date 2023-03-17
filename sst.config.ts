@@ -1,5 +1,6 @@
 import * as iam from "aws-cdk-lib/aws-iam"
 import type { SSTConfig } from "sst"
+import type { StackContext } from "sst/constructs"
 import {
   Api,
   Auth,
@@ -7,7 +8,6 @@ import {
   EventBus,
   Queue,
   RemixSite,
-  StackContext,
   use,
 } from "sst/constructs"
 
@@ -94,27 +94,6 @@ function ApiGateway(ctx: StackContext) {
       "GET /trpc/{proxy+}": "server/functions/trpc.handler",
       "POST /trpc/{proxy+}": "server/functions/trpc.handler",
     },
-    // TODO:
-    // - Review this, I think we may never need to enable as we will only call
-    //   the API via the actions/loaders of the site.
-    //
-    // cors: {
-    //   allowCredentials: true,
-    //   allowHeaders: ["Accept", "Content-Type", "Authorization"],
-    //   allowMethods: [
-    //     "DELETE",
-    //     "GET",
-    //     "HEAD",
-    //     "OPTIONS",
-    //     "PATCH",
-    //     "POST",
-    //     "PUT",
-    //   ],
-    //   allowOrigins: [ctx.app.local
-    //     ? "http://localhost:3000"
-    //     : `https://www.hivemindtales.com`],
-    //   maxAge: "1 day",
-    // },
   })
   return {
     api,
@@ -156,7 +135,10 @@ export default {
   config(input) {
     return {
       name: "hmt",
-      region: input.stage === "production" ? "us-east-1" : "ap-southeast-1",
+      region:
+        input.stage === "production" || input.stage?.indexOf("uk") != -1
+          ? "us-east-1"
+          : "ap-southeast-1",
       profile: "sockthedev",
     }
   },

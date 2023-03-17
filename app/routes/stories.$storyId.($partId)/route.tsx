@@ -1,4 +1,5 @@
-import { ActionArgs, json, LoaderArgs, redirect } from "@remix-run/node"
+import type { ActionArgs, LoaderArgs } from "@remix-run/node"
+import { json, redirect } from "@remix-run/node"
 import { useLoaderData, useNavigate } from "@remix-run/react"
 import { withZod } from "@remix-validated-form/with-zod"
 import React from "react"
@@ -7,13 +8,13 @@ import { ValidatedForm, validationError } from "remix-validated-form"
 import { z } from "zod"
 
 import { Button, Divider, H1, Spacer } from "~/app/components"
+import { FormRichTextInput } from "~/app/components/form-rich-text-input"
 import { FormSubmitButton } from "~/app/components/form-submit-button"
-import { RichTextInput } from "~/app/components/rich-text-input"
 import type { StoryNavigatorNode } from "~/app/components/story-navigator"
 import { TwoColumnContent } from "~/app/components/two-column-content"
-import { createLoginActionCookie } from "~/app/server/login-action-cookie.server"
+import { apiClient } from "~/app/server/api-client.server"
+import { createPartAction } from "~/app/server/login-action.server"
 import { getToken } from "~/app/server/session.server"
-import { trpc } from "~/app/server/trpc.server"
 import {
   MAX_CONTENT_TEXT_LENGTH,
   MIN_CONTENT_TEXT_LENGTH,
@@ -23,9 +24,12 @@ import type { StoryNode } from "~/server/domain/stories.types"
 
 import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
+const DEFAULT_COLLABORATE_CONTENT = "<p>The story didn't end there...</p>"
+
 export const formSchema = withZod(
   z.object({
-    storyId: z.string().min(1, "Story ID is required"),
+    storyId: z.string().min(1, "storyId is required"),
+    parentId: z.string().min(1, "parentId is required"),
     content: z
       .string()
       .min(1, { message: "Story is required" })
@@ -40,13 +44,17 @@ const paramsSchema = z.object({
   partId: z.string().optional(),
 })
 
-export async function loader({ params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderArgs) {
   const { storyId, partId } = paramsSchema.parse(params)
 
-  const [story, part] = await Promise.all([
-    trpc().stories.getStory.query({ storyId }),
-    trpc().stories.getPartOrRootPart.query({ storyId, partId }),
-  ])
+  const [story, part] = await apiClient({
+    request,
+    thunk: (client) =>
+      Promise.all([
+        client.stories.getStory.query({ storyId }),
+        client.stories.getPartOrRootPart.query({ storyId, partId }),
+      ]),
+  })
 
   // TODO:
   // - Consider a caching strategy here.
@@ -72,23 +80,22 @@ export async function action({ request }: ActionArgs) {
   const token = await getToken(request)
 
   if (token) {
-    const part = await trpc(token).stories.addPart.mutate({
-      storyId: form.data.storyId,
-      content: form.data.content,
-    })
-    return redirect(`/stories/${form.data.storyId}/${part.partId}/share`, {
-      status: 302,
-    })
-  } else {
-    return redirect("/login", {
-      headers: {
-        "Set-Cookie": await createLoginActionCookie("create-part", {
+    const part = await apiClient({
+      request,
+      thunk: (client) =>
+        client.stories.addPart.mutate({
           storyId: form.data.storyId,
+          parentId: form.data.parentId,
           content: form.data.content,
         }),
-      },
-      status: 302,
+      auth: true,
+      loginAction: createPartAction({
+        storyId: form.data.storyId,
+        parentId: form.data.parentId,
+        content: form.data.content,
+      }),
     })
+    return redirect(`/stories/${form.data.storyId}/${part.partId}`)
   }
 }
 
@@ -114,6 +121,16 @@ export default function StoryRoute() {
   const navigate = useNavigate()
 
   const [showEditor, setShowEditor] = React.useState(false)
+
+  const currentPartRef = React.useRef<string | null>(null)
+
+  React.useEffect(() => {
+    if (!currentPartRef.current) {
+      currentPartRef.current = data.part.partId
+    } else if (currentPartRef.current !== data.part.partId) {
+      setShowEditor(false)
+    }
+  }, [data.part.partId])
 
   const navigateToNode = React.useCallback(
     (args: { node: StoryNode }) => {
@@ -188,8 +205,9 @@ export default function StoryRoute() {
                   hint="Add your own spin by clicking the text below"
                 />
                 <Spacer size="sm" />
-                <RichTextInput
-                  defaultValue={"<p>The story didn't end there...</p>"}
+                <FormRichTextInput
+                  name="content"
+                  defaultValue={DEFAULT_COLLABORATE_CONTENT}
                 />
                 <Spacer size="lg" />
                 <div className="text-center">
@@ -197,6 +215,11 @@ export default function StoryRoute() {
                     type="hidden"
                     name="storyId"
                     value={data.story.storyId}
+                  />
+                  <input
+                    type="hidden"
+                    name="parentId"
+                    value={data.part.partId}
                   />
                   <FormSubmitButton>Submit</FormSubmitButton>
                 </div>

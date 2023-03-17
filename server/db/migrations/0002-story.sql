@@ -1,4 +1,5 @@
 drop table if exists story;
+drop table if exists part;
 
 create table story (
   story_id varchar(30) not null,
@@ -18,7 +19,7 @@ create table part (
 
   story_id varchar(30) not null,
 
-  parent_part_id varchar(30) null,
+  parent_id varchar(30) null,
 
   content text not null,
 

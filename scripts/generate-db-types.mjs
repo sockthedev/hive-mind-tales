@@ -3,7 +3,7 @@ import { Config } from "sst/node/config"
 
 try {
   execSync(
-    "pnpm kysely-codegen --camel-case --dialect mysql --out-file ./db/db.types.ts",
+    "pnpm kysely-codegen --camel-case --dialect mysql --out-file ./server/db/db.types.ts",
     {
       stdio: "inherit",
       env: {
@@ -13,7 +13,7 @@ try {
       },
     },
   )
-} catch (err: any) {
+} catch (err) {
   console.error(err.stack)
   process.exit(1)
 }

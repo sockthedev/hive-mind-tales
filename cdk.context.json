@@ -2,5 +2,9 @@
   "hosted-zone:account=884600638546:domainName=hivemindtales.com:region=ap-southeast-1": {
     "Id": "/hostedzone/Z082033938ZMS26WIEEAW",
     "Name": "hivemindtales.com."
+  },
+  "hosted-zone:account=884600638546:domainName=hivemindtales.com:region=us-east-1": {
+    "Id": "/hostedzone/Z082033938ZMS26WIEEAW",
+    "Name": "hivemindtales.com."
   }
 }

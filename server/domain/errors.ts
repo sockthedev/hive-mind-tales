@@ -5,6 +5,7 @@ export class ValidationError extends Error {
 
   constructor(message: string) {
     super(message)
+    this.name = this.constructor.name
     Object.setPrototypeOf(this, new.target.prototype)
   }
 }
@@ -14,7 +15,8 @@ export class InvalidArgumentError extends Error {
 
   constructor(message: string) {
     super(message)
-    Object.setPrototypeOf(this, InvalidArgumentError.prototype)
+    this.name = this.constructor.name
+    Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
@@ -23,7 +25,8 @@ export class InternalError extends Error {
 
   constructor(message = "An unexpected error occured") {
     super(message)
-    Object.setPrototypeOf(this, InternalError.prototype)
+    this.name = this.constructor.name
+    Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
@@ -32,7 +35,18 @@ export class NotImplementedError extends Error {
 
   constructor(message = "This feature has not yet been implemented") {
     super(message)
-    Object.setPrototypeOf(this, NotImplementedError.prototype)
+    this.name = this.constructor.name
+    Object.setPrototypeOf(this, new.target.prototype)
+  }
+}
+
+export class ForbiddenError extends Error {
+  statusCode = 403
+
+  constructor(message = "Forbidden") {
+    super(message)
+    this.name = this.constructor.name
+    Object.setPrototypeOf(this, new.target.prototype)
   }
 }
 
@@ -41,6 +55,7 @@ export class UnauthorizedError extends Error {
 
   constructor(message = "Unauthorized") {
     super(message)
-    Object.setPrototypeOf(this, UnauthorizedError.prototype)
+    this.name = this.constructor.name
+    Object.setPrototypeOf(this, new.target.prototype)
   }
 }

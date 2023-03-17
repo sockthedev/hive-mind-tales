@@ -1,6 +1,7 @@
 import { AuthHandler, GoogleAdapter, LinkAdapter, Session } from "sst/node/auth"
 import { Config } from "sst/node/config"
 import invariant from "tiny-invariant"
+
 import { Auth } from "~/server/domain/auth"
 import { Bus } from "~/server/domain/event-bus"
 import { Users } from "~/server/domain/users"
@@ -55,9 +56,7 @@ export const handler = AuthHandler({
         return {
           statusCode: 302,
           headers: {
-            location: `${
-              Config.SITE_URL
-            }/login/magic-link-sent`,
+            location: `${Config.SITE_URL}/login/magic-link-sent`,
           },
         }
       },
@@ -65,9 +64,7 @@ export const handler = AuthHandler({
         return {
           statusCode: 302,
           headers: {
-            location: `${
-              Config.SITE_URL
-            }/login/magic-link-failed`,
+            location: `${Config.SITE_URL}/login/magic-link-failed`,
           },
         }
       },

@@ -1,12 +1,12 @@
-import { json, LoaderArgs } from "@remix-run/node"
+import type { LoaderArgs } from "@remix-run/node"
+import { json } from "@remix-run/node"
 import { useFetcher } from "@remix-run/react"
 import React from "react"
 import { zfd } from "zod-form-data"
-import {
-  StoryNavigator,
-  StoryNavigatorNode,
-} from "~/app/components/story-navigator"
-import { trpc } from "~/app/server/trpc.server"
+
+import type { StoryNavigatorNode } from "~/app/components/story-navigator"
+import { StoryNavigator } from "~/app/components/story-navigator"
+import { apiClient } from "~/app/server/api-client.server"
 
 const searchParamsSchema = zfd.formData({
   storyId: zfd.text(),
@@ -16,7 +16,10 @@ export const loader = async ({ request }: LoaderArgs) => {
   const url = new URL(request.url)
   const { storyId } = searchParamsSchema.parse(url.searchParams)
 
-  const tree = await trpc().stories.getTree.query({ storyId })
+  const tree = await apiClient({
+    request,
+    thunk: (client) => client.stories.getTree.query({ storyId }),
+  })
 
   // TODO:
   // - Consider a caching strategy here.
@@ -38,7 +41,7 @@ export const FullStackStoryNavigator: React.FC<FullStackStoryNavigatorProps> = (
     if (fetcher.type === "init") {
       fetcher.load(`/resources/stories/tree?storyId=${props.storyId}`)
     }
-  }, [props.storyId])
+  }, [fetcher, props.storyId])
 
   const tree = fetcher.data?.tree
   if (!tree) {

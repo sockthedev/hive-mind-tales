@@ -33,6 +33,7 @@ export abstract class Stories {
 
   static async addPart(args: {
     storyId: string
+    parentId: string
     content: string
   }): Promise<Part> {
     const authContext = Auth.useAuthContext()
@@ -41,9 +42,9 @@ export abstract class Stories {
       throw new UnauthorizedError()
     }
 
-    const story = await Stories.getStory(args)
-    if (!story) {
-      throw new InvalidArgumentError("Story not found")
+    const parentPart = await Stories.getPart({ partId: args.parentId })
+    if (!parentPart) {
+      throw new InvalidArgumentError("Parent part not found")
     }
 
     const purifiedContent = sanitizeHtml(args.content, {
@@ -63,7 +64,7 @@ export abstract class Stories {
       content: purifiedContent,
       createdAt: dbNow(),
       storyId: args.storyId,
-      parentPartId: null,
+      parentId: parentPart.partId,
     }
 
     await db.insertInto("part").values(part).execute()
@@ -110,16 +111,21 @@ export abstract class Stories {
       content: purifiedContent,
       createdAt: dbNow(),
       storyId,
-      parentPartId: null,
+      parentId: null,
     }
 
-    await db
-      .transaction()
-      .setIsolationLevel("read uncommitted")
-      .execute(async (trx) => {
-        await trx.insertInto("story").values(story).execute()
-        await trx.insertInto("part").values(part).execute()
-      })
+    try {
+      await db
+        .transaction()
+        .setIsolationLevel("read uncommitted")
+        .execute(async (trx) => {
+          await trx.insertInto("story").values(story).execute()
+          await trx.insertInto("part").values(part).execute()
+        })
+    } catch (error: any) {
+      console.error(error)
+      throw error
+    }
 
     return {
       story,
@@ -173,8 +179,8 @@ export abstract class Stories {
       const part = parts.find((part) => part.partId === partId)
       invariant(part, `Could not find part with id ${partId}`)
       breadcrumb.push(part)
-      if (part.parentPartId) {
-        findParent(part.parentPartId)
+      if (part.parentId) {
+        findParent(part.parentId)
       }
     }
 
@@ -189,15 +195,15 @@ export abstract class Stories {
       .selectFrom("part")
       .where("storyId", "=", args.storyId)
       .orderBy("partId", "asc")
-      .select(["partId", "parentPartId", "createdBy"])
+      .select(["partId", "parentId", "createdBy"])
       .execute()
 
-    const rootItem = parts.find((part) => part.parentPartId == null)
+    const rootItem = parts.find((part) => part.parentId == null)
     invariant(rootItem, "No root part found")
 
     const rootNode: StoryNode = {
       partId: rootItem.partId,
-      parentPartId: null,
+      parentId: null,
       createdBy: rootItem.createdBy,
       children: [],
     }
@@ -209,18 +215,18 @@ export abstract class Stories {
     parts.forEach((part) => {
       if (part === rootItem) return
 
-      invariant(part.parentPartId, "Multiple root nodes found")
+      invariant(part.parentId, "Multiple root nodes found")
 
       const node: StoryNode = {
         partId: part.partId,
         createdBy: part.createdBy,
         children: [],
-        parentPartId: part.parentPartId,
+        parentId: part.parentId,
       }
 
       nodeMap.set(part.partId, node)
 
-      const parentNode = nodeMap.get(part.parentPartId)
+      const parentNode = nodeMap.get(part.parentId)
       if (parentNode) {
         parentNode.children = parentNode.children || []
         parentNode.children.push(node)

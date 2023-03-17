@@ -1,7 +1,7 @@
 import { Users } from "~/server/domain/users"
 
-import { authProcedure } from "./lib/auth-procedure.js"
 import { t } from "./lib/builder.js"
+import { authProcedure } from "./middleware/auth-procedure.js"
 
 export const users = t.router({
   logout: authProcedure.mutation(({ ctx }) => {

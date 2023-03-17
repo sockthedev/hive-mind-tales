@@ -1,7 +1,7 @@
 export interface Part {
   partId: string;
   storyId: string;
-  parentPartId: string | null;
+  parentId: string | null;
   content: string;
   createdBy: string;
   createdAt: string;

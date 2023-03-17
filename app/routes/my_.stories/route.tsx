@@ -1,22 +1,19 @@
 import { useLoaderData } from "@remix-run/react"
 import type { LoaderArgs } from "@remix-run/server-runtime"
-import { unauthorized } from "remix-utils"
 
 import { H2, Spacer } from "~/app/components"
 import { H1 } from "~/app/components/h1"
 import { LinkButton } from "~/app/components/link-button"
 import { NarrowContent } from "~/app/components/narrow-content"
 import { P } from "~/app/components/p"
-import { requireToken } from "~/app/server/session.server"
-import { trpc } from "~/app/server/trpc.server"
+import { apiClient } from "~/app/server/api-client.server"
 
 export async function loader({ request }: LoaderArgs) {
-  const token = await requireToken(request)
-  if (token === null) {
-    throw unauthorized({ token: null })
-  }
-
-  const stories = await trpc(token).stories.mine.query()
+  const stories = await apiClient({
+    request,
+    thunk: (client) => client.stories.mine.query(),
+    auth: true,
+  })
 
   return {
     stories,

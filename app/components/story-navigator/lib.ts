@@ -1,11 +1,9 @@
-import {
-  hierarchy,
-  HierarchyPointLink,
-  HierarchyPointNode,
-  tree as d3tree,
-} from "d3-hierarchy"
+import type { HierarchyPointLink, HierarchyPointNode } from "d3-hierarchy"
+import { hierarchy, tree as d3tree } from "d3-hierarchy"
 import invariant from "tiny-invariant"
+
 import type { StoryNode, StoryTree } from "~/server/domain/stories.types"
+
 import { config } from "./config"
 
 export type StoryNavigatorNode = HierarchyPointNode<StoryNode>
@@ -47,10 +45,10 @@ export function createNavigatorData(args: {
   let currentNode = findNode({ nodes, storyPartId: args.activePartId })
   invariant(currentNode, "Could not find active node in tree")
   thread.push(currentNode)
-  while (currentNode.data.parentPartId) {
+  while (currentNode.data.parentId) {
     const parentNode = findNode({
       nodes,
-      storyPartId: currentNode.data.parentPartId,
+      storyPartId: currentNode.data.parentId,
     })
     invariant(parentNode, "Could not node in tree")
     thread.push(parentNode)

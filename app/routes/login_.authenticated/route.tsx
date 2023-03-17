@@ -1,51 +1,56 @@
-import type { LoaderArgs } from "@remix-run/node";
-import { redirect } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { forbidden } from "remix-utils";
-import { parseLoginActionCookie } from "~/app/server/login-action-cookie.server";
-import { getToken } from "~/app/server/session.server";
-import { trpc } from "~/app/server/trpc.server";
+import type { LoaderArgs } from "@remix-run/node"
+import { redirect } from "@remix-run/node"
+
+import { apiClient } from "~/app/server/api-client.server"
+import { parseLoginActionCookie } from "~/app/server/login-action.server"
 
 export const loader = async ({ request, params }: LoaderArgs) => {
-  const token = await getToken(request)
-  if (token == null) {
-    throw forbidden({ token: null });
-  }
-
-  const loginAction = await parseLoginActionCookie(request);
-
-  let redirectTo = '/';
+  const loginAction = await parseLoginActionCookie(request)
 
   if (loginAction) {
     switch (loginAction.type) {
-      case 'create-story':
-        const { story, part } = await trpc(token).stories.create.mutate({
-          title: loginAction.payload.title,
-          content: loginAction.payload.content,
-          visibleInFeeds: loginAction.payload.visibleInFeeds,
+      case "create-story": {
+        const { story, part } = await apiClient({
+          request,
+          auth: true,
+          thunk: (client) =>
+            client.stories.create.mutate({
+              title: loginAction.payload.title,
+              content: loginAction.payload.content,
+              visibleInFeeds: loginAction.payload.visibleInFeeds,
+            }),
         })
         throw redirect(`/stories/${story.storyId}/${part.partId}/share`, {
           status: 302,
         })
+      }
+      case "create-part": {
+        const part = await apiClient({
+          request,
+          auth: true,
+          thunk: (client) => client.stories.addPart.mutate(loginAction.payload),
+        })
+        throw redirect(`/stories/${part.storyId}/${part.partId}/share`, {
+          status: 302,
+        })
+      }
+      case "redirect": {
+        throw redirect(loginAction.payload.url, {
+          status: 302,
+        })
+      }
     }
   }
 
   if (params["isFirstLogin"] !== "true") {
-    throw redirect(redirectTo);
+    throw redirect("/")
   }
-
-  return {
-    redirect: redirectTo,
-  };
-};
+}
 
 export default function AuthenticatedRoute() {
-  const data = useLoaderData<typeof loader>();
   return (
     <div>
       <h1>Welcome to Hive Mind Tales</h1>
-      <p>{data.redirect}</p>
     </div>
-  );
+  )
 }
-
