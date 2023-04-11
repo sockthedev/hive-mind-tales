@@ -7,6 +7,7 @@ import { authProcedure } from "./middleware/auth-procedure.js"
 
 export const stories = t.router({
   // Mutations
+
   create: authProcedure
     .input(
       z.object({
@@ -22,6 +23,7 @@ export const stories = t.router({
         visibleInFeeds: input.visibleInFeeds,
       })
     }),
+
   addPart: authProcedure
     .input(
       z.object({
@@ -39,16 +41,28 @@ export const stories = t.router({
     }),
 
   // Queries
+
   getTree: t.procedure
     .input(z.object({ storyId: z.string() }))
     .query(({ input }) => {
       return Stories.getTree({ storyId: input.storyId })
     }),
+
   getStory: t.procedure
     .input(z.object({ storyId: z.string() }))
     .query(({ input }) => {
       return Stories.getStory({ storyId: input.storyId })
     }),
+
+  getPart: t.procedure
+    .input(z.object({ storyId: z.string(), partId: z.string() }))
+    .query(({ input }) => {
+      return Stories.getPart({
+        storyId: input.storyId,
+        partId: input.partId,
+      })
+    }),
+
   getPartOrRootPart: t.procedure
     .input(z.object({ storyId: z.string(), partId: z.string().optional() }))
     .query(({ input }) => {
@@ -57,6 +71,7 @@ export const stories = t.router({
         partId: input.partId,
       })
     }),
+
   mine: authProcedure.query(() => {
     return Stories.getMyStories()
   }),

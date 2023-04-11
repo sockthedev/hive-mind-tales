@@ -46,7 +46,7 @@ export default function LoginPickUsernameRoute() {
       <Spacer size="xl" />
       <H1>Update Username</H1>
       <Spacer size="xl" />
-      <ValidatedForm method="post" validator={validator}>
+      <ValidatedForm method="POST" validator={validator}>
         <P>
           We've automatically assigned a username to you. You can customize it
           now, or update it later.

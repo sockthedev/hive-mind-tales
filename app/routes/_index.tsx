@@ -96,7 +96,7 @@ export default function HomepageRoute() {
         </section>
       )}
       right={() => (
-        <ValidatedForm method="post" validator={formValidator}>
+        <ValidatedForm method="POST" validator={formValidator}>
           <Spacer size="md" />
           <Divider
             label="Story Editor"

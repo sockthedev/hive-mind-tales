@@ -51,6 +51,7 @@ function Bus(ctx: StackContext) {
 function Site(ctx: StackContext) {
   const site = new RemixSite(ctx.stack, "site", {
     runtime: "nodejs16.x",
+    buildCommand: "pnpm remix build",
     customDomain:
       ctx.app.stage === "production"
         ? {
@@ -65,6 +66,7 @@ function Site(ctx: StackContext) {
           ? "https://api.hivemindtales.com"
           : `https://api.${ctx.app.stage}.hivemindtales.com`,
     },
+    waitForInvalidation: ctx.app.stage === "production",
   })
   ctx.stack.addOutputs({
     url: site.url ?? "http://localhost:3000",
@@ -135,10 +137,7 @@ export default {
   config(input) {
     return {
       name: "hmt",
-      region:
-        input.stage === "production" || input.stage?.indexOf("uk") != -1
-          ? "us-east-1"
-          : "ap-southeast-1",
+      region: input.stage === "production" ? "us-east-1" : "ap-southeast-1",
       profile: "sockthedev",
     }
   },

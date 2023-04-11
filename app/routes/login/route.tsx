@@ -41,7 +41,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   return (
     <button
       {...props}
-      className="flex w-full items-center gap-x-2 rounded-md bg-indigo-600 py-2.5 px-3.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      className="flex w-full items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
     >
       <FontAwesomeIcon
         icon={icon}
@@ -62,7 +62,7 @@ export default function LoginRoute() {
       <Spacer size="xl" />
       <hr />
 
-      <form method="get" action={`${apiUrl}/auth/twitter/authorize`}>
+      <form method="GET" action={`${apiUrl}/auth/twitter/authorize`}>
         <IconButton icon={faTwitter} type="submit">
           Continue with Twitter
         </IconButton>
@@ -70,7 +70,7 @@ export default function LoginRoute() {
 
       <Spacer size="sm" />
 
-      <form method="get" action={`${apiUrl}/auth/google/authorize`}>
+      <form method="GET" action={`${apiUrl}/auth/google/authorize`}>
         <IconButton icon={faGoogle} type="submit">
           Continue with Google
         </IconButton>
@@ -89,7 +89,7 @@ export default function LoginRoute() {
 
       <Spacer size="sm" />
 
-      <ValidatedForm method="post" validator={validator}>
+      <ValidatedForm method="POST" validator={validator}>
         <FormInput
           id="email"
           name="email"

@@ -133,28 +133,44 @@ export abstract class Stories {
     }
   }
 
-  static async getStory(args: { storyId: string }): Promise<Story> {
+  static async getStory(args: { storyId: string }) {
     return db
       .selectFrom("story")
+      .innerJoin("user", "story.createdBy", "user.userId")
       .where("storyId", "=", args.storyId)
-      .selectAll()
+      .select([
+        "story.storyId",
+        "story.createdBy",
+        "story.title",
+        "story.createdAt",
+        "story.rootPartId",
+        "user.username as createdByUsername",
+      ])
       .executeTakeFirstOrThrow()
   }
 
-  static async getPart(args: { partId: string }): Promise<Part> {
+  static async getPart(args: { storyId: string; partId: string }) {
     return db
       .selectFrom("part")
+      .innerJoin("user", "part.createdBy", "user.userId")
+      .where("storyId", "=", args.storyId)
       .where("partId", "=", args.partId)
-      .selectAll()
+      .select([
+        "part.partId",
+        "part.storyId",
+        "part.content",
+        "part.parentId",
+        "part.createdBy",
+        "part.createdAt",
+        "user.username as createdByUsername",
+      ])
       .executeTakeFirstOrThrow()
   }
 
-  static async getPartOrRootPart(args: {
-    storyId: string
-    partId?: string
-  }): Promise<Part> {
+  static async getPartOrRootPart(args: { storyId: string; partId?: string }) {
     const story = await Stories.getStory(args)
     const part = await Stories.getPart({
+      storyId: args.storyId,
       partId: args.partId ?? story.rootPartId,
     })
     return part

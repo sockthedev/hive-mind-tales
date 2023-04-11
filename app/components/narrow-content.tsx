@@ -3,5 +3,5 @@ export type NarrowContentProps = {
 }
 
 export const NarrowContent: React.FC<NarrowContentProps> = (props) => {
-  return <div className="mx-auto max-w-lg">{props.children}</div>
+  return <div className="mx-auto max-w-2xl">{props.children}</div>
 }

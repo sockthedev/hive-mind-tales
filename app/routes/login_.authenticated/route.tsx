@@ -113,7 +113,7 @@ export default function AuthenticatedRoute() {
       <Spacer size="xl" />
       <H1>Customize your Username</H1>
       <Spacer size="xl" />
-      <ValidatedForm method="post" validator={formSchema}>
+      <ValidatedForm method="POST" validator={formSchema}>
         <P>
           We've automatically assigned a username to you. This is what we'll
           display against your stories. You can customize it now, or change it

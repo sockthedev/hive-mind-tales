@@ -41,7 +41,7 @@ export default function LoginVerifyRoute() {
       <Spacer size="xl" />
       <H1>Check your email</H1>
       <Spacer size="xl" />
-      <ValidatedForm method="post" validator={validator}>
+      <ValidatedForm method="POST" validator={validator}>
         <P>Enter the verification code that was sent to your email address.</P>
         <Spacer size="md" />
         <FormInput

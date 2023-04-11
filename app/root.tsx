@@ -1,11 +1,12 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node"
+import type { LinksFunction } from "@remix-run/node"
+import type { V2_MetaFunction } from "@remix-run/react"
 import {
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
+  ScrollRestoration,
 } from "@remix-run/react"
 
 import { Footer } from "./components/footer"
@@ -16,12 +17,19 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
 ]
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Hive Mind Tales",
-  viewport:
-    "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
-})
+export const meta: V2_MetaFunction = () => [
+  {
+    charset: "utf-8",
+  },
+  {
+    title: "Hive Mind Tales",
+  },
+  {
+    name: "viewport",
+    content:
+      "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no",
+  },
+]
 
 export default function App() {
   return (
