@@ -95,7 +95,7 @@ export async function action({ request }: ActionArgs) {
         content: form.data.content,
       }),
     })
-    return redirect(`/stories/${form.data.storyId}/${part.partId}`)
+    return redirect(`/stories/${form.data.storyId}/${part.partId}/read`)
   }
 }
 

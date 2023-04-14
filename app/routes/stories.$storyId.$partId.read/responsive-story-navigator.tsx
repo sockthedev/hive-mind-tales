@@ -4,8 +4,8 @@ import React from "react"
 
 import { IconButton } from "~/app/components/icon-button"
 
-import type { FullStackStoryNavigatorProps } from "../resources/components/stories.tree/route"
-import { FullStackStoryNavigator } from "../resources/components/stories.tree/route"
+import type { FullStackStoryNavigatorProps } from "../resources.components.stories.tree/route"
+import { FullStackStoryNavigator } from "../resources.components.stories.tree/route"
 
 export type {
   StoryNavigatorData,
@@ -31,7 +31,7 @@ export const ResponsiveStoryNavigator: React.FC<
   //   CSS approach.
 
   return isMobile ? (
-    <div className="pointer-events-none fixed top-0 left-0 z-50 h-screen w-screen">
+    <div className="pointer-events-none fixed left-0 top-0 z-50 h-screen w-screen">
       <div className="pointer-events-auto absolute bottom-2 right-2">
         <IconButton
           icon={faSitemap}
@@ -40,7 +40,7 @@ export const ResponsiveStoryNavigator: React.FC<
         />
       </div>
       {showMobileNav && (
-        <div className="pointer-events-auto absolute top-0 left-0 h-screen w-screen bg-yellow-50">
+        <div className="pointer-events-auto absolute left-0 top-0 h-screen w-screen bg-yellow-50">
           <FullStackStoryNavigator
             storyId={props.storyId}
             activePartId={props.activePartId}
@@ -63,7 +63,7 @@ export const ResponsiveStoryNavigator: React.FC<
     // This is an unholy abomination. I'm sorry. It's the only way I could
     // get the sticky nav to work, taking up the full screen height.
     <div className="absolute -top-14 left-0 h-[calc(100%+9rem)] min-h-full w-full">
-      <div className="sticky top-0 left-0 h-[100vh] min-h-[100vh-3.5rem] w-full pt-14">
+      <div className="sticky left-0 top-0 h-[100vh] min-h-[100vh-3.5rem] w-full pt-14">
         <FullStackStoryNavigator
           storyId={props.storyId}
           activePartId={props.activePartId}

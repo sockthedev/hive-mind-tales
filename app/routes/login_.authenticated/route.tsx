@@ -70,6 +70,20 @@ export const loader = async ({ request }: LoaderArgs) => {
   }
 }
 
+export const formSchema = withZod(
+  z.object({
+    username: z
+      .string()
+      .min(1, { message: "Username is required" })
+      .max(15, { message: "Username cannot be more than 15 characters long" })
+      .regex(
+        /^[a-z][a-z0-9]{0,14}$/i,
+        "Username must start with a letter and can only contain numbers or letters",
+      ),
+    redirectUrl: z.string().min(1, "redirectUrl is required"),
+  }),
+)
+
 export async function action({ request }: ActionArgs) {
   if (request.method !== "POST") {
     throw badRequest("Method not allowed")
@@ -91,20 +105,6 @@ export async function action({ request }: ActionArgs) {
 
   return redirect(form.data.redirectUrl)
 }
-
-export const formSchema = withZod(
-  z.object({
-    username: z
-      .string()
-      .min(1, { message: "Username is required" })
-      .max(15, { message: "Username cannot be more than 15 characters long" })
-      .regex(
-        /^[a-z][a-z0-9]{0,14}$/i,
-        "Username must start with a letter and can only contain numbers or letters",
-      ),
-    redirectUrl: z.string().min(1, "redirectUrl is required"),
-  }),
-)
 
 export default function AuthenticatedRoute() {
   const data = useLoaderData<typeof loader>()

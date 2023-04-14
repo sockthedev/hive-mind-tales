@@ -61,6 +61,8 @@ caddy reverse-proxy --from local.hivemindtales.com --to localhost:3000
 
 ### Database
 
+TODO: Information on Planetscale.
+
 The migrations are located at `server/db/migrations/`, you need to run these manually utilising the Planetscale CLI.
 
 Use the following template for your CLI command;

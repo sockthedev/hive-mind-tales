@@ -37,7 +37,9 @@ export default function MyStoriesRoute() {
           <H2>{story.title}</H2>
           <div dangerouslySetInnerHTML={{ __html: story.content }} />
           <P>
-            <LinkButton to={`/stories/${story.storyId}/${story.rootPartId}`}>
+            <LinkButton
+              to={`/stories/${story.storyId}/${story.rootPartId}/read`}
+            >
               Read
             </LinkButton>
           </P>

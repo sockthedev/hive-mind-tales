@@ -17,7 +17,7 @@ import { ResponsiveStoryNavigator } from "./responsive-story-navigator"
 
 const paramsSchema = z.object({
   storyId: z.string(),
-  partId: z.string().optional(),
+  partId: z.string(),
 })
 
 export async function loader({ request, params }: LoaderArgs) {
@@ -28,11 +28,10 @@ export async function loader({ request, params }: LoaderArgs) {
     thunk: (client) =>
       Promise.all([
         client.stories.getStory.query({ storyId }),
-        client.stories.getPartOrRootPart.query({ storyId, partId }),
+        client.stories.getPart.query({ storyId, partId }),
       ]),
   })
 
-  // TODO: Cache control headers?
   return json(
     {
       story,
@@ -97,12 +96,12 @@ export default function StoryRoute() {
           <Spacer size="md" />
           <div className="text-center">
             <LinkButton
-              to={`/stories/${data.story.storyId}/${data.part.partId}/collaborate}`}
+              to={`/stories/${data.story.storyId}/${data.part.partId}/collaborate`}
             >
               Collaborate
             </LinkButton>
             <LinkButton
-              to={`/stories/${data.story.storyId}/${data.part.partId}/share}`}
+              to={`/stories/${data.story.storyId}/${data.part.partId}/share`}
             >
               Invite
             </LinkButton>

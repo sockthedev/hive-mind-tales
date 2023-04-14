@@ -21,8 +21,6 @@ export const loader = async ({ request }: LoaderArgs) => {
     thunk: (client) => client.stories.getTree.query({ storyId }),
   })
 
-  // TODO:
-  // - Consider a caching strategy here.
   return json({ tree }, 200)
 }
 

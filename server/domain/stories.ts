@@ -42,7 +42,10 @@ export abstract class Stories {
       throw new UnauthorizedError()
     }
 
-    const parentPart = await Stories.getPart({ partId: args.parentId })
+    const parentPart = await Stories.getPart({
+      storyId: args.storyId,
+      partId: args.parentId,
+    })
     if (!parentPart) {
       throw new InvalidArgumentError("Parent part not found")
     }
