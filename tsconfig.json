@@ -5,6 +5,7 @@
     "lib/**/*.ts",
     "scripts/**/*.ts",
     "server/**/*.ts",
+    "stacks/**/*.ts",
     "remix.env.d.ts",
     "sst.env.d.ts"
   ],
