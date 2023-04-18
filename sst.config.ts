@@ -4,6 +4,7 @@ import { Api } from "./stacks/api"
 import { Authentication } from "./stacks/authentication"
 import { Bus } from "./stacks/bus"
 import { Database } from "./stacks/database"
+import { OpenGraph } from "./stacks/open-graph"
 import { Site } from "./stacks/site"
 
 export default {
@@ -32,6 +33,7 @@ export default {
     app.stack(Bus)
     app.stack(Api)
     app.stack(Authentication)
+    app.stack(OpenGraph)
     app.stack(Site)
   },
 } satisfies SSTConfig
